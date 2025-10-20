@@ -1,35 +1,35 @@
-🏟️ SportSpot
-📖 Problem Statement
+# SportSpot
+## 🏅 Problem Statement
 
-Sports enthusiasts often struggle to find information about local sporting events, recreational matches, or tournaments happening nearby.
-Organizers, on the other hand, face difficulties reaching players and audiences, as well as managing registrations and communication efficiently.
+- Sports enthusiasts often struggle to find information about local sporting events, recreational matches, or tournaments happening nearby.
+- Organizers, on the other hand, face difficulties reaching players and audiences, as well as managing registrations and communication efficiently.
 
-🎯 Target Users
+## 👥 Target Users
 
-Recreational athletes
+- Recreational athletes
 
-Sports clubs and associations
+- Sports clubs and associations
 
-Tournament and event organizers
+- Tournament and event organizers
 
-Fans and spectators
+- Fans and spectators
 
-💡 Proposed Solution
+## 🚀 Proposed Solution
 
-SportSpot is an all-in-one platform that connects the entire sports community.
-It allows users to easily:
+- SportSpot is an all-in-one platform that connects the entire sports community.
+- It allows users to easily:
 
-Browse upcoming sports events, tournaments, and recreational matches
+- Browse upcoming sports events, tournaments, and recreational matches
 
-Register as players or spectators
+- Register as players or spectators
 
-Create and manage their own sports events
+- Create and manage their own sports events
 
-Follow event details and results in real time
+- Follow event details and results in real time
 
-Everything you need for sports — all in one place! 💪
+- Everything you need for sports — all in one place! 💪
 
-🌱 Inspiration
+## 💬 Inspiration
 
 Through conversations with friends and acquaintances, we discovered that many people find out about local sports activities through WhatsApp groups or word of mouth.
 However, not everyone knows these groups exist — making it easy to miss opportunities to join games or tournaments.
