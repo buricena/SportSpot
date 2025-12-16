@@ -1,42 +1,25 @@
 import Link from "next/link";
-import { FC } from "react";
 
-const EventsPage: FC = () => {
+type Event = { id: number; title: string; body: string };
+
+async function getEvents(): Promise<Event[]> {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts", { cache: "no-store" });
+  return res.json();
+}
+
+export default async function EventsPage() {
+  const events = await getEvents();
+
   return (
-    <main style={{ fontFamily: "sans-serif", padding: "2rem" }}>
+    <main style={{ padding: "2rem" }}>
       <h1>Events</h1>
-      <p>Choose what you want to do:</p>
-
-      <ul
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.5rem",
-          maxWidth: "200px",
-          marginTop: "1rem",
-        }}
-      >
-        <li>
-          <Link href="/events/participate">
-            <button style={{ padding: "0.5rem", cursor: "pointer" }}>
-              Participate in Events
-            </button>
-          </Link>
-        </li>
-        <li>
-          <Link href="/events/organize">
-            <button style={{ padding: "0.5rem", cursor: "pointer" }}>
-              Organize an Event
-            </button>
-          </Link>
-        </li>
+      <ul>
+        {events.slice(0, 10).map(event => (
+          <li key={event.id}>
+            <Link href={`/events/${event.id}`}>{event.title}</Link>
+          </li>
+        ))}
       </ul>
-
-      <p style={{ marginTop: "1.5rem" }}>
-        <Link href="/">← Back to Homepage</Link>
-      </p>
     </main>
   );
-};
-
-export default EventsPage;
+}
