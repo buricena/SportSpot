@@ -26,7 +26,10 @@
 
 - Link to Assignment 1: [**Assignment 1**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment1.md) <!-- Replace with actual URL -->
 - Link to Assignment 2: [**Assignment 2**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment2/assignment2.md) <!-- Replace with actual URL -->
-- Link to Assignment 3: [**Assignment 3**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment3/assignment3.md) <!-- Replace with actual URL -->
+- Link to Assignment 3: [**Assignment 3**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment3/assignment3.md)
+- Link to Assignment 4: [**Assignment 4**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment4/assignment4.md)
+- Link to Assignment 5: [**Assignment 5**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment5/assignment5.md)
+- Link to Assignment 6: [**Assignment 6**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment6/assignment6.md) <!-- Replace with actual URL -->
 <!-- Add more assignments as necessary -->
 
 ## Project Requirements
