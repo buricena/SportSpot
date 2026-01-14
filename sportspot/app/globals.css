@@ -6,6 +6,16 @@
 }
 
 /* ================= NAVBAR ================= */
+/* Navbar linkovi hover efekt */
+.navbar-center a {
+  color: black; /* osnovna boja */
+  text-decoration: none;
+  transition: color 0.3s ease; /* glatki prijelaz */
+}
+
+.navbar-center a:hover {
+  color: #FF6B35; /* boja na hover */
+}
 
 .navbar {
   height: 70px;
@@ -19,7 +29,7 @@
 
 .navbar-center {
   display: flex;
-  gap: 2rem;
+  gap: 5.0rem;
 }
 
 .navbar-center a {
@@ -116,6 +126,11 @@
   font-size: 1.1rem;
   opacity: 0.6;
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
 
 .search-btn {
   background: #ff6b35;
@@ -298,6 +313,24 @@
   padding: 0.6rem;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.signin-btn {
+  background-color: #FF6B35; /* osnovna boja gumba */
+  color: white;              /* tekst */
+  font-size: 1rem;           /* osnovna veličina */
+  padding: 8px 16px;         /* unutarnji razmak */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease; /* glatka animacija */
+}
+
+/* hover efekt */
+.signin-btn:hover {
+  background-color: #ff976b; /* svjetlija nijansa narančaste */
+          /* lagano uvećaj tekst */
+  color: #ffffff;            /* pobijeli tekst */
 }
 
 /* ================= FOOTER ================= */

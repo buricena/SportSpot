@@ -1,4 +1,5 @@
 import heroImage from "./media/background.jpeg";
+import { CalendarDays, LandPlot, MapPin } from "lucide-react"; // uvoz Lucide ikone
 
 export default function HomePage() {
   return (
@@ -17,17 +18,16 @@ export default function HomePage() {
 
           <form className="search-bar">
             <div className="search-field">
-              <span className="icon">🏀</span>
               <select>
                 <option>Sport type</option>
               </select>
             </div>
             <div className="search-field">
-              <span className="icon">📍</span>
+              <MapPin size={24} style={{ marginRight: "8px", color: "#FF6B35" }} />
               <input placeholder="Location" />
             </div>
             <div className="search-field">
-              <span className="icon">📅</span>
+                <CalendarDays size={24} style={{ marginRight: "8px", color: "#FF6B35" }} />
               <input type="date" />
             </div>
             <button className="search-btn">Search Events</button>
@@ -116,7 +116,12 @@ export default function HomePage() {
       <footer className="footer">
         <div className="footer-grid">
           <div>
-            <h3>SportSpot</h3>
+            {/* Dodana Lucide ikona pored naslova */}
+            <h3 className="logo">
+              <LandPlot size={24} style={{ marginRight: "8px" }} />
+              SportSpot
+            </h3><br/>
+
             <p>
               Your local sports community. Connect, play, and track your sports
               activities.
@@ -147,7 +152,7 @@ export default function HomePage() {
         </div>
 
         <div className="footer-bottom">
-          © 2025 SportSpot. All rights reserved.
+          © 2026 SportSpot. All rights reserved.
         </div>
       </footer>
     </>

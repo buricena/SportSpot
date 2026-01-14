@@ -1,5 +1,6 @@
 import "./globals.css";
 import Link from "next/link";
+import { LandPlot, Radius } from "lucide-react";
 
 export default function RootLayout({
   children,
@@ -11,9 +12,24 @@ export default function RootLayout({
       <body>
         <header className="navbar">
           <div className="logo">
-            <span className="logo-icon">⚽</span>
-            SportSpot
+             <Link href="/" className="logo-link" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
+  <LandPlot
+    size={24}
+    style={{
+      marginRight: "8px",
+      background: "#FF6B35",
+      color: "white",
+      borderRadius: "30%",
+      padding: "4px",
+      display: "inline-flex",
+      verticalAlign: "middle",
+    }}
+  />
+  SportSpot
+</Link>
+
           </div>
+          
 
           <nav className="navbar-center">
             <Link href="/discover">Discover</Link>
