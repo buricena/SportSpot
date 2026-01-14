@@ -6,15 +6,14 @@
 }
 
 /* ================= NAVBAR ================= */
-/* Navbar linkovi hover efekt */
 .navbar-center a {
-  color: black; /* osnovna boja */
+  color: black;
   text-decoration: none;
-  transition: color 0.3s ease; /* glatki prijelaz */
+  transition: color 0.3s ease;
 }
 
 .navbar-center a:hover {
-  color: #FF6B35; /* boja na hover */
+  color: #FF6B35;
 }
 
 .navbar {
@@ -58,10 +57,16 @@
   padding: 0.55rem 1.4rem;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.signin-btn:hover {
+  background-color: #ff976b;
+  color: white;
+  transform: scale(1.05);
 }
 
 /* ================= HERO ================= */
-
 .hero {
   height: calc(100vh - 70px);
   background-size: cover;
@@ -92,7 +97,6 @@
 }
 
 /* ================= SEARCH BAR ================= */
-
 .search-bar {
   background: white;
   display: flex;
@@ -101,6 +105,7 @@
   padding: 0.9rem;
   border-radius: 14px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  flex-wrap: wrap;
 }
 
 .search-field {
@@ -109,6 +114,7 @@
   gap: 0.4rem;
   padding: 0.6rem 0.8rem;
   border-right: 1px solid #eee;
+  flex: 1 1 150px; /* responsivna širina */
 }
 
 .search-field:last-of-type {
@@ -120,17 +126,18 @@
   border: none;
   outline: none;
   font-size: 0.95rem;
+  width: 100%;
 }
 
 .icon {
   font-size: 1.1rem;
   opacity: 0.6;
 }
+
 input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
   -webkit-appearance: none;
 }
-
 
 .search-btn {
   background: #ff6b35;
@@ -140,10 +147,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 /* ================= HOW IT WORKS ================= */
-
 .how-it-works {
   padding: 5rem 2rem;
   background: #ffffff;
@@ -168,10 +175,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   gap: 3rem;
   max-width: 1100px;
   margin: 0 auto;
+  flex-wrap: wrap;
 }
 
 .step {
   max-width: 280px;
+  text-align: center;
 }
 
 .step-icon {
@@ -214,8 +223,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-size: 0.95rem;
   color: #6b7280;
 }
-/* ================= EVENTS AROUND YOU ================= */
 
+/* ================= EVENTS AROUND YOU ================= */
 .events-around {
   padding: 5rem 2rem;
   background: #f9fafb;
@@ -232,10 +241,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  flex-wrap: wrap;
 }
 
 .map-placeholder {
-  flex: 2;
+  flex: 2 1 300px;
   background: linear-gradient(135deg, #fde68a, #bfdbfe);
   border-radius: 16px;
   height: 320px;
@@ -260,13 +270,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .events-list {
-  flex: 1;
+  flex: 1 1 250px;
   background: white;
   border-radius: 16px;
   padding: 1.5rem;
   text-align: left;
 }
 
+/* Event cards */
 .event-card {
   background: #f9fafb;
   border-radius: 12px;
@@ -282,20 +293,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: 999px;
 }
 
-.football {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.basketball {
-  background: #ffedd5;
-  color: #c2410c;
-}
-
-.tennis {
-  background: #dcfce7;
-  color: #166534;
-}
+.football { background: #fee2e2; color: #b91c1c; }
+.basketball { background: #ffedd5; color: #c2410c; }
+.tennis { background: #dcfce7; color: #166534; }
 
 .distance {
   position: absolute;
@@ -315,26 +315,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-.signin-btn {
-  background-color: #FF6B35; /* osnovna boja gumba */
-  color: white;              /* tekst */
-  font-size: 1rem;           /* osnovna veličina */
-  padding: 8px 16px;         /* unutarnji razmak */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease; /* glatka animacija */
-}
-
-/* hover efekt */
-.signin-btn:hover {
-  background-color: #ff976b; /* svjetlija nijansa narančaste */
-          /* lagano uvećaj tekst */
-  color: #ffffff;            /* pobijeli tekst */
-}
-
 /* ================= FOOTER ================= */
-
 .footer {
   background: #1f2933;
   color: #d1d5db;
@@ -345,7 +326,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 2rem;
 }
 
@@ -365,4 +346,71 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   text-align: center;
   font-size: 0.8rem;
   color: #9ca3af;
+}
+
+/* ================= MEDIA QUERIES ================= */
+
+/* Tablet i veći mobiteli */
+@media (max-width: 1024px) {
+  .navbar-center {
+    gap: 2rem;
+  }
+
+  .hero-overlay h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-overlay p {
+    font-size: 1rem;
+  }
+
+  .steps {
+    gap: 2rem;
+  }
+}
+
+/* Mobilni uređaji */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .navbar-center {
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .hero-overlay h1 {
+    font-size: 2rem;
+  }
+
+  .hero-overlay p {
+    font-size: 0.95rem;
+  }
+
+  .search-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .search-field {
+    flex: 1 1 100%;
+    border-right: none;
+  }
+
+  .steps {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .events-layout {
+    flex-direction: column;
+  }
+
+  .map-placeholder {
+    height: 250px;
+  }
 }
