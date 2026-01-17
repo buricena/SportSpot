@@ -1,17 +1,21 @@
 "use client";
 
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useEffect } from "react";
+import L from "leaflet";
+
 type EventMarker = {
   id: number;
   title: string;
   position: [number, number];
 };
 
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import { useEffect } from "react";
-import L from "leaflet";
+type Props = {
+  center: [number, number];
+  userLocation?: [number, number] | null;
+};
 
-
-// Fix za Leaflet ikone u Next.js
+// Fix Leaflet ikona
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -22,11 +26,7 @@ L.Icon.Default.mergeOptions({
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-type Props = {
-  center: [number, number];
-};
-
-function ChangeView({ center }: Props) {
+function ChangeView({ center }: { center: [number, number] }) {
   const map = useMap();
 
   useEffect(() => {
@@ -37,25 +37,12 @@ function ChangeView({ center }: Props) {
 }
 
 const events: EventMarker[] = [
-  {
-    id: 1,
-    title: "5v5 Football",
-    position: [45.815399, 15.966568],
-  },
-  {
-    id: 2,
-    title: "3v3 Basketball",
-    position: [45.810567, 15.979123],
-  },
-  {
-    id: 3,
-    title: "Tennis Match",
-    position: [45.818234, 15.955123],
-  },
+  { id: 1, title: "5v5 Football", position: [45.815399, 15.966568] },
+  { id: 2, title: "3v3 Basketball", position: [45.810567, 15.979123] },
+  { id: 3, title: "Tennis Match", position: [45.818234, 15.955123] },
 ];
 
-
-export default function MapView({ center }: Props) {
+export default function MapView({ center, userLocation }: Props) {
   return (
     <MapContainer
       center={center}
@@ -71,6 +58,13 @@ export default function MapView({ center }: Props) {
           <Popup>{event.title}</Popup>
         </Marker>
       ))}
+
+      {/* USER LOCATION */}
+      {userLocation && (
+        <Marker position={userLocation}>
+          <Popup>You are here</Popup>
+        </Marker>
+      )}
     </MapContainer>
   );
 }

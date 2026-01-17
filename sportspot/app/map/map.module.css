@@ -1,0 +1,29 @@
+.page {
+  height: calc(100vh - 70px); /* minus navbar */
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.header p {
+  color: #6b7280;
+}
+
+.mapWrapper {
+  flex: 1;
+}
+.locBtn {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  background: #0ea5e9;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
