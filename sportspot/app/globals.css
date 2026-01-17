@@ -1,3 +1,4 @@
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,6 +12,44 @@
   text-decoration: none;
   transition: color 0.3s ease;
 }
+.map-container {
+  flex: 2;
+  height: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+.map-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1000;
+}.map-wrapper {
+  position: relative;
+  flex: 2;
+  height: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.map-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 99999;
+  background: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
 
 .navbar-center a:hover {
   color: #FF6B35;

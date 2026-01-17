@@ -1,5 +1,7 @@
 import heroImage from "./media/background.jpeg";
 import { CalendarDays, LandPlot, MapPin } from "lucide-react"; // uvoz Lucide ikone
+import MapSection from "./components/MapSection";
+
 
 export default function HomePage() {
   return (
@@ -78,10 +80,9 @@ export default function HomePage() {
         </p>
 
         <div className="events-layout">
-          <div className="map-placeholder">
-            <span>📍 Interactive Map View</span>
-            <button className="map-btn">My Location</button>
-          </div>
+<MapSection />
+
+
 
           <div className="events-list">
             <h3>Nearby Events</h3>

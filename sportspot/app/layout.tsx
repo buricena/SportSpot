@@ -1,6 +1,8 @@
 import "./globals.css";
 import Link from "next/link";
 import { LandPlot, Radius } from "lucide-react";
+import "leaflet/dist/leaflet.css";
+
 
 export default function RootLayout({
   children,
