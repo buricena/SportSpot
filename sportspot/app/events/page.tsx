@@ -49,6 +49,11 @@ export default async function EventsPage() {
           </div>
         ))}
       </section>
+
+      {/* Plus Button for Adding Event */}
+      <Link href="/add-event" className={styles.addButton}>
+        +
+      </Link>
     </main>
   );
 }

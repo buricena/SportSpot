@@ -34,7 +34,7 @@ export default function RootLayout({
           
 
           <nav className="navbar-center">
-            <Link href="/discover">Discover</Link>
+         
             <Link href="/events">Events</Link>
             <Link href="/map">Map</Link>
             <Link href="/results">Results</Link>

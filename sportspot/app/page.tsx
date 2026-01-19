@@ -1,3 +1,4 @@
+"use client";
 import heroImage from "./media/background.jpeg";
 import { CalendarDays, LandPlot, MapPin } from "lucide-react"; // uvoz Lucide ikone
 import MapSection from "./components/MapSection";
@@ -18,22 +19,10 @@ export default function HomePage() {
             events in your area
           </p>
 
-          <form className="search-bar">
-            <div className="search-field">
-              <select>
-                <option>Sport type</option>
-              </select>
-            </div>
-            <div className="search-field">
-              <MapPin size={24} style={{ marginRight: "8px", color: "#FF6B35" }} />
-              <input placeholder="Location" />
-            </div>
-            <div className="search-field">
-                <CalendarDays size={24} style={{ marginRight: "8px", color: "#FF6B35" }} />
-              <input type="date" />
-            </div>
-            <button className="search-btn">Search Events</button>
-          </form>
+          {/* New Button */}
+          <button className="hero-btn" onClick={() => window.location.href = '/events'}>
+            Explore Events
+          </button>
         </div>
       </main>
 
@@ -80,9 +69,7 @@ export default function HomePage() {
         </p>
 
         <div className="events-layout">
-<MapSection />
-
-
+          <MapSection />
 
           <div className="events-list">
             <h3>Nearby Events</h3>
@@ -121,7 +108,7 @@ export default function HomePage() {
             <h3 className="logo">
               <LandPlot size={24} style={{ marginRight: "8px" }} />
               SportSpot
-            </h3><br/>
+            </h3><br />
 
             <p>
               Your local sports community. Connect, play, and track your sports
