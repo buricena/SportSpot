@@ -1,4 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import styles from "./events.module.css";
 
 type Event = {
@@ -7,29 +11,58 @@ type Event = {
   body: string;
 };
 
-async function getEvents(): Promise<Event[]> {
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts", {
-    cache: "no-store",
-  });
-  return res.json();
-}
+export default function EventsPage() {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [search, setSearch] = useState("");
 
-export default async function EventsPage() {
-  const events = await getEvents();
+  useEffect(() => {
+    async function fetchEvents() {
+      const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+      const data = await res.json();
+      setEvents(data);
+    }
+
+    fetchEvents();
+  }, []);
+
+  const filteredEvents = events.filter(event =>
+    event.title.toLowerCase().includes(search.toLowerCase()) ||
+    event.body.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <main className={styles.page}>
-      {/* HEADER */}
+      {/* HERO HEADER */}
       <header className={styles.header}>
-        <h1>Browse Events</h1>
+        <h1>Upcoming Sports Events</h1>
         <p className={styles.subtitle}>
-          Discover upcoming sports events and join the ones you like.
+          Discover upcoming events, search by interest, or create your own.
         </p>
+
+        {/* ACTION BAR */}
+     <div className={styles.actions}>
+  <div className={styles.searchWrapper}>
+    <input
+      type="text"
+      placeholder="Search events..."
+      value={search}
+      onChange={e => setSearch(e.target.value)}
+      className={styles.search}
+    />
+  </div>
+</div>
+
       </header>
+
+      {/* SECTION HEADER */}
+      <section className={styles.sectionHeader}>
+        <h2>Upcoming Events</h2>
+        <span>{filteredEvents.length} events</span>
+      </section>
 
       {/* EVENTS GRID */}
       <section className={styles.grid}>
-        {events.slice(0, 12).map(event => (
+        {filteredEvents.slice(0, 12).map(event => (
           <div key={event.id} className={styles.card}>
             <span className={styles.tag}>Sport Event</span>
 
@@ -48,11 +81,19 @@ export default async function EventsPage() {
             </div>
           </div>
         ))}
+
+        {filteredEvents.length === 0 && (
+          <p className={styles.empty}>No events found.</p>
+        )}
       </section>
 
-      {/* Plus Button for Adding Event */}
-      <Link href="/add-event" className={styles.addButton}>
-        +
+      {/* FLOATING ADD EVENT BUTTON */}
+      <Link
+        href="/add-event"
+        className={styles.addButton}
+        aria-label="Create event"
+      >
+        <Plus size={28} strokeWidth={2.5} />
       </Link>
     </main>
   );
