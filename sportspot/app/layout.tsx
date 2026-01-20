@@ -1,7 +1,5 @@
-"use client";
-
 import "./globals.css";
-import "leaflet/dist/leaflet.css";
+import { AuthProvider } from "../lib/AuthProvider";
 import Navbar from "./components/Navbar";
 
 export default function RootLayout({
@@ -10,11 +8,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
-        <Navbar />
-        {children}
-      </body>
-    </html>
+<html lang="en">
+  <body>
+    <AuthProvider>
+      <Navbar />
+      {children}
+    </AuthProvider>
+  </body>
+</html>
+
   );
 }

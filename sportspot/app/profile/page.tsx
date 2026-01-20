@@ -1,40 +1,40 @@
+"use client";
+import RequireAuth from "../components/RequireAuth";
+
 import Link from "next/link";
+import styles from "./profile.module.css";
 
-export default function LoginPage() {
+export default function ProfilePage() {
   return (
-    <main style={{ fontFamily: "sans-serif", padding: "2rem" }}>
-      <h1>Login</h1>
-      <p>Please log into your SportSpot account to access your profile options.</p>
-
-      {/* Login form */}
-      <form
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          maxWidth: "300px",
-          gap: "0.5rem",
-          marginTop: "1rem",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <input type="text" placeholder="Username" />
-        <input type="password" placeholder="Password" />
-        <button type="submit">Login</button>
-      </form>
-
-      <hr style={{ margin: "1.5rem 0" }} />
-
-      <h2>Profile Menu</h2>
-      <ul>
-        <li><Link href="/profile/personal-information">Personal Information</Link></li>
-        <li><Link href="/profile/sports-preferences">Sports Preferences</Link></li>
-        <li><Link href="/profile/my-past-events">My Past Events</Link></li>
-        <li><Link href="/profile/my-reviews">My Reviews</Link></li>
-      </ul>
-
-      <p style={{ marginTop: "1rem" }}>
-        <Link href="/">← Back to Homepage</Link>
+    <RequireAuth>
+    <main className={styles.container}>
+      <h1 className={styles.title}>My Profile</h1>
+      <p className={styles.subtitle}>
+        Welcome back, <strong>Ena</strong>
       </p>
+
+      <div className={styles.grid}>
+        <Link href="/profile/my-events" className={styles.card}>
+          <h3>My Events</h3>
+          <p>Events you joined or participated in</p>
+        </Link>
+
+        <Link href="/profile/my-reviews" className={styles.card}>
+          <h3>My Reviews</h3>
+          <p>Your reviews and ratings</p>
+        </Link>
+
+        <Link href="/profile/personal-information" className={styles.card}>
+          <h3>Personal Info</h3>
+          <p>Edit your personal information</p>
+        </Link>
+
+        <Link href="/profile/sports-preferences" className={styles.card}>
+          <h3>Sport Preferences</h3>
+          <p>Select your favorite sports</p>
+        </Link>
+      </div>
     </main>
+    </RequireAuth>
   );
 }

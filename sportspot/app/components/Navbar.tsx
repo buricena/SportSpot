@@ -2,14 +2,21 @@
 
 import Link from "next/link";
 import { LandPlot, User } from "lucide-react";
-import { useState } from "react";
+import { useAuth } from "../../lib/AuthProvider";
+import { supabase } from "../../lib/supabaseClient";
 
 export default function Navbar() {
-  // MOCK LOGIN STATE
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   return (
     <header className="navbar">
+      {/* LOGO */}
       <div className="logo">
         <Link
           href="/"
@@ -35,35 +42,35 @@ export default function Navbar() {
         </Link>
       </div>
 
+      {/* CENTER NAV */}
       <nav className="navbar-center">
         <Link href="/events">Events</Link>
         <Link href="/map">Map</Link>
         <Link href="/results">Results</Link>
       </nav>
 
-      {/* RIGHT SIDE */}
-      {!isLoggedIn ? (
-        <Link href="/login" className="signin-btn">
-          Sign In
-        </Link>
-      ) : (
-        <Link href="/profile" className="profile-btn">
-          <User size={18} style={{ marginRight: "6px" }} />
-          My Profile
-        </Link>
-      )}
+      {/* RIGHT ACTIONS */}
+      <div className="navbar-actions">
+        {!user ? (
+          <Link href="/login">
+            <button className="signin-btn">Sign In</button>
+          </Link>
+        ) : (
+          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            <Link
+              href="/profile"
+              style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            >
+              <User size={20} />
+              Profile
+            </Link>
 
-      {/* TEMP BUTTON – SAMO ZA TEST */}
-      <button
-        onClick={() => setIsLoggedIn(prev => !prev)}
-        style={{
-          marginLeft: "1rem",
-          fontSize: "0.7rem",
-          opacity: 0.5,
-        }}
-      >
-        toggle login
-      </button>
+            <button className="signin-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
     </header>
   );
 }
