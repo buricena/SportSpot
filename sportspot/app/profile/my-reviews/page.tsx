@@ -11,7 +11,7 @@ type Review = {
   created_at: string;
   events: {
     title: string;
-  };
+  }[];
 };
 
 export default function MyReviews() {
@@ -57,7 +57,7 @@ export default function MyReviews() {
         {reviews.map(review => (
           <div key={review.id} className={styles.reviewCard}>
             <div className={styles.reviewHeader}>
-              <strong>{review.events.title}</strong>
+              <strong>{review.events[0].title}</strong>
               <span className={styles.rating}>
                 {"★".repeat(review.rating)}
               </span>
