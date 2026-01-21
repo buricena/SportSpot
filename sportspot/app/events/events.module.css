@@ -22,17 +22,27 @@
   width: 100%;
   min-height: 100vh;
   padding: 2.5rem 2rem 5rem;
-  background-color: var(--bg-light);
+
+  background:
+    radial-gradient(
+      800px 300px at 50% 0%,
+      rgba(255, 107, 44, 0.12),
+      transparent 70%
+    ),
+    #f9fafb;
 }
+
+
 
 /* ===============================
    HEADER
 ================================ */
 .header {
   max-width: 800px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 2rem; /* bilo je 3rem */
   text-align: center;
 }
+
 
 .header h1 {
   font-size: 2.8rem;
@@ -69,22 +79,90 @@
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.2);
 }
-.joinBtn {
-  background: #ff6b35;
-  color: white;
-  border: none;
-  border-radius: 999px;
-  padding: 0.3rem 0.8rem;
-  cursor: pointer;
-  font-size: 0.8rem;
+
+/* SEARCH WRAPPER */
+.searchWrapper {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  padding: 0.6rem;
+  border-radius: 16px;
+  position: relative;
+  border: 1.5px solid #ff6b2c;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
-.joined {
-  font-size: 0.8rem;
-  color: #2ecc71;
+.searchWrapper:hover {
+  border-color: #ff6b2c;
+}
+
+.searchWrapper:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(255, 107, 44, 0.18);
+}
+
+.searchWrapper .search {
+  margin: 0;
+  padding-left: 3rem;
+  border: none;
+  max-width: 100%;
+  font-size: 1.05rem;
+  background: transparent;
+}
+
+.searchWrapper .search:focus {
+  box-shadow: none;
+}
+
+/* ===============================
+   ACTIONS
+================================ */
+.actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.createButton {
+  padding: 0.85rem 1.5rem;
+  border-radius: 10px;
+  background-color: var(--primary);
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.createButton:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ===============================
+   SECTION HEADER
+================================ */
+.sectionHeader {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionHeader h2 {
+  font-size: 1.6rem;
   font-weight: 600;
 }
 
+.sectionHeader span {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
 
 /* ===============================
    EVENTS GRID
@@ -100,21 +178,40 @@
 /* ===============================
    EVENT CARD
 ================================ */
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .card {
-  background: white;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #fff7f3 100%
+  );
   padding: 2rem;
   border-radius: var(--radius-lg);
   border-top: 4px solid #ff6b2c;
   box-shadow: var(--shadow-sm);
   position: relative;
+
   display: flex;
   flex-direction: column;
+
+  /* NOVO */
+  height: 320px;
+
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+
 .card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-6px) scale(1.01);
   box-shadow: var(--shadow-lg);
+}
+.card:hover {
+  cursor: pointer;
 }
 
 /* ===============================
@@ -167,6 +264,9 @@
 }
 
 .link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   color: var(--primary);
   font-weight: 600;
   text-decoration: none;
@@ -176,6 +276,75 @@
 .link:hover {
   color: var(--primary-dark);
   transform: translateX(4px);
+}
+
+/* ===============================
+   JOIN
+================================ */
+.joinBtn {
+  background: #ff6b35;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.joinBtn:hover {
+  background: #e75f1e;
+  transform: translateY(-1px);
+}
+
+.joined {
+  font-size: 0.8rem;
+  color: #2ecc71;
+  font-weight: 600;
+}
+
+/* ===============================
+   TABS
+================================ */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+
+.tab {
+  padding: 0.5rem 1.4rem;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.tab:hover {
+  border-color: #ff6b35;
+  transform: translateY(-1px);
+}
+
+.activeTab {
+  background: #ff6b35;
+  color: white;
+  border-color: #ff6b35;
+  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.35);
+}
+
+/* ===============================
+   EMPTY STATE
+================================ */
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-top: 2rem;
 }
 
 /* ===============================
@@ -223,104 +392,4 @@
     height: 56px;
     font-size: 2rem;
   }
-}
-/* ACTION BAR */
-.actions {
-  margin-top: 2rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.createButton {
-  padding: 0.85rem 1.5rem;
-  border-radius: 10px;
-  background-color: var(--primary);
-  color: white;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.25s ease, transform 0.25s ease;
-}
-
-.createButton:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-2px);
-}
-
-/* SECTION HEADER */
-.sectionHeader {
-  max-width: 1200px;
-  margin: 0 auto 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.sectionHeader h2 {
-  font-size: 1.6rem;
-  font-weight: 600;
-}
-
-.sectionHeader span {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-}
-
-/* EMPTY STATE */
-.empty {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 1.1rem;
-  margin-top: 2rem;
-}
-
-/* ===============================
-   SEARCH HIGHLIGHT
-================================ */
-.searchWrapper {
-  width: 100%;
-  max-width: 520px;
-  background: white;
-  padding: 0.6rem;
-  border-radius: 16px;
-  position: relative;
-
-  /* NEW */
-  border: 1.5px solid #ff6b2c;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-.searchWrapper:hover {
-  border-color:#ff6b2c;
-}
-
-.searchWrapper:focus-within {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(255, 107, 44, 0.18);
-}
-
-/* EXISTING */
-.searchWrapper::before {
-  position: absolute;
-  left: 1.2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.1rem;
-  opacity: 0.6;
-}
-
-.searchWrapper .search {
-  margin: 0;
-  padding-left: 3rem;
-  border: none;
-  max-width: 100%;
-  font-size: 1.05rem;
-  background: transparent;
-}
-
-.searchWrapper .search:focus {
-  box-shadow: none;
 }

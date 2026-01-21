@@ -95,7 +95,7 @@ export default function HomePage() {
               <span className="distance">3.8 km</span>
             </div>
 
-            <button className="explore-btn">Explore Map View</button>
+            <button className="explore-btn" onClick={() => window.location.href = '/map'}>Explore Map View</button>
           </div>
         </div>
       </section>

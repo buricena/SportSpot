@@ -15,7 +15,7 @@ const sportsList = [
   "Padel",
 ];
 
-export default function SportsPreferencesPage() {
+export default function SportsPreferences() {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 

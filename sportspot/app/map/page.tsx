@@ -1,34 +1,59 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./map.module.css";
 
+// ⛔ Leaflet mora biti client-side
 const MapView = dynamic(() => import("../components/MapView"), {
   ssr: false,
 });
 
-export default function MapPage() {
-  const defaultCenter: [number, number] = [45.815399, 15.966568];
+type Event = {
+  id: string;
+  title: string;
+  lat: number;
+  lng: number;
+};
 
+export default function MapPage() {
+  const defaultCenter: [number, number] = [45.815399, 15.966568]; // Zagreb
   const [center, setCenter] = useState<[number, number]>(defaultCenter);
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [events, setEvents] = useState<Event[]>([]);
+
+  // 🔹 privremeni mock eventi (kasnije Supabase)
+  useEffect(() => {
+    setEvents([
+      {
+        id: "1",
+        title: "5v5 Football Match",
+        lat: 45.817,
+        lng: 15.97,
+      },
+      {
+        id: "2",
+        title: "3v3 Basketball",
+        lat: 45.81,
+        lng: 15.98,
+      },
+      {
+        id: "3",
+        title: "Tennis Doubles",
+        lat: 45.812,
+        lng: 15.955,
+      },
+    ]);
+  }, []);
 
   const handleMyLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
+      alert("Geolocation not supported");
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
-      position => {
-        const coords: [number, number] = [
-          position.coords.latitude,
-          position.coords.longitude,
-        ];
-
-        setUserLocation(coords);
-        setCenter(coords);
+      pos => {
+        setCenter([pos.coords.latitude, pos.coords.longitude]);
       },
       () => {
         alert("Location access denied");
@@ -41,13 +66,17 @@ export default function MapPage() {
       <header className={styles.header}>
         <h1>Event Map</h1>
         <p>Explore events and your location on the map</p>
-        <button className={styles.locBtn} onClick={handleMyLocation}>
+
+        <button
+          onClick={handleMyLocation}
+          className={styles.locationBtn}
+        >
           My location
         </button>
       </header>
 
       <section className={styles.mapWrapper}>
-        <MapView center={center} userLocation={userLocation} />
+<MapView center={center} events={events ?? []} />
       </section>
     </main>
   );

@@ -1,12 +1,22 @@
+/* ===============================
+   PAGE CONTAINER
+================================ */
 .container {
-  max-width: 1000px;
-  margin: 3rem auto;
-  padding: 0 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* ===============================
+   TITLE
+================================ */
 .title {
-  font-size: 2.2rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
 }
 
 .subtitle {
@@ -14,180 +24,291 @@
   margin-bottom: 2rem;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
+/* ===============================
+   TABS
+================================ */
+.tabs {
+  display: inline-flex;
+  gap: 0.4rem;
+  background: #f3f4f6;
+  padding: 0.4rem;
+  border-radius: 999px;
+  margin-bottom: 2.5rem;
 }
 
-.card {
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
-  text-decoration: none;
-  color: inherit;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
-}
-
-.card h3 {
-  margin-bottom: 0.5rem;
-}
-
-.card p {
-  color: #666;
-  font-size: 0.95rem;
-}
-.form {
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-.label {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.9rem;
-  color: #444;
-}
-
-.input {
-  margin-top: 0.4rem;
-  padding: 0.6rem 0.8rem;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 0.95rem;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #ff6b35;
-}
-
-.primaryBtn {
-  margin-top: 1rem;
-  background: #ff6b35;
-  color: white;
+.tab {
+  padding: 0.55rem 1.5rem;
+  border-radius: 999px;
   border: none;
-  border-radius: 999px;
-  padding: 0.7rem;
-  font-weight: 600;
+  background: transparent;
   cursor: pointer;
+  font-weight: 500;
+  color: #444;
+  transition: all 0.25s ease;
 }
 
-.primaryBtn:hover {
-  opacity: 0.9;
-}
-.section {
-  margin-top: 2.5rem;
-}
-
-.sectionTitle {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
-}
-
-.card {
-  background: white;
-  border-radius: 14px;
-  padding: 1rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-}
-
-.card h3 {
-  margin: 0 0 0.3rem;
-  font-size: 1rem;
-}
-
-.card p {
-  margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.date {
-  display: inline-block;
-  margin-top: 0.6rem;
-  font-size: 0.8rem;
-  color: #999;
-}
-
-.past {
-  opacity: 0.65;
-}
-
-.empty {
-  font-size: 0.9rem;
-  color: #888;
-}
-.reviewList {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  margin-top: 2rem;
-}
-
-.reviewCard {
-  background: white;
-  padding: 1.4rem;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-}
-
-.reviewHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.rating {
-  font-size: 1.1rem;
-  color: #ffb703;
-}
-
-.comment {
-  margin: 0.8rem 0;
-  color: #555;
-}
-
-.date {
-  font-size: 0.8rem;
-  color: #999;
-}
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin: 2rem 0;
-}
-
-.tag {
-  padding: 0.6rem 1.2rem;
-  border-radius: 999px;
-  border: 1px solid #ddd;
-  background: white;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.tag:hover {
-  border-color: #ff6b35;
+.tab:hover {
+  background: #e5e7eb;
 }
 
 .active {
   background: #ff6b35;
   color: white;
+  box-shadow: 0 6px 18px rgba(255, 107, 53, 0.35);
+}
+
+/* ===============================
+   MAIN CONTENT CARD
+================================ */
+.content {
+  width: 100%;
+  background: white;
+  border-radius: 24px;
+  padding: 2.8rem;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+}
+
+/* ===============================
+   SECTIONS
+================================ */
+.section {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+}
+
+/* ===============================
+   EVENTS GRID
+================================ */
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.4rem;
+}
+
+/* ===============================
+   EVENT CARD
+================================ */
+.eventCard {
+  background: #f9fafb;
+  border-radius: 18px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.eventCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+}
+
+.past {
+  opacity: 0.6;
+}
+
+.eventTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.eventMeta {
+  font-size: 0.9rem;
+  color: #777;
+  margin-top: 0.4rem;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.primaryBtn {
+  background: #ff6b35;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1.2rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.25s ease;
+}
+
+.primaryBtn:hover {
+  background: #e75f1e;
+  transform: translateY(-2px);
+}
+
+.secondaryBtn {
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  padding: 0.45rem 1.2rem;
+  cursor: pointer;
+}
+
+/* ===============================
+   EMPTY
+================================ */
+.empty {
+  color: #777;
+  font-style: italic;
+}
+
+/* ===============================
+   MODAL
+================================ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+}
+
+.modalActions {
+  margin-top: 1.4rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* ===============================
+   PREFERENCES (SPORT TAGS)
+================================ */
+.preferenceGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.preference {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.preference:hover {
   border-color: #ff6b35;
+}
+
+.preferenceActive {
+  background: #ff6b35;
+  color: white;
+  border-color: #ff6b35;
+}
+/* ===============================
+   FORMS (Personal Info)
+================================ */
+.form {
+  max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #444;
+  gap: 0.4rem;
+}
+
+.input {
+  padding: 0.65rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 0.95rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+.input:disabled {
+  background: #f3f4f6;
+  color: #777;
+  cursor: not-allowed;
+}
+
+/* ===============================
+   SPORTS PREFERENCES
+================================ */
+.tags {
+  max-width: 520px;
+  margin: 1.2rem auto 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.tag {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.tag:hover {
+  border-color: #ff6b35;
+  transform: translateY(-2px);
+}
+
+.tag.active {
+  background: #ff6b35;
+  color: white;
+  border-color: #ff6b35;
+  box-shadow: 0 8px 20px rgba(255, 107, 53, 0.35);
+}
+
+/* ===============================
+   CENTER HEADINGS INSIDE CONTENT
+================================ */
+.content h1,
+.content h2,
+.content p {
+  text-align: center;
+}
+
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .content {
+    padding: 1.8rem;
+  }
+
+  .title {
+    font-size: 2.1rem;
+  }
 }

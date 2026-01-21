@@ -2,166 +2,181 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { supabase } from "@/lib/supabaseClient";
 import styles from "./events.module.css";
-import { supabase } from "../../lib/supabaseClient";
 
 type Event = {
-  id: number;
+  id: string;
   title: string;
-  body: string;
+  description: string;
+  sport: string;
+  event_date: string;
+  location: string;
 };
+
+type Tab = "upcoming" | "past";
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
-  const [search, setSearch] = useState("");
-  const [joined, setJoined] = useState<number[]>([]);
+  const [joinedEventIds, setJoinedEventIds] = useState<string[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<Tab>("upcoming");
 
   useEffect(() => {
-    async function fetchEvents() {
-      const res = await fetch(
-        "https://jsonplaceholder.typicode.com/posts"
-      );
-      const data = await res.json();
-      setEvents(data);
-    }
+    init();
+  }, [activeTab]);
 
-    async function fetchJoined() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+  async function init() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-      if (!user) return;
+    setUserId(user?.id ?? null);
 
-      const { data } = await supabase
-        .from("event_participants")
-        .select("external_event_id")
-        .eq("user_id", user.id);
-
-      setJoined(data?.map(e => e.external_event_id) || []);
-    }
-
-    fetchEvents();
-    fetchJoined();
-  }, []);
-const joinEvent = async (eventId: number) => {
-  console.log("JOIN CLICKED:", eventId);
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  console.log("USER:", user, userError);
-
-  if (!user) {
-    alert("You must be logged in to join events");
-    return;
+    await Promise.all([fetchEvents(), user && fetchJoinedEvents(user.id)]);
   }
 
-  const { data, error } = await supabase
-    .from("event_participants")
-    .insert({
-      user_id: user.id,
-      external_event_id: eventId,
-    })
-    .select();
+  async function fetchEvents() {
+    setLoading(true);
 
-  console.log("INSERT RESULT:", data, error);
+    const today = new Date().toISOString().split("T")[0];
 
-  if (error) {
-    alert(error.message);
-    return;
+    const query =
+      activeTab === "upcoming"
+        ? supabase
+            .from("events")
+            .select("*")
+            .gte("event_date", today)
+            .order("event_date", { ascending: true })
+        : supabase
+            .from("events")
+            .select("*")
+            .lt("event_date", today)
+            .order("event_date", { ascending: false });
+
+    const { data, error } = await query;
+
+    if (!error) {
+      setEvents(data || []);
+    }
+
+    setLoading(false);
   }
 
-  setJoined(prev => [...prev, eventId]);
-};
-;
+  async function fetchJoinedEvents(uid: string) {
+    const { data } = await supabase
+      .from("event_participants")
+      .select("event_id")
+      .eq("user_id", uid);
 
-  const filteredEvents = events.filter(
-    event =>
-      event.title.toLowerCase().includes(search.toLowerCase()) ||
-      event.body.toLowerCase().includes(search.toLowerCase())
-  );
+    setJoinedEventIds(data?.map(e => e.event_id) || []);
+  }
+
+  async function joinEvent(eventId: string) {
+    if (!userId) return;
+
+    const { error } = await supabase.from("event_participants").insert({
+      user_id: userId,
+      event_id: eventId,
+    });
+
+    if (!error) {
+      setJoinedEventIds(prev => [...prev, eventId]);
+    }
+  }
 
   return (
     <main className={styles.page}>
-      {/* HERO HEADER */}
+      {/* HEADER */}
       <header className={styles.header}>
-        <h1>Upcoming Sports Events</h1>
+        <h1>Events</h1>
         <p className={styles.subtitle}>
-          Discover upcoming events, search by interest, or create your own.
+          Browse upcoming and past sports events.
         </p>
 
-        {/* ACTION BAR */}
-        <div className={styles.actions}>
-          <div className={styles.searchWrapper}>
-            <input
-              type="text"
-              placeholder="Search events..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className={styles.search}
-            />
-          </div>
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab} ${
+              activeTab === "upcoming" ? styles.activeTab : ""
+            }`}
+            onClick={() => setActiveTab("upcoming")}
+          >
+            Upcoming
+          </button>
+
+          <button
+            className={`${styles.tab} ${
+              activeTab === "past" ? styles.activeTab : ""
+            }`}
+            onClick={() => setActiveTab("past")}
+          >
+            Past
+          </button>
         </div>
       </header>
 
-      {/* SECTION HEADER */}
-      <section className={styles.sectionHeader}>
-        <h2>Upcoming Events</h2>
-        <span>{filteredEvents.length} events</span>
-      </section>
+      {loading && <p>Loading events...</p>}
 
-      {/* EVENTS GRID */}
+      {!loading && events.length === 0 && (
+        <p className={styles.empty}>
+          {activeTab === "upcoming"
+            ? "No upcoming events."
+            : "No past events."}
+        </p>
+      )}
+
+      {/* GRID */}
       <section className={styles.grid}>
-        {filteredEvents.slice(0, 12).map(event => (
-          <div key={event.id} className={styles.card}>
-            <span className={styles.tag}>Sport Event</span>
+        {events.map(event => {
+          const isJoined = joinedEventIds.includes(event.id);
 
-            <h3 className={styles.title}>{event.title}</h3>
+          return (
+            <Link
+              key={event.id}
+              href={`/events/${event.id}`}
+              className={styles.cardLink}
+            >
+              <div className={styles.card}>
+                <span className={styles.tag}>{event.sport}</span>
 
-            <p className={styles.description}>
-              {event.body.slice(0, 90)}...
-            </p>
+                <h3 className={styles.title}>{event.title}</h3>
 
-            <div className={styles.footer}>
-              <span className={styles.status}>Upcoming</span>
+                <p className={styles.description}>
+                  {event.description?.slice(0, 90)}...
+                </p>
 
-              {joined.includes(event.id) ? (
-                <span className={styles.joined}>Joined</span>
-              ) : (
-                <button
-                  onClick={() => joinEvent(event.id)}
-                  className={styles.joinBtn}
-                >
-                  Join event
-                </button>
-              )}
+                <p className={styles.meta}>
+                  📅{" "}
+                  {new Date(event.event_date).toLocaleDateString("hr-HR")}
+                </p>
 
-              <Link
-                href={`/events/${event.id}`}
-                className={styles.link}
-              >
-                View details →
-              </Link>
-            </div>
-          </div>
-        ))}
+                <p className={styles.meta}>📍 {event.location}</p>
 
-        {filteredEvents.length === 0 && (
-          <p className={styles.empty}>No events found.</p>
-        )}
+                {/* JOIN */}
+                {userId && (
+                  <div className={styles.joinArea}>
+                    {isJoined ? (
+                      <span className={styles.joined}>Joined</span>
+                    ) : (
+                      <button
+                        className={styles.joinBtn}
+                        onClick={e => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          joinEvent(event.id);
+                        }}
+                      >
+                        Join
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </Link>
+          );
+        })}
       </section>
-
-      {/* FLOATING ADD EVENT BUTTON */}
-      <Link
-        href="/add-event"
-        className={styles.addButton}
-        aria-label="Create event"
-      >
-        <Plus size={28} strokeWidth={2.5} />
-      </Link>
     </main>
   );
 }

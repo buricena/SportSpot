@@ -5,7 +5,7 @@ import RequireAuth from "../../components/RequireAuth";
 import { supabase } from "../../../lib/supabaseClient";
 import styles from "../profile.module.css";
 
-export default function PersonalInformationPage() {
+export default function PersonalInformation() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     name: "",

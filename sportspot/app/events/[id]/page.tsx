@@ -1,76 +1,71 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+
 type Event = {
-  id: number;
+  id: string;
   title: string;
-  body: string;
+  description: string;
+  sport: string;
+  event_date: string;
+  location: string;
 };
 
-async function getEvent(id: string): Promise<Event | null> {
-  const res = await fetch(
-    `https://jsonplaceholder.typicode.com/posts/${id}`,
-    { cache: "no-store" }
-  );
+export default function EventDetailsPage() {
+  const params = useParams();
+  const id = params.id as string;
 
-  if (!res.ok) return null;
+  const [event, setEvent] = useState<Event | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const data: Event = await res.json();
-  return data.id ? data : null;
-}
+  useEffect(() => {
+    if (!id) return;
 
-export default async function EventPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+    fetchEvent();
+  }, [id]);
 
-  const event = await getEvent(id);
+  async function fetchEvent() {
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from("events")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      console.error("EVENT FETCH ERROR:", error);
+      setEvent(null);
+    } else {
+      setEvent(data);
+    }
+
+    setLoading(false);
+  }
+
+  if (loading) {
+    return <p style={{ padding: "2rem" }}>Loading event...</p>;
+  }
 
   if (!event) {
-    return (
-      <main style={{ padding: "4rem 2rem", textAlign: "center" }}>
-        <h1>Event not found</h1>
-        <p>The event with id {id} does not exist.</p>
-      </main>
-    );
+    return <p style={{ padding: "2rem" }}>Event not found.</p>;
   }
 
   return (
-    <main style={{ padding: "4rem 2rem", maxWidth: "800px", margin: "0 auto" }}>
-      <header style={{ marginBottom: "2rem" }}>
-        <span
-          style={{
-            padding: "0.3rem 0.7rem",
-            borderRadius: "999px",
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            background: "#dcfce7",
-            color: "#166534",
-          }}
-        >
-          Upcoming Event
-        </span>
+    <main style={{ padding: "2rem", maxWidth: "700px", margin: "0 auto" }}>
+      <h1>{event.title}</h1>
 
-        <h1 style={{ marginTop: "1rem" }}>{event.title}</h1>
-      </header>
+      <p style={{ marginTop: "0.5rem", color: "#666" }}>
+        📅 {new Date(event.event_date).toLocaleDateString("hr-HR")}
+      </p>
 
-      <section style={{ marginBottom: "2.5rem", color: "#374151" }}>
-        <p>{event.body}</p>
-      </section>
+      <p style={{ color: "#666" }}>📍 {event.location}</p>
 
-      <section
-        style={{
-          background: "#f9fafb",
-          padding: "1.5rem",
-          borderRadius: "16px",
-        }}
-      >
-        <h3>Event Details</h3>
-        <ul style={{ marginTop: "1rem", color: "#6b7280" }}>
-          <li>📍 Location: To be announced</li>
-          <li>📅 Date: Upcoming</li>
-          <li>👥 Participants: Open</li>
-        </ul>
-      </section>
+      <p style={{ marginTop: "1.5rem", lineHeight: 1.6 }}>
+        {event.description}
+      </p>
     </main>
   );
 }
