@@ -1,395 +1,144 @@
-/* ===============================
-   VARIABLES
-================================ */
-:root {
-  --primary: #ff6b2c;
-  --primary-dark: #e75f1e;
-  --success: #28a745;
-  --text-dark: #222;
-  --text-muted: #666;
-  --bg-light: #f9fafb;
-  --border: #e5e7eb;
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.12);
-  --radius-lg: 16px;
-  --radius-md: 10px;
-}
-
-/* ===============================
-   PAGE
-================================ */
 .page {
-  width: 100%;
-  min-height: 100vh;
-  padding: 2.5rem 2rem 5rem;
-
-  background:
-    radial-gradient(
-      800px 300px at 50% 0%,
-      rgba(255, 107, 44, 0.12),
-      transparent 70%
-    ),
-    #f9fafb;
+  padding: 40px;
+  background: #fafafa;
 }
 
-
-
-/* ===============================
-   HEADER
-================================ */
 .header {
-  max-width: 800px;
-  margin: 0 auto 2rem; /* bilo je 3rem */
-  text-align: center;
+  max-width: 1200px;
+  margin-bottom: 40px;
 }
 
+.kicker {
+  color: #ff5a1f;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
 
 .header h1 {
-  font-size: 2.8rem;
-  font-weight: 700;
-  color: var(--text-dark);
+  font-size: 42px;
+  margin: 10px 0;
 }
 
 .subtitle {
-  margin-top: 0.75rem;
-  font-size: 1.2rem;
-  color: var(--text-muted);
+  color: #666;
+  max-width: 600px;
 }
 
-/* ===============================
-   SEARCH
-================================ */
-.search {
-  margin: 2rem auto 0;
-  padding: 0.9rem 1.2rem;
-  width: 100%;
-  max-width: 420px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  font-size: 1rem;
-  outline: none;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
-}
-
-.search::placeholder {
-  color: #aaa;
-}
-
-.search:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.2);
-}
-
-/* SEARCH WRAPPER */
-.searchWrapper {
-  width: 100%;
-  max-width: 520px;
-  background: white;
-  padding: 0.6rem;
-  border-radius: 16px;
-  position: relative;
-  border: 1.5px solid #ff6b2c;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-}
-
-.searchWrapper:hover {
-  border-color: #ff6b2c;
-}
-
-.searchWrapper:focus-within {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(255, 107, 44, 0.18);
-}
-
-.searchWrapper .search {
-  margin: 0;
-  padding-left: 3rem;
-  border: none;
-  max-width: 100%;
-  font-size: 1.05rem;
-  background: transparent;
-}
-
-.searchWrapper .search:focus {
-  box-shadow: none;
-}
-
-/* ===============================
-   ACTIONS
-================================ */
-.actions {
-  margin-top: 2rem;
+.topBar {
+  margin-top: 30px;
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  gap: 20px;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.createButton {
-  padding: 0.85rem 1.5rem;
+.search {
+  flex: 1;
+  padding: 14px 16px;
   border-radius: 10px;
-  background-color: var(--primary);
-  color: white;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.25s ease, transform 0.25s ease;
+  border: 1px solid #ddd;
+  font-size: 15px;
 }
 
-.createButton:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-2px);
-}
-
-/* ===============================
-   SECTION HEADER
-================================ */
-.sectionHeader {
-  max-width: 1200px;
-  margin: 0 auto 1.5rem;
-  padding-top: 1rem;
+.actions {
   display: flex;
-  justify-content: space-between;
+  gap: 16px;
   align-items: center;
 }
 
-.sectionHeader h2 {
-  font-size: 1.6rem;
-  font-weight: 600;
-}
-
-.sectionHeader span {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-}
-
-/* ===============================
-   EVENTS GRID
-================================ */
-.grid {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
-/* ===============================
-   EVENT CARD
-================================ */
-.cardLink {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-
-.card {
-  background: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    #fff7f3 100%
-  );
-  padding: 2rem;
-  border-radius: var(--radius-lg);
-  border-top: 4px solid #ff6b2c;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-
-  /* NOVO */
-  height: 320px;
-
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-
-.card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: var(--shadow-lg);
-}
-.card:hover {
-  cursor: pointer;
-}
-
-/* ===============================
-   TAG
-================================ */
-.tag {
-  background-color: var(--primary);
-  color: white;
-  padding: 0.4rem 1.1rem;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  position: absolute;
-  top: 1.2rem;
-  left: 1.2rem;
-}
-
-/* ===============================
-   CONTENT
-================================ */
-.title {
-  font-size: 1.5rem;
-  margin-top: 2.2rem;
-  font-weight: 600;
-  color: var(--text-dark);
-}
-
-.description {
-  margin-top: 0.6rem;
-  font-size: 1rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  flex-grow: 1;
-}
-
-/* ===============================
-   FOOTER
-================================ */
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1.5rem;
-}
-
-.status {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--success);
-}
-
-.link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  color: var(--primary);
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.link:hover {
-  color: var(--primary-dark);
-  transform: translateX(4px);
-}
-
-/* ===============================
-   JOIN
-================================ */
-.joinBtn {
-  background: #ff6b35;
-  color: white;
-  border: none;
-  border-radius: 999px;
-  padding: 0.35rem 0.9rem;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: background-color 0.25s ease, transform 0.2s ease;
-}
-
-.joinBtn:hover {
-  background: #e75f1e;
-  transform: translateY(-1px);
-}
-
-.joined {
-  font-size: 0.8rem;
-  color: #2ecc71;
-  font-weight: 600;
-}
-
-/* ===============================
-   TABS
-================================ */
 .tabs {
   display: flex;
-  justify-content: center;
-  gap: 0.6rem;
-  margin-top: 1.4rem;
+  background: #f1f1f1;
+  border-radius: 12px;
+  padding: 4px;
 }
 
 .tab {
-  padding: 0.5rem 1.4rem;
-  border-radius: 999px;
-  border: 1px solid #ddd;
-  background: white;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
   cursor: pointer;
   font-weight: 500;
-  transition: all 0.25s ease;
 }
 
-.tab:hover {
-  border-color: #ff6b35;
-  transform: translateY(-1px);
-}
-
-.activeTab {
-  background: #ff6b35;
+.tab span {
+  margin-left: 6px;
+  background: #ff5a1f;
   color: white;
-  border-color: #ff6b35;
-  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.35);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 12px;
 }
 
-/* ===============================
-   EMPTY STATE
-================================ */
-.empty {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 1.1rem;
-  margin-top: 2rem;
-}
-
-/* ===============================
-   ADD BUTTON
-================================ */
-.addButton {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  background-color: var(--primary);
+.active {
+  background: #ff5a1f;
   color: white;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  font-size: 2.4rem;
+}
+
+.addBtn {
+  background: #ff5a1f;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.grid {
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  transition: transform .2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.cardTop {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
-  transition: background-color 0.25s ease, transform 0.25s ease,
-    box-shadow 0.25s ease;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.addButton:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-6px) scale(1.05);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+.sport {
+  background: #e7f8f2;
+  color: #0f766e;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
 }
 
-/* ===============================
-   RESPONSIVE
-================================ */
-@media (max-width: 600px) {
-  .header h1 {
-    font-size: 2.2rem;
-  }
+.status {
+  color: #16a34a;
+  font-size: 13px;
+}
 
-  .page {
-    padding: 2rem 1.2rem 5rem;
-  }
+.card h3 {
+  margin: 10px 0;
+}
 
-  .addButton {
-    width: 56px;
-    height: 56px;
-    font-size: 2rem;
-  }
+.desc {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
 }

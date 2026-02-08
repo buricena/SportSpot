@@ -18,28 +18,16 @@ type Tab = "upcoming" | "past";
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
-  const [joinedEventIds, setJoinedEventIds] = useState<string[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>("upcoming");
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    init();
+    fetchEvents();
   }, [activeTab]);
-
-  async function init() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    setUserId(user?.id ?? null);
-
-    await Promise.all([fetchEvents(), user && fetchJoinedEvents(user.id)]);
-  }
 
   async function fetchEvents() {
     setLoading(true);
-
     const today = new Date().toISOString().split("T")[0];
 
     const query =
@@ -55,127 +43,87 @@ export default function EventsPage() {
             .lt("event_date", today)
             .order("event_date", { ascending: false });
 
-    const { data, error } = await query;
-
-    if (!error) {
-      setEvents(data || []);
-    }
-
+    const { data } = await query;
+    setEvents(data || []);
     setLoading(false);
   }
 
-  async function fetchJoinedEvents(uid: string) {
-    const { data } = await supabase
-      .from("event_participants")
-      .select("event_id")
-      .eq("user_id", uid);
-
-    setJoinedEventIds(data?.map(e => e.event_id) || []);
-  }
-
-  async function joinEvent(eventId: string) {
-    if (!userId) return;
-
-    const { error } = await supabase.from("event_participants").insert({
-      user_id: userId,
-      event_id: eventId,
-    });
-
-    if (!error) {
-      setJoinedEventIds(prev => [...prev, eventId]);
-    }
-  }
+  const filtered = events.filter(e =>
+    `${e.title} ${e.sport} ${e.location}`
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
 
   return (
     <main className={styles.page}>
       {/* HEADER */}
       <header className={styles.header}>
-        <h1>Events</h1>
+        <span className={styles.kicker}>EVENTS</span>
+        <h1>Discover Sports Events</h1>
         <p className={styles.subtitle}>
-          Browse upcoming and past sports events.
+          Browse upcoming and past sports events. Find your next game,
+          tournament, or match.
         </p>
 
-        <div className={styles.tabs}>
-          <button
-            className={`${styles.tab} ${
-              activeTab === "upcoming" ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab("upcoming")}
-          >
-            Upcoming
-          </button>
+        <div className={styles.topBar}>
+          <input
+            className={styles.search}
+            placeholder="Search events by name, sport, or location..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
 
-          <button
-            className={`${styles.tab} ${
-              activeTab === "past" ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab("past")}
-          >
-            Past
-          </button>
+          <div className={styles.actions}>
+            <div className={styles.tabs}>
+              <button
+                className={`${styles.tab} ${
+                  activeTab === "upcoming" ? styles.active : ""
+                }`}
+                onClick={() => setActiveTab("upcoming")}
+              >
+                Upcoming <span>{events.length}</span>
+              </button>
+              <button
+                className={`${styles.tab} ${
+                  activeTab === "past" ? styles.active : ""
+                }`}
+                onClick={() => setActiveTab("past")}
+              >
+                Past
+              </button>
+            </div>
+
+            <Link href="/events/create" className={styles.addBtn}>
+              + Add Event
+            </Link>
+          </div>
         </div>
       </header>
 
+      {/* GRID */}
       {loading && <p>Loading events...</p>}
 
-      {!loading && events.length === 0 && (
-        <p className={styles.empty}>
-          {activeTab === "upcoming"
-            ? "No upcoming events."
-            : "No past events."}
-        </p>
-      )}
-
-      {/* GRID */}
       <section className={styles.grid}>
-        {events.map(event => {
-          const isJoined = joinedEventIds.includes(event.id);
+        {filtered.map(event => (
+          <Link
+            href={`/events/${event.id}`}
+            key={event.id}
+            className={styles.card}
+          >
+            <div className={styles.cardTop}>
+              <span className={styles.sport}>{event.sport}</span>
+              <span className={styles.status}>Upcoming</span>
+            </div>
 
-          return (
-            <Link
-              key={event.id}
-              href={`/events/${event.id}`}
-              className={styles.cardLink}
-            >
-              <div className={styles.card}>
-                <span className={styles.tag}>{event.sport}</span>
+            <h3>{event.title}</h3>
+            <p className={styles.desc}>{event.description}</p>
 
-                <h3 className={styles.title}>{event.title}</h3>
-
-                <p className={styles.description}>
-                  {event.description?.slice(0, 90)}...
-                </p>
-
-                <p className={styles.meta}>
-                  📅{" "}
-                  {new Date(event.event_date).toLocaleDateString("hr-HR")}
-                </p>
-
-                <p className={styles.meta}>📍 {event.location}</p>
-
-                {/* JOIN */}
-                {userId && (
-                  <div className={styles.joinArea}>
-                    {isJoined ? (
-                      <span className={styles.joined}>Joined</span>
-                    ) : (
-                      <button
-                        className={styles.joinBtn}
-                        onClick={e => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          joinEvent(event.id);
-                        }}
-                      >
-                        Join
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            </Link>
-          );
-        })}
+            <div className={styles.meta}>
+              <span>📅 {new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
+              <span>📍 {event.location}</span>
+            </div>
+          </Link>
+        ))}
       </section>
     </main>
   );
