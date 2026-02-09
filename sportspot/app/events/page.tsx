@@ -122,6 +122,7 @@ export default function EventsPage() {
               <span>📅 {new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
               <span>📍 {event.location}</span>
             </div>
+            {/* <span className={styles.cta}>View event</span> */}
           </Link>
         ))}
       </section>

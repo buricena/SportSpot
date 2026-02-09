@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 import styles from "./createEvent.module.css";
 
+const MapPicker = dynamic(() => import("./MapPicker"), { ssr: false });
+
 export default function CreateEventPage() {
   const router = useRouter();
 
-  // Form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [sport, setSport] = useState("");
@@ -25,30 +27,38 @@ export default function CreateEventPage() {
     setLoading(true);
     setError("");
 
-    const eventDateISO = date ? new Date(date).toISOString() : null;
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    try {
-      const { data, error } = await supabase.from("events").insert([
-        {
-          title,
-          description,
-          sport,
-          event_date: eventDateISO,
-          location,
-          lat: lat !== null && !isNaN(lat) ? lat : null,
-          lng: lng !== null && !isNaN(lng) ? lng : null,
-        },
-      ]);
-
-      if (error) throw error;
-
-      router.push("/events");
-    } catch (err) {
-      console.error("CREATE EVENT ERROR:", err);
-      setError("Failed to create event. Please try again.");
-    } finally {
+    if (!user) {
+      setError("You must be logged in to create an event.");
       setLoading(false);
+      return;
     }
+
+    const eventDateISO = new Date(date).toISOString();
+
+    const { error } = await supabase.from("events").insert([
+      {
+        title,
+        description,
+        sport,
+        event_date: eventDateISO,
+        location,
+        lat,
+        lng,
+        organizer_id: user.id,
+      },
+    ]);
+
+    if (error) {
+      setError("Failed to create event.");
+      setLoading(false);
+      return;
+    }
+
+    router.push("/events");
   }
 
   return (
@@ -61,12 +71,11 @@ export default function CreateEventPage() {
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.formLabel}>
-            Event Title
+            Event title
             <input
               className={styles.input}
               value={title}
               onChange={e => setTitle(e.target.value)}
-              placeholder="Tennis Doubles Tournament"
               required
             />
           </label>
@@ -77,7 +86,6 @@ export default function CreateEventPage() {
               className={styles.input}
               value={sport}
               onChange={e => setSport(e.target.value)}
-              placeholder="Tennis, Padel, Running..."
               required
             />
           </label>
@@ -88,14 +96,13 @@ export default function CreateEventPage() {
               className={styles.input}
               value={description}
               onChange={e => setDescription(e.target.value)}
-              placeholder="Short description of the event..."
               rows={4}
               required
             />
           </label>
 
           <label className={styles.formLabel}>
-            Date & Time
+            Date & time
             <input
               className={styles.input}
               type="datetime-local"
@@ -106,49 +113,40 @@ export default function CreateEventPage() {
           </label>
 
           <label className={styles.formLabel}>
-            Location
+            Location (name)
             <input
               className={styles.input}
               value={location}
               onChange={e => setLocation(e.target.value)}
-              placeholder="City, venue..."
               required
             />
           </label>
 
-          <label className={styles.formLabel}>
-            Latitude
-            <input
-              className={styles.input}
-              type="number"
-              step="any"
-              value={lat ?? ""}
-              onChange={e => setLat(Number(e.target.value))}
-              placeholder="45.8150"
+          {/* MAP PICKER */}
+          <div className={styles.mapSection}>
+            <span className={styles.mapLabel}>Select event location</span>
+            <MapPicker
+              lat={lat}
+              lng={lng}
+              onSelect={(lat, lng) => {
+                setLat(lat);
+                setLng(lng);
+              }}
             />
-          </label>
-
-          <label className={styles.formLabel}>
-            Longitude
-            <input
-              className={styles.input}
-              type="number"
-              step="any"
-              value={lng ?? ""}
-              onChange={e => setLng(Number(e.target.value))}
-              placeholder="15.9780"
-            />
-          </label>
+            {lat && lng && (
+              <span className={styles.mapHint}>Location selected ✓</span>
+            )}
+          </div>
 
           {error && <p className={styles.error}>{error}</p>}
 
           <button className={styles.button} disabled={loading}>
-            {loading ? "Creating..." : "Create Event"}
+            {loading ? "Creating…" : "Create event"}
           </button>
         </form>
 
         <p className={styles.footerText}>
-          <Link href="/events">← Back to Events</Link>
+          <Link href="/events">← Back to events</Link>
         </p>
       </div>
     </main>

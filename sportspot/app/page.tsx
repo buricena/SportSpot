@@ -36,7 +36,7 @@ export default function HomePage() {
         <div className="steps">
           <div className="step">
             <div className="step-icon">
-              🔍<span className="step-number">01</span>
+              🔍<span className="step-number">1</span>
             </div>
             <h3>Discover Events</h3>
             <p>Browse local matches and tournaments near you</p>
@@ -44,7 +44,7 @@ export default function HomePage() {
 
           <div className="step">
             <div className="step-icon">
-              👥<span className="step-number">02</span>
+              👥<span className="step-number">2</span>
             </div>
             <h3>Join & Connect</h3>
             <p>Register for events and meet new players</p>
@@ -52,7 +52,7 @@ export default function HomePage() {
 
           <div className="step">
             <div className="step-icon">
-              🏆<span className="step-number">03</span>
+              🏆<span className="step-number">3</span>
             </div>
             <h3>Play & Track</h3>
             <p>Participate and follow your results</p>

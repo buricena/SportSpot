@@ -531,3 +531,4 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height: 250px;
   }
 }
+@import "leaflet/dist/leaflet.css";

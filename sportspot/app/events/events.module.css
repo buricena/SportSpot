@@ -3,6 +3,7 @@
   background: #fafafa;
 }
 
+/* HEADER */
 .header {
   max-width: 1200px;
   margin-bottom: 40px;
@@ -25,6 +26,7 @@
   max-width: 600px;
 }
 
+/* TOP BAR */
 .topBar {
   margin-top: 30px;
   display: flex;
@@ -47,6 +49,7 @@
   align-items: center;
 }
 
+/* TABS */
 .tabs {
   display: flex;
   background: #f1f1f1;
@@ -77,6 +80,7 @@
   color: white;
 }
 
+/* ADD BUTTON */
 .addBtn {
   background: #ff5a1f;
   color: white;
@@ -86,59 +90,102 @@
   font-weight: 600;
 }
 
+/* GRID */
 .grid {
-  max-width: 1200px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
 }
 
+/* CARD */
 .card {
   background: white;
   border-radius: 16px;
   padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-  transition: transform .2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
 }
 
+/* CARD TOP */
 .cardTop {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.sport {
-  background: #e7f8f2;
-  color: #0f766e;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 13px;
-}
-
-.status {
-  color: #16a34a;
-  font-size: 13px;
-}
-
-.card h3 {
-  margin: 10px 0;
-}
-
-.desc {
-  color: #666;
-  font-size: 14px;
+  align-items: center;
   margin-bottom: 14px;
 }
 
+/* SPORT BADGE */
+.sport {
+  background: #e7f8f2;
+  color: #0f766e;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* STATUS */
+.status {
+  font-size: 12px;
+  font-weight: 600;
+  color: #16a34a;
+}
+
+/* TITLE */
+.card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #111;
+}
+
+/* DESCRIPTION */
+.desc {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+/* META */
 .meta {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+.meta span:first-child {
+  font-weight: 600;
+  color: #111;
+}
+.meta span:last-child {
+  display: inline-block;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 8px;
+  width: fit-content;
+}
+
+
+/* CTA */
+.cta {
+  margin-top: auto;
+  align-self: flex-start;
+  color: #ff5a1f;
   font-size: 14px;
+  font-weight: 600;
 }
