@@ -1,43 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MapView from "./MapView";
+import { supabase } from "@/lib/supabaseClient";
 
-type Event = {
+export type Event = {
   id: string;
   title: string;
   lat: number;
   lng: number;
+  location: string;
+  sport: string;
+  event_date: string;
 };
 
-export default function MapSection() {
-  // 🔹 default Zagreb centar
-  const [center, setCenter] = useState<[number, number]>([
-    45.815399,
-    15.966568,
-  ]);
+type MapSectionProps = {
+  onEventsFetched: (events: Event[]) => void;
+};
 
-  // 🔹 privremeni eventi (kasnije Supabase)
-  const [events] = useState<Event[]>([
-    {
-      id: "1",
-      title: "5v5 Football Match",
-      lat: 45.817,
-      lng: 15.97,
-    },
-    {
-      id: "2",
-      title: "3v3 Basketball",
-      lat: 45.81,
-      lng: 15.98,
-    },
-    {
-      id: "3",
-      title: "Tennis Doubles",
-      lat: 45.812,
-      lng: 15.955,
-    },
-  ]);
+export default function MapSection({ onEventsFetched }: MapSectionProps) {
+  const [center, setCenter] = useState<[number, number]>([45.815399, 15.966568]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  async function fetchEvents() {
+    setLoading(true);
+    const today = new Date().toISOString().split("T")[0];
+
+    const { data } = await supabase
+      .from("events")
+      .select("id, title, lat, lng, location, sport, event_date")
+      .gte("event_date", today)
+      .order("event_date", { ascending: true })
+      .limit(3);
+
+    if (data) {
+      setEvents(data);
+      onEventsFetched(data); // šaljemo natrag evente roditelju da ih prikaže u listi
+      // centriramo mapu na prvi event
+      if (data.length > 0) {
+        setCenter([data[0].lat, data[0].lng]);
+      }
+    }
+    setLoading(false);
+  }
 
   const handleMyLocation = () => {
     if (!navigator.geolocation) {
@@ -46,12 +56,8 @@ export default function MapSection() {
     }
 
     navigator.geolocation.getCurrentPosition(
-      pos => {
-        setCenter([pos.coords.latitude, pos.coords.longitude]);
-      },
-      () => {
-        alert("Location access denied");
-      }
+      pos => setCenter([pos.coords.latitude, pos.coords.longitude]),
+      () => alert("Location access denied")
     );
   };
 
@@ -61,7 +67,7 @@ export default function MapSection() {
         My location
       </button>
 
-      <MapView center={center} events={events} />
+      {loading ? <p>Loading events...</p> : <MapView center={center} events={events} />}
     </div>
   );
 }
