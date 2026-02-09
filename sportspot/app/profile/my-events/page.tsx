@@ -7,8 +7,11 @@ import styles from "../profile.module.css";
 type MyEvent = {
   id: string;
   title: string;
+  sport: string;
+  location: string;
   event_date: string;
 };
+
 
 export default function MyEvents() {
   const [events, setEvents] = useState<MyEvent[]>([]);
@@ -32,11 +35,14 @@ export default function MyEvents() {
     const { data, error } = await supabase
       .from("event_participants")
       .select(`
-        events (
-          id,
-          title,
-          event_date
-        )
+events (
+  id,
+  title,
+  sport,
+  location,
+  event_date
+)
+
       `)
       .eq("user_id", user.id);
 
@@ -76,12 +82,12 @@ export default function MyEvents() {
   const past = events.filter(
     e => new Date(e.event_date) < now
   );
+return (
+  <main className={styles.container}>
+    <h1 className={styles.title}>My Events</h1>
+    <p className={styles.subtitle}>Events you have joined</p>
 
-  return (
-    <main className={styles.container}>
-      <h1 className={styles.title}>My Events</h1>
-      <p className={styles.subtitle}>Events you have joined</p>
-
+    <div className={styles.content}>
       {loading && <p>Loading events...</p>}
 
       {!loading && events.length === 0 && (
@@ -93,21 +99,27 @@ export default function MyEvents() {
       {/* UPCOMING */}
       {upcoming.length > 0 && (
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Upcoming</h2>
+          <div className={styles.sectionHeaderInline}>
+            <h2 className={styles.sectionTitle}>Upcoming events</h2>
+            <span className={styles.sectionCount}>
+              {upcoming.length}
+            </span>
+          </div>
+
           <div className={styles.eventsGrid}>
             {upcoming.map(event => (
               <div key={event.id} className={styles.eventCard}>
                 <h3 className={styles.eventTitle}>{event.title}</h3>
-                <span className={styles.eventMeta}>
-                  {new Date(event.event_date).toLocaleDateString("hr-HR")}
-                </span>
+
+                <div className={styles.metaRow}>
+                  <span>📅 {new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
+                </div>
 
                 <button
-                  className={styles.primaryBtn}
-                  style={{ marginTop: "0.8rem" }}
+                  className={styles.leaveBtn}
                   onClick={() => setToLeave(event)}
                 >
-                  Leave event
+                  Leave
                 </button>
               </div>
             ))}
@@ -118,7 +130,13 @@ export default function MyEvents() {
       {/* PAST */}
       {past.length > 0 && (
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Past</h2>
+          <div className={styles.sectionHeaderInline}>
+            <h2 className={styles.sectionTitle}>Past events</h2>
+            <span className={styles.sectionCount}>
+              {past.length}
+            </span>
+          </div>
+
           <div className={styles.eventsGrid}>
             {past.map(event => (
               <div
@@ -134,34 +152,36 @@ export default function MyEvents() {
           </div>
         </section>
       )}
+    </div>
 
-      {/* CONFIRM MODAL */}
-      {toLeave && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <p>
-              Are you sure you want to leave
-              <br />
-              <b>{toLeave.title}</b>?
-            </p>
+    {/* CONFIRM MODAL */}
+    {toLeave && (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modal}>
+          <p>
+            Are you sure you want to leave
+            <br />
+            <b>{toLeave.title}</b>?
+          </p>
 
-            <div className={styles.modalActions}>
-              <button
-                className={styles.secondaryBtn}
-                onClick={() => setToLeave(null)}
-              >
-                Cancel
-              </button>
-              <button
-                className={styles.primaryBtn}
-                onClick={confirmLeave}
-              >
-                Leave
-              </button>
-            </div>
+          <div className={styles.modalActions}>
+            <button
+              className={styles.secondaryBtn}
+              onClick={() => setToLeave(null)}
+            >
+              Cancel
+            </button>
+            <button
+              className={styles.primaryBtn}
+              onClick={confirmLeave}
+            >
+              Leave
+            </button>
           </div>
         </div>
-      )}
-    </main>
-  );
+      </div>
+    )}
+  </main>
+);
+
 }
