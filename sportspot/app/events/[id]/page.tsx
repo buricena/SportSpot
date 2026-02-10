@@ -25,6 +25,8 @@ type Event = {
   lat: number | null;
   lng: number | null;
   organizer_id: string;
+  max_participants: number | null; // ⬅️ OVO
+
 };
 
 export default function EventDetailsPage() {
@@ -143,7 +145,12 @@ export default function EventDetailsPage() {
     </div>
     <div className={styles.infoText}>
       <span className={styles.infoLabel}>Time</span>
-      <span className={styles.infoValue}>18:00</span>
+<span className={styles.infoValue}>
+  {new Date(event.event_date).toLocaleTimeString("hr-HR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  })}
+</span>
       <span className={styles.infoHint}>Be there on time</span>
     </div>
   </div>
@@ -160,20 +167,37 @@ export default function EventDetailsPage() {
   </div>
 
   {/* PARTICIPANTS */}
-  <div className={styles.infoCard}>
-    <div className={styles.infoIcon}>
-      <Users size={20} />
-    </div>
-    <div className={styles.infoText}>
-      <span className={styles.infoLabel}>Participants</span>
-      <span className={styles.infoValue}>
-        {participantsCount} / 14
-      </span>
-      <span className={styles.infoHint}>
-        {14 - participantsCount} spots remaining
-      </span>
-    </div>
+{/* PARTICIPANTS */}
+<div className={styles.infoCard}>
+  <div className={styles.infoIcon}>
+    <Users size={20} />
   </div>
+
+  <div className={styles.infoText}>
+    <span className={styles.infoLabel}>Participants</span>
+
+    {event.max_participants ? (
+      <>
+        <span className={styles.infoValue}>
+          {participantsCount} / {event.max_participants}
+        </span>
+        <span className={styles.infoHint}>
+          {event.max_participants - participantsCount} spots remaining
+        </span>
+      </>
+    ) : (
+      <>
+        <span className={styles.infoValue}>
+          {participantsCount}
+        </span>
+        <span className={styles.infoHint}>
+          Unlimited participants
+        </span>
+      </>
+    )}
+  </div>
+</div>
+
 </div>
 
 

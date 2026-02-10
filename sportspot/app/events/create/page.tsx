@@ -1,59 +1,87 @@
 "use client";
 
+import styles from "./createEvent.module.css";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
+import {
+  Trophy,
+  Calendar,
+  MapPin,
+  Users,
+  ArrowLeft,
+} from "lucide-react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
-import styles from "./createEvent.module.css";
 
-const MapPicker = dynamic(() => import("./MapPicker"), { ssr: false });
+// MAPA – SSR OFF
+const MapPicker = dynamic(() => import("./MapPicker"), {
+  ssr: false,
+});
 
 export default function CreateEventPage() {
   const router = useRouter();
 
+  // 🔹 FORM STATE
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [sport, setSport] = useState("");
+  const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
+  const [maxParticipants, setMaxParticipants] = useState("");
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // 🔹 SUBMIT
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (!title || !sport || !date || !time || !location) {
+      setError("Please fill all required fields.");
+      return;
+    }
+
+    if (!lat || !lng) {
+      setError("Please select location on the map.");
+      return;
+    }
 
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-      setError("You must be logged in to create an event.");
-      setLoading(false);
+      setError("You must be logged in.");
       return;
     }
 
-    const eventDateISO = new Date(date).toISOString();
+    setLoading(true);
 
-    const { error } = await supabase.from("events").insert([
-      {
+    // 🔥 SPOJ DATE + TIME → TIMESTAMP
+    const eventDate = new Date(`${date}T${time}`).toISOString();
+
+    const { error: insertError } = await supabase
+      .from("events")
+      .insert({
         title,
-        description,
         sport,
-        event_date: eventDateISO,
+        description,
         location,
+        event_date: eventDate,
         lat,
         lng,
         organizer_id: user.id,
-      },
-    ]);
+        max_participants:
+          maxParticipants === "" ? null : Number(maxParticipants),
+      });
 
-    if (error) {
-      setError("Failed to create event.");
+    if (insertError) {
+      setError(insertError.message);
       setLoading(false);
       return;
     }
@@ -63,91 +91,146 @@ export default function CreateEventPage() {
 
   return (
     <main className={styles.page}>
-      <div className={styles.card}>
-        <h1>Create Event</h1>
-        <p className={styles.subtitle}>
-          Organize your sports event and invite participants.
-        </p>
+      <div className={styles.container}>
+        {/* BACK */}
+        <Link href="/events" className={styles.back}>
+          <ArrowLeft size={16} />
+          Back to events
+        </Link>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <label className={styles.formLabel}>
-            Event title
-            <input
-              className={styles.input}
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              required
-            />
-          </label>
+        {/* HEADER */}
+        <header className={styles.header}>
+          <h1>Create a New Event</h1>
+          <p>Organize a sports event and invite participants.</p>
+        </header>
 
-          <label className={styles.formLabel}>
-            Sport
-            <input
-              className={styles.input}
-              value={sport}
-              onChange={e => setSport(e.target.value)}
-              required
-            />
-          </label>
+        <form onSubmit={handleSubmit}>
+          {/* EVENT DETAILS */}
+          <section className={styles.card}>
+            <h2>
+              <Trophy size={18} />
+              Event Details
+            </h2>
 
-          <label className={styles.formLabel}>
-            Description
-            <textarea
-              className={styles.input}
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              rows={4}
-              required
-            />
-          </label>
+            <div className={styles.field}>
+              <label>Event title *</label>
+              <input
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+              />
+            </div>
 
-          <label className={styles.formLabel}>
-            Date & time
-            <input
-              className={styles.input}
-              type="datetime-local"
-              value={date}
-              onChange={e => setDate(e.target.value)}
-              required
-            />
-          </label>
+            <div className={styles.field}>
+              <label>Sport *</label>
+<input
+  placeholder="e.g. Football, Yoga, Crossfit..."
+  value={sport}
+  onChange={e => setSport(e.target.value)}
+/>
 
-          <label className={styles.formLabel}>
-            Location (name)
-            <input
-              className={styles.input}
-              value={location}
-              onChange={e => setLocation(e.target.value)}
-              required
-            />
-          </label>
+            </div>
 
-          {/* MAP PICKER */}
-          <div className={styles.mapSection}>
-            <span className={styles.mapLabel}>Select event location</span>
-            <MapPicker
-              lat={lat}
-              lng={lng}
-              onSelect={(lat, lng) => {
-                setLat(lat);
-                setLng(lng);
-              }}
-            />
-            {lat && lng && (
-              <span className={styles.mapHint}>Location selected ✓</span>
-            )}
-          </div>
+            <div className={styles.field}>
+              <label>Description</label>
+              <textarea
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
+            </div>
+          </section>
+
+          {/* DATE & TIME */}
+          <section className={styles.card}>
+            <h2>
+              <Calendar size={18} />
+              Date & Time
+            </h2>
+
+            <div className={styles.grid2}>
+              <div className={styles.field}>
+                <label>Date *</label>
+<input
+  type="date"
+  value={date}
+  min={new Date().toISOString().split("T")[0]}
+  onChange={(e) => setDate(e.target.value)}
+  className={styles.input}
+/>
+
+
+              </div>
+
+              <div className={styles.field}>
+                <label>Time *</label>
+                <input
+                  type="time"
+                  value={time}
+                  onChange={e => setTime(e.target.value)}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* LOCATION */}
+          <section className={styles.card}>
+            <h2>
+              <MapPin size={18} />
+              Location
+            </h2>
+
+            <div className={styles.field}>
+              <label>Venue name *</label>
+              <input
+                value={location}
+                onChange={e => setLocation(e.target.value)}
+              />
+            </div>
+
+            <div className={styles.mapWrapper}>
+              <MapPicker
+                lat={lat}
+                lng={lng}
+                onSelect={(lat, lng) => {
+                  setLat(lat);
+                  setLng(lng);
+                }}
+              />
+            </div>
+          </section>
+
+          {/* PARTICIPANTS */}
+          <section className={styles.card}>
+            <h2>
+              <Users size={18} />
+              Participants
+            </h2>
+
+            <div className={styles.field}>
+              <label>Max participants (optional)</label>
+              <input
+                type="number"
+                min={2}
+                value={maxParticipants}
+                onChange={e => setMaxParticipants(e.target.value)}
+              />
+            </div>
+          </section>
 
           {error && <p className={styles.error}>{error}</p>}
 
-          <button className={styles.button} disabled={loading}>
-            {loading ? "Creating…" : "Create event"}
-          </button>
+          {/* ACTIONS */}
+          <div className={styles.actions}>
+            <Link href="/events" className={styles.cancel}>
+              Cancel
+            </Link>
+            <button
+              className={styles.submit}
+              disabled={loading}
+            >
+              {loading ? "Creating…" : "Create Event"}
+            </button>
+          </div>
         </form>
-
-        <p className={styles.footerText}>
-          <Link href="/events">← Back to events</Link>
-        </p>
       </div>
     </main>
   );
