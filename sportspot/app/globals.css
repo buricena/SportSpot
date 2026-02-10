@@ -451,9 +451,7 @@
   color:red
 }
 
-.football { background: #fee2e2; color: #b91c1c; }
-.basketball { background: #ffedd5; color: #c2410c; }
-.tennis { background: #dcfce7; color: #166534; }
+
 
 .distance {
   position: absolute;
@@ -471,6 +469,11 @@
   padding: 0.6rem;
   border-radius: 10px;
   cursor: pointer;
+   transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.explore-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 107, 53, 0.35);
 }
 
 /* ================= FOOTER ================= */

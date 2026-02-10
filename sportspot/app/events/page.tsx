@@ -110,10 +110,18 @@ export default function EventsPage() {
             key={event.id}
             className={styles.card}
           >
-            <div className={styles.cardTop}>
-              <span className={styles.sport}>{event.sport}</span>
-              <span className={styles.status}>Upcoming</span>
-            </div>
+           <div className={styles.cardTop}>
+  <span className={styles.sport}>{event.sport}</span>
+
+  <span
+    className={`${styles.status} ${
+      activeTab === "past" ? styles.past : styles.upcoming
+    }`}
+  >
+    {activeTab === "past" ? "Past" : "Upcoming"}
+  </span>
+</div>
+
 
             <h3>{event.title}</h3>
             <p className={styles.desc}>{event.description}</p>

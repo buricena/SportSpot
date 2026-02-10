@@ -114,7 +114,6 @@ export default function HomePage() {
           </div>
           <div>
             <h4>Platform</h4>
-            <a>Discover</a>
             <a>Events</a>
             <a>Map</a>
             <a>Results</a>

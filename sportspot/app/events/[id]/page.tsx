@@ -4,13 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { supabase } from "@/lib/supabaseClient";
-import {
-  ArrowLeft,
-  Calendar,
-  Clock,
-  MapPin,
-  Users,
-} from "lucide-react";
+import { ArrowLeft, Calendar, Clock, MapPin, Users } from "lucide-react";
 import styles from "./event-details.module.css";
 
 const EventMap = dynamic(() => import("./EventMap"), { ssr: false });
@@ -25,8 +19,7 @@ type Event = {
   lat: number | null;
   lng: number | null;
   organizer_id: string;
-  max_participants: number | null; // ⬅️ OVO
-
+  max_participants: number | null;
 };
 
 export default function EventDetailsPage() {
@@ -45,38 +38,49 @@ export default function EventDetailsPage() {
   }, [id]);
 
   async function fetchAll() {
+    setLoading(true);
+
+    /* EVENT */
     const { data: eventData } = await supabase
       .from("events")
       .select("*")
       .eq("id", id)
       .single();
 
-    if (eventData) {
-      setEvent(eventData);
-
-      const { data: org } = await supabase
-        .from("profiles")
-        .select("username")
-        .eq("id", eventData.organizer_id)
-        .single();
-
-      if (org?.username) setOrganizerName(org.username);
+    if (!eventData) {
+      setLoading(false);
+      return;
     }
 
+    setEvent(eventData);
+
+    /* ORGANIZER */
+    const { data: organizer } = await supabase
+      .from("profiles")
+      .select("name")
+      .eq("id", eventData.organizer_id)
+      .single();
+
+    if (organizer?.name) {
+      setOrganizerName(organizer.name);
+    }
+
+    /* AUTH USER */
     const { data: auth } = await supabase.auth.getUser();
     setUser(auth.user);
 
     if (auth.user) {
-      const { data } = await supabase
+      const { data: joinedData } = await supabase
         .from("event_participants")
         .select("id")
         .eq("event_id", id)
         .eq("user_id", auth.user.id)
         .maybeSingle();
 
-      if (data) setJoined(true);
+      if (joinedData) setJoined(true);
     }
 
+    /* PARTICIPANTS COUNT */
     const { count } = await supabase
       .from("event_participants")
       .select("*", { count: "exact", head: true })
@@ -87,7 +91,10 @@ export default function EventDetailsPage() {
   }
 
   async function handleJoin() {
-    if (!user) return router.push("/login");
+    if (!user) {
+      router.push("/login");
+      return;
+    }
 
     await supabase.from("event_participants").insert({
       event_id: id,
@@ -95,7 +102,7 @@ export default function EventDetailsPage() {
     });
 
     setJoined(true);
-    setParticipantsCount(c => c + 1);
+    setParticipantsCount((c) => c + 1);
   }
 
   if (loading || !event) {
@@ -123,91 +130,81 @@ export default function EventDetailsPage() {
           Organized by <strong>{organizerName}</strong>
         </p>
 
-       <div className={styles.infoGrid}>
-  {/* DATE */}
-  <div className={styles.infoCard}>
-    <div className={styles.infoIcon}>
-      <Calendar size={20} />
-    </div>
-    <div className={styles.infoText}>
-      <span className={styles.infoLabel}>Date</span>
-      <span className={styles.infoValue}>
-        {new Date(event.event_date).toLocaleDateString("hr-HR")}
-      </span>
-      <span className={styles.infoHint}>Mark your calendar</span>
-    </div>
-  </div>
+        <div className={styles.infoGrid}>
+          {/* DATE */}
+          <div className={styles.infoCard}>
+            <div className={styles.infoIcon}>
+              <Calendar size={20} />
+            </div>
+            <div className={styles.infoText}>
+              <span className={styles.infoLabel}>Date</span>
+              <span className={styles.infoValue}>
+                {new Date(event.event_date).toLocaleDateString("hr-HR")}
+              </span>
+            </div>
+          </div>
 
-  {/* TIME */}
-  <div className={styles.infoCard}>
-    <div className={styles.infoIcon}>
-      <Clock size={20} />
-    </div>
-    <div className={styles.infoText}>
-      <span className={styles.infoLabel}>Time</span>
-<span className={styles.infoValue}>
-  {new Date(event.event_date).toLocaleTimeString("hr-HR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  })}
-</span>
-      <span className={styles.infoHint}>Be there on time</span>
-    </div>
-  </div>
+          {/* TIME */}
+          <div className={styles.infoCard}>
+            <div className={styles.infoIcon}>
+              <Clock size={20} />
+            </div>
+            <div className={styles.infoText}>
+              <span className={styles.infoLabel}>Time</span>
+              <span className={styles.infoValue}>
+                {new Date(event.event_date).toLocaleTimeString("hr-HR", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+            </div>
+          </div>
 
-  {/* LOCATION */}
-  <div className={styles.infoCard}>
-    <div className={styles.infoIcon}>
-      <MapPin size={20} />
-    </div>
-    <div className={styles.infoText}>
-      <span className={styles.infoLabel}>Location</span>
-      <span className={styles.infoValue}>{event.location}</span>
-    </div>
-  </div>
+          {/* LOCATION */}
+          <div className={styles.infoCard}>
+            <div className={styles.infoIcon}>
+              <MapPin size={20} />
+            </div>
+            <div className={styles.infoText}>
+              <span className={styles.infoLabel}>Location</span>
+              <span className={styles.infoValue}>{event.location}</span>
+            </div>
+          </div>
 
-  {/* PARTICIPANTS */}
-{/* PARTICIPANTS */}
-<div className={styles.infoCard}>
-  <div className={styles.infoIcon}>
-    <Users size={20} />
-  </div>
+          {/* PARTICIPANTS */}
+          <div className={styles.infoCard}>
+            <div className={styles.infoIcon}>
+              <Users size={20} />
+            </div>
+            <div className={styles.infoText}>
+              <span className={styles.infoLabel}>Participants</span>
 
-  <div className={styles.infoText}>
-    <span className={styles.infoLabel}>Participants</span>
-
-    {event.max_participants ? (
-      <>
-        <span className={styles.infoValue}>
-          {participantsCount} / {event.max_participants}
-        </span>
-        <span className={styles.infoHint}>
-          {event.max_participants - participantsCount} spots remaining
-        </span>
-      </>
-    ) : (
-      <>
-        <span className={styles.infoValue}>
-          {participantsCount}
-        </span>
-        <span className={styles.infoHint}>
-          Unlimited participants
-        </span>
-      </>
-    )}
-  </div>
-</div>
-
-</div>
-
+              {event.max_participants ? (
+                <>
+                  <span className={styles.infoValue}>
+                    {participantsCount} / {event.max_participants}
+                  </span>
+                  <span className={styles.infoHint}>
+                    {event.max_participants - participantsCount} spots remaining
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className={styles.infoValue}>{participantsCount}</span>
+                  <span className={styles.infoHint}>
+                    Unlimited participants
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
 
         {/* JOIN */}
         <div className={styles.joinCard}>
           <div>
             <strong>Want to participate?</strong>
-            <p>
-              Join this event and appear on the participants list.
-            </p>
+            <p>Join this event and appear on the participants list.</p>
             <span className={styles.participants}>
               {participantsCount} people joined
             </span>

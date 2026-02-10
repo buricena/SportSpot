@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 type Props = {
   lat: number;
@@ -19,6 +21,14 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function EventMap({ lat, lng }: Props) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <div style={{ borderRadius: "16px", overflow: "hidden" }}>
       <MapContainer

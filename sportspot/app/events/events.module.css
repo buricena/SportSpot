@@ -126,8 +126,8 @@
 
 /* SPORT BADGE */
 .sport {
-  background: #e7f8f2;
-  color: #0f766e;
+  background: #ff5a1f;;
+  color: #fffefe;
   padding: 4px 12px;
   border-radius: 999px;
   font-size: 12px;
@@ -136,9 +136,21 @@
 
 /* STATUS */
 .status {
+  padding: 4px 10px;
   font-size: 12px;
   font-weight: 600;
-  color: #16a34a;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+.upcoming {
+  background: #e6f7ef;
+  color: #1e7f5c;
+}
+
+/* Past – crven */
+.past {
+  background: #fde8e8;
+  color: #c53030;
 }
 
 /* TITLE */
