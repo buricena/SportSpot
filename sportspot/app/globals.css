@@ -76,6 +76,27 @@
 .navbar-center a:hover::after {
   width: 100%;
 }
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ff6b35;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-avatar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
 
 .map-container {
   flex: 2;
@@ -392,8 +413,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   flex: 1 1 250px;
   background: #ffffff;
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 2rem;
   text-align: left;
+}
+.events-list strong{
+  padding:1rem
+}
+.events-list p{
+  margin-top:0.5rem
 }
 .events-list h3{
   margin-bottom: 2rem;
@@ -422,7 +449,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .tag {
   font-size: 0.7rem;
   font-weight: 600;
-  padding: 0.2rem 0.6rem;
+  padding:0rem;
   border-radius: 999px;
   color:red
 }

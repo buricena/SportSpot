@@ -4,6 +4,8 @@ import heroImage from "./media/background.jpeg";
 import { LandPlot } from "lucide-react";
 import MapSection, { Event } from "./components/MapSection";
 import { useState } from "react";
+import Link from "next/link";
+
 
 export default function HomePage() {
   const [nearbyEvents, setNearbyEvents] = useState<Event[]>([]);
@@ -64,16 +66,31 @@ export default function HomePage() {
 
           {/* Lista događaja */}
           <div className="events-list">
-            <h3>Upcoming Events</h3>
-            {nearbyEvents.length === 0 && <p>No upcoming events.</p>}
-            {nearbyEvents.map(event => (
-              <div key={event.id} className="event-card">
-                <span className={`tag ${event.sport.toLowerCase()}`}>{event.sport}</span>
-                <strong>{event.title}</strong>
-                <p>{event.location}</p>
-                <span className="distance">{new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
-              </div>
-            ))}
+           <h3>Upcoming Events</h3>
+
+{nearbyEvents.length === 0 && <p>No upcoming events.</p>}
+
+{nearbyEvents.map(event => (
+  <Link
+    key={event.id}
+    href={`/events/${event.id}`}
+    style={{ textDecoration: "none", color: "inherit" }}
+  >
+    <div className="event-card">
+      <span className={`tag ${event.sport.toLowerCase()}`}>
+        {event.sport}
+      </span>
+
+      <strong>{event.title}</strong>
+      <p>{event.location}</p>
+
+      <span className="distance">
+        {new Date(event.event_date).toLocaleDateString("hr-HR")}
+      </span>
+    </div>
+  </Link>
+))}
+
             <button className="explore-btn" onClick={() => window.location.href = '/events'}>
               Explore All Events
             </button>

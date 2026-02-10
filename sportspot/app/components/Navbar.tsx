@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LandPlot, User } from "lucide-react";
+import { LandPlot } from "lucide-react";
 import { useAuth } from "../../lib/AuthProvider";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -12,6 +12,31 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+  };
+
+  // Helper za inicijale
+  const getInitials = () => {
+    if (!user) return "";
+
+    const fullName =
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      "";
+
+    if (fullName) {
+      const parts = fullName.trim().split(" ");
+      return parts
+  .slice(0, 2)
+  .map((p: string) => p[0].toUpperCase())
+  .join("");
+
+    }
+
+    if (user.email) {
+      return user.email[0].toUpperCase();
+    }
+
+    return "?";
   };
 
   return (
@@ -57,12 +82,8 @@ export default function Navbar() {
           </Link>
         ) : (
           <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <Link
-              href="/profile"
-              style={{ display: "flex", alignItems: "center", gap: "6px" }}
-            >
-              <User size={20} />
-              Profile
+            <Link href="/profile" className="profile-avatar">
+              {getInitials()}
             </Link>
 
             <button className="signin-btn" onClick={handleLogout}>
