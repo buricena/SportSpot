@@ -4,6 +4,13 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { supabase } from "@/lib/supabaseClient";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+} from "lucide-react";
 import styles from "./event-details.module.css";
 
 const EventMap = dynamic(() => import("./EventMap"), { ssr: false });
@@ -21,181 +28,187 @@ type Event = {
 };
 
 export default function EventDetailsPage() {
-  const params = useParams();
-  const id = params.id as string;
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
   const [event, setEvent] = useState<Event | null>(null);
   const [user, setUser] = useState<any>(null);
   const [joined, setJoined] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
-  const [organizerName, setOrganizerName] = useState<string | null>(null);
+  const [organizerName, setOrganizerName] = useState<string>("Unknown");
   const [loading, setLoading] = useState(true);
 
-  async function fetchEvent() {
-    const { data, error } = await supabase
+  useEffect(() => {
+    fetchAll();
+  }, [id]);
+
+  async function fetchAll() {
+    const { data: eventData } = await supabase
       .from("events")
       .select("*")
       .eq("id", id)
       .single();
 
-    if (!error) setEvent(data);
-    setLoading(false);
-  }
+    if (eventData) {
+      setEvent(eventData);
 
-  async function fetchOrganizer(organizerId: string) {
-    const { data } = await supabase
-      .from("profiles")
-      .select("username")
-      .eq("id", organizerId)
-      .single();
+      const { data: org } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", eventData.organizer_id)
+        .single();
 
-    if (data) setOrganizerName(data.username);
-  }
+      if (org?.username) setOrganizerName(org.username);
+    }
 
-  async function fetchUser() {
-    const { data } = await supabase.auth.getUser();
-    setUser(data.user);
+    const { data: auth } = await supabase.auth.getUser();
+    setUser(auth.user);
 
-    if (data.user) {
-      const { data: join } = await supabase
+    if (auth.user) {
+      const { data } = await supabase
         .from("event_participants")
         .select("id")
         .eq("event_id", id)
-        .eq("user_id", data.user.id)
+        .eq("user_id", auth.user.id)
         .maybeSingle();
 
-      if (join) setJoined(true);
+      if (data) setJoined(true);
     }
-  }
 
-  async function fetchParticipants() {
     const { count } = await supabase
       .from("event_participants")
       .select("*", { count: "exact", head: true })
       .eq("event_id", id);
 
-    setParticipantsCount(count || 0);
+    setParticipantsCount(count ?? 0);
+    setLoading(false);
   }
 
   async function handleJoin() {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
+    if (!user) return router.push("/login");
 
-    const { error } = await supabase.from("event_participants").insert({
+    await supabase.from("event_participants").insert({
       event_id: id,
       user_id: user.id,
     });
 
-    if (!error) {
-      setJoined(true);
-      setParticipantsCount(c => c + 1);
-    }
+    setJoined(true);
+    setParticipantsCount(c => c + 1);
   }
 
-  useEffect(() => {
-    if (!id) return;
-    fetchEvent();
-    fetchUser();
-    fetchParticipants();
-  }, [id]);
-
-  useEffect(() => {
-    if (event?.organizer_id) fetchOrganizer(event.organizer_id);
-  }, [event]);
-
-  if (loading) {
-    return <main className={styles.page}>Loading event…</main>;
+  if (loading || !event) {
+    return <main className={styles.page}>Loading…</main>;
   }
-
-  if (!event) {
-    return <main className={styles.page}>Event not found.</main>;
-  }
-
-  const isOrganizer = user && user.id === event.organizer_id;
 
   return (
     <main className={styles.page}>
       <article className={styles.card}>
         {/* BACK */}
         <button className={styles.back} onClick={() => router.push("/events")}>
-          ← Back to events
+          <ArrowLeft size={16} />
+          Back to events
         </button>
 
-        {/* HEADER */}
-        <div className={styles.headerRow}>
-            <span className={styles.sport}>{event.sport}</span>
-            <span className={styles.status}>Upcoming</span>
-        </div>
-
-        <div className={styles.organizer}>
-          Organized by <strong>{organizerName ?? "Unknown"}</strong>
+        {/* TAGS */}
+        <div className={styles.tags}>
+          <span className={styles.sport}>{event.sport}</span>
+          <span className={styles.status}>Upcoming</span>
         </div>
 
         <h1 className={styles.title}>{event.title}</h1>
 
-        {/* META */}
-        <div className={styles.meta}>
-          <div>
-            <span className={styles.metaLabel}>Date</span>
-            <span className={styles.metaValue}>
-              {new Date(event.event_date).toLocaleDateString("hr-HR")}
-            </span>
-          </div>
-          <div>
-            <span className={styles.metaLabel}>Location</span>
-            <span className={styles.metaValue}>{event.location}</span>
-          </div>
-        </div>
+        <p className={styles.organizer}>
+          Organized by <strong>{organizerName}</strong>
+        </p>
 
-        {/* MAP */}
-        {event.lat && event.lng && (
-          <div className={styles.mapWrapper}>
-            <EventMap lat={event.lat} lng={event.lng} />
-          </div>
-        )}
+       <div className={styles.infoGrid}>
+  {/* DATE */}
+  <div className={styles.infoCard}>
+    <div className={styles.infoIcon}>
+      <Calendar size={20} />
+    </div>
+    <div className={styles.infoText}>
+      <span className={styles.infoLabel}>Date</span>
+      <span className={styles.infoValue}>
+        {new Date(event.event_date).toLocaleDateString("hr-HR")}
+      </span>
+      <span className={styles.infoHint}>Mark your calendar</span>
+    </div>
+  </div>
+
+  {/* TIME */}
+  <div className={styles.infoCard}>
+    <div className={styles.infoIcon}>
+      <Clock size={20} />
+    </div>
+    <div className={styles.infoText}>
+      <span className={styles.infoLabel}>Time</span>
+      <span className={styles.infoValue}>18:00</span>
+      <span className={styles.infoHint}>Be there on time</span>
+    </div>
+  </div>
+
+  {/* LOCATION */}
+  <div className={styles.infoCard}>
+    <div className={styles.infoIcon}>
+      <MapPin size={20} />
+    </div>
+    <div className={styles.infoText}>
+      <span className={styles.infoLabel}>Location</span>
+      <span className={styles.infoValue}>{event.location}</span>
+    </div>
+  </div>
+
+  {/* PARTICIPANTS */}
+  <div className={styles.infoCard}>
+    <div className={styles.infoIcon}>
+      <Users size={20} />
+    </div>
+    <div className={styles.infoText}>
+      <span className={styles.infoLabel}>Participants</span>
+      <span className={styles.infoValue}>
+        {participantsCount} / 14
+      </span>
+      <span className={styles.infoHint}>
+        {14 - participantsCount} spots remaining
+      </span>
+    </div>
+  </div>
+</div>
+
 
         {/* JOIN */}
         <div className={styles.joinCard}>
-          <div className={styles.joinText}>
+          <div>
             <strong>Want to participate?</strong>
-            <span>
-              {joined
-                ? "You are already participating in this event."
-                : "Join this event and appear on the participants list."}
-            </span>
+            <p>
+              Join this event and appear on the participants list.
+            </p>
             <span className={styles.participants}>
-              👥 {participantsCount} people joined this event
+              {participantsCount} people joined
             </span>
           </div>
 
           <button
-            className={styles.joinBtn}
             onClick={handleJoin}
             disabled={joined}
+            className={styles.joinBtn}
           >
-            {joined ? "Joined" : "Join event"}
+            {joined ? "Joined" : "Join Event"}
           </button>
         </div>
 
-        {/* ORGANIZER ONLY */}
-        {isOrganizer && (
-          <div className={styles.organizerActions}>
-            <button
-              className={styles.resultsBtn}
-              onClick={() =>
-                router.push(`/results/create?event=${event.id}`)
-              }
-            >
-              Add results
-            </button>
-          </div>
-        )}
+        {/* MAP + DESCRIPTION */}
+        <div className={styles.contentGrid}>
+          {event.lat && event.lng && (
+            <EventMap lat={event.lat} lng={event.lng} />
+          )}
 
-        {/* DESCRIPTION */}
-        <p className={styles.description}>{event.description}</p>
+          <div className={styles.descriptionCard}>
+            <h3>About this Event</h3>
+            <p>{event.description}</p>
+          </div>
+        </div>
       </article>
     </main>
   );

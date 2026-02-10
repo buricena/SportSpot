@@ -8,7 +8,6 @@ type Props = {
   lng: number;
 };
 
-// Leaflet icon fix (isti kao prije)
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -20,27 +19,21 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function EventMap({ lat, lng }: Props) {
-  if (typeof window === "undefined") return null;
-
   return (
-    <MapContainer
-      center={[lat, lng]}
-      zoom={14}
-      scrollWheelZoom={false}
-      dragging={false}
-      zoomControl={false}
-      style={{
-        height: "260px",
-        width: "100%",
-        borderRadius: "16px",
-      }}
-    >
-      <TileLayer
-        attribution="© OpenStreetMap"
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-
-      <Marker position={[lat, lng]} />
-    </MapContainer>
+    <div style={{ borderRadius: "16px", overflow: "hidden" }}>
+      <MapContainer
+        center={[lat, lng]}
+        zoom={14}
+        scrollWheelZoom={false}
+        dragging={false}
+        style={{ height: "300px", width: "100%" }}
+      >
+        <TileLayer
+          attribution="© OpenStreetMap"
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={[lat, lng]} />
+      </MapContainer>
+    </div>
   );
 }
