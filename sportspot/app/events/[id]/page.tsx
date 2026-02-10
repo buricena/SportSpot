@@ -32,6 +32,8 @@ export default function EventDetailsPage() {
   const [participantsCount, setParticipantsCount] = useState(0);
   const [organizerName, setOrganizerName] = useState<string>("Unknown");
   const [loading, setLoading] = useState(true);
+  
+
 
   useEffect(() => {
     fetchAll();
@@ -108,6 +110,8 @@ export default function EventDetailsPage() {
   if (loading || !event) {
     return <main className={styles.page}>Loading…</main>;
   }
+const eventDate = new Date(event.event_date);
+const isPast = eventDate < new Date();
 
   return (
     <main className={styles.page}>
@@ -120,9 +124,15 @@ export default function EventDetailsPage() {
 
         {/* TAGS */}
         <div className={styles.tags}>
-          <span className={styles.sport}>{event.sport}</span>
-          <span className={styles.status}>Upcoming</span>
-        </div>
+  <span className={styles.sport}>{event.sport}</span>
+  <span
+    className={`${styles.status} ${
+      isPast ? styles.past : styles.upcoming
+    }`}
+  >
+    {isPast ? "Past" : "Upcoming"}
+  </span>
+</div>
 
         <h1 className={styles.title}>{event.title}</h1>
 

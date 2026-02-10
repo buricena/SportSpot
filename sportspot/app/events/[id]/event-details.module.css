@@ -52,6 +52,16 @@
   font-weight: 700;
   font-size: 12px;
 }
+.upcoming {
+  background: #e6f7ef;
+  color: #1e7f5c;
+}
+
+.past {
+  background: #fde8e8;
+  color: #c53030;
+}
+
 
 /* TITLE */
 .title {
