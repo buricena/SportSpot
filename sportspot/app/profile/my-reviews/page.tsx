@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import styles from "../profile.module.css";
+import styles from "./my-reviews.module.css";
 
 type Review = {
   id: string;
@@ -19,93 +19,81 @@ export default function MyReviews() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchReviews();
+    loadReviews();
   }, []);
 
-  const fetchReviews = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  const loadReviews = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return setLoading(false);
 
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("reviews")
       .select(`
         id,
         rating,
         comment,
         created_at,
-        events (
-          title
-        )
+        events ( title )
       `)
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("REVIEWS FETCH ERROR:", error);
-      setReviews([]);
-      setLoading(false);
-      return;
-    }
-
-    // ✅ SANITIZE DATA (ključ za Vercel crash fix)
-    const safeData: Review[] =
+    setReviews(
       data?.map((r: any) => ({
         id: r.id,
         rating: r.rating,
         comment: r.comment,
         created_at: r.created_at,
         events: r.events ?? [],
-      })) ?? [];
+      })) ?? []
+    );
 
-    setReviews(safeData);
     setLoading(false);
   };
 
   if (loading) {
-    return <p style={{ padding: "2rem" }}>Loading reviews…</p>;
+    return <p>Loading reviews…</p>;
+  }
+
+  /* EMPTY STATE */
+  if (reviews.length === 0) {
+    return (
+      <div className={styles.emptyState}>
+        <div className={styles.icon}>⭐</div>
+        <h3>No reviews yet</h3>
+        <p>
+          You haven’t reviewed any events yet.
+          <br />
+          Join an event and share your experience.
+        </p>
+      </div>
+    );
   }
 
   return (
-    <main className={styles.container}>
-      <h1 className={styles.title}>My Reviews</h1>
-      <p className={styles.subtitle}>Your reviews and ratings</p>
-
-      {reviews.length === 0 && (
-        <p className={styles.empty}>
-          You haven’t written any reviews yet.
-        </p>
-      )}
-
-      <div className={styles.eventsGrid}>
+    <div className={styles.wrapper}>
+      <div className={styles.grid}>
         {reviews.map(review => (
-          <div key={review.id} className={styles.eventCard}>
-            <h3 className={styles.eventTitle}>
+          <div key={review.id} className={styles.card}>
+            <h4 className={styles.eventTitle}>
               {review.events?.[0]?.title ?? "Unknown event"}
-            </h3>
+            </h4>
 
-            <div className={styles.eventMeta}>
-              ⭐ {review.rating} / 5
+            <div className={styles.rating}>
+              {"⭐".repeat(review.rating)}
+              <span>{review.rating}/5</span>
             </div>
 
-            <p style={{ marginTop: "0.6rem" }}>
+            <p className={styles.comment}>
               {review.comment || "No comment provided."}
             </p>
 
-            <span
-              className={styles.eventMeta}
-              style={{ marginTop: "0.6rem", display: "block" }}
-            >
+            <span className={styles.date}>
               {new Date(review.created_at).toLocaleDateString("hr-HR")}
             </span>
           </div>
         ))}
       </div>
-    </main>
+    </div>
   );
 }

@@ -1,58 +1,43 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import RequireAuth from "../../components/RequireAuth";
-import { supabase } from "../../../lib/supabaseClient";
-import styles from "../profile.module.css";
+import { supabase } from "@/lib/supabaseClient";
+import styles from "./sports-preferences.module.css";
 
-const sportsList = [
+const ALL_SPORTS = [
   "Football",
   "Basketball",
   "Tennis",
-  "Volleyball",
+  "Padel",
   "Running",
   "Cycling",
-  "Padel",
+  "Gym",
+  "Yoga",
 ];
 
 export default function SportsPreferences() {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  // 1️⃣ LOAD FROM SUPABASE
   useEffect(() => {
-    const loadPreferences = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("favorite_sport")
-        .eq("id", user.id)
-        .single();
-
-      if (error) {
-        console.error("LOAD PREF ERROR:", error);
-      }
-
-      if (data?.favorite_sport) {
-        try {
-          setSelected(JSON.parse(data.favorite_sport));
-        } catch {
-          setSelected([]);
-        }
-      }
-
-      setLoading(false);
-    };
-
     loadPreferences();
   }, []);
 
-  // 2️⃣ TOGGLE
+  const loadPreferences = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return setLoading(false);
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("sports")
+      .eq("id", user.id)
+      .single();
+
+    setSelected(data?.sports ?? []);
+    setLoading(false);
+  };
+
   const toggleSport = (sport: string) => {
     setSelected(prev =>
       prev.includes(sport)
@@ -61,60 +46,55 @@ export default function SportsPreferences() {
     );
   };
 
-  // 3️⃣ SAVE TO SUPABASE
-  const handleSave = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  const savePreferences = async () => {
+    setSaving(true);
 
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { error } = await supabase
+    await supabase
       .from("profiles")
-      .update({
-        favorite_sport: JSON.stringify(selected),
-      })
+      .update({ sports: selected })
       .eq("id", user.id);
 
-    if (error) {
-      console.error("SAVE PREF ERROR:", error);
-      alert("Save failed");
-      return;
-    }
-
+    setSaving(false);
     alert("Preferences saved");
   };
 
   if (loading) {
-    return <p style={{ padding: "2rem" }}>Loading preferences...</p>;
+    return <p>Loading preferences…</p>;
   }
 
   return (
-    <RequireAuth>
-      <main className={styles.container}>
-        <h1 className={styles.title}>Sport Preferences</h1>
-        <p className={styles.subtitle}>
-          Choose sports you are interested in
-        </p>
+    <div className={styles.wrapper}>
+      <h2 className={styles.title}>Sports Preferences</h2>
+      <p className={styles.subtitle}>
+        Choose sports you are interested in
+      </p>
 
-        <div className={styles.tags}>
-          {sportsList.map(sport => (
-            <button
-              key={sport}
-              onClick={() => toggleSport(sport)}
-              className={`${styles.tag} ${
-                selected.includes(sport) ? styles.active : ""
-              }`}
-            >
-              {sport}
-            </button>
-          ))}
-        </div>
+      <div className={styles.grid}>
+        {ALL_SPORTS.map(sport => (
+          <button
+            key={sport}
+            onClick={() => toggleSport(sport)}
+            className={`${styles.tag} ${
+              selected.includes(sport) ? styles.active : ""
+            }`}
+          >
+            {sport}
+          </button>
+        ))}
+      </div>
 
-        <button onClick={handleSave} className={styles.primaryBtn}>
-          Save preferences
+      <div className={styles.actions}>
+        <button
+          className={styles.saveBtn}
+          onClick={savePreferences}
+          disabled={saving}
+        >
+          {saving ? "Saving…" : "Save preferences"}
         </button>
-      </main>
-    </RequireAuth>
+      </div>
+    </div>
   );
 }

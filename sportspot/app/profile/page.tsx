@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import styles from "./profile.module.css";
+import {
+  Mail,
+  MapPin,
+  Calendar,
+  Star,
+  User,
+  Settings,
+} from "lucide-react";
+
+import styles from "./profile.layout.module.css";
 
 import MyEvents from "./my-events/page";
 import MyReviews from "./my-reviews/page";
@@ -13,89 +22,134 @@ type Tab = "events" | "reviews" | "info" | "preferences";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<Tab>("events");
-  const [name, setName] = useState<string>("");
+  const [profile, setProfile] = useState({
+    name: "",
+    email: "",
+    city: "",
+    eventsCount: 0,
+    reviewsCount: 0,
+  });
 
   useEffect(() => {
-    const loadUserName = async () => {
+    const loadProfile = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
       if (!user) return;
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("profiles")
-        .select("name")
+        .select("name, city")
         .eq("id", user.id)
         .single();
 
-      if (error) {
-        console.error("LOAD NAME ERROR:", error);
-        return;
-      }
+      const { count: eventsCount } = await supabase
+        .from("event_participants")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
 
-      if (data?.name) {
-        setName(data.name);
-      }
+      const { count: reviewsCount } = await supabase
+        .from("reviews")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
+      setProfile({
+        name: data?.name ?? "",
+        city: data?.city ?? "",
+        email: user.email ?? "",
+        eventsCount: eventsCount ?? 0,
+        reviewsCount: reviewsCount ?? 0,
+      });
     };
 
-    loadUserName();
+    loadProfile();
   }, []);
 
   return (
-    <main className={styles.container}>
-      <h1 className={styles.title}>My Profile</h1>
+    <main className={styles.page}>
+      {/* PROFILE CARD */}
+      <section className={styles.profileCard}>
+        <div className={styles.avatar}>
+          {profile.name?.charAt(0).toUpperCase() || "U"}
+        </div>
 
-      <p className={styles.subtitle}>
-        Welcome back{ name ? `, ${name}` : "" }
-      </p>
+        <div className={styles.profileInfo}>
+          <h1>{profile.name || "User"}</h1>
+          <p className={styles.welcome}>
+            Welcome back! Here is your profile overview.
+          </p>
 
-      {/* TAB BAR */}
-      <div className={styles.tabs}>
+          <div className={styles.meta}>
+            <span>
+              <Mail size={16} />
+              {profile.email}
+            </span>
+
+            {profile.city && (
+              <span>
+                <MapPin size={16} />
+                {profile.city}
+              </span>
+            )}
+          </div>
+
+          <div className={styles.stats}>
+            <span>
+              <Calendar size={16} />
+              <b>{profile.eventsCount}</b> Events Joined
+            </span>
+
+            <span>
+              <Star size={16} />
+              <b>{profile.reviewsCount}</b> Reviews
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* TABS */}
+      <nav className={styles.tabs}>
         <button
+          className={activeTab === "events" ? styles.active : ""}
           onClick={() => setActiveTab("events")}
-          className={`${styles.tab} ${
-            activeTab === "events" ? styles.active : ""
-          }`}
         >
+          <Calendar size={16} />
           My Events
         </button>
 
         <button
+          className={activeTab === "reviews" ? styles.active : ""}
           onClick={() => setActiveTab("reviews")}
-          className={`${styles.tab} ${
-            activeTab === "reviews" ? styles.active : ""
-          }`}
         >
+          <Star size={16} />
           Reviews
         </button>
 
         <button
+          className={activeTab === "info" ? styles.active : ""}
           onClick={() => setActiveTab("info")}
-          className={`${styles.tab} ${
-            activeTab === "info" ? styles.active : ""
-          }`}
         >
+          <User size={16} />
           Personal Info
         </button>
 
         <button
+          className={activeTab === "preferences" ? styles.active : ""}
           onClick={() => setActiveTab("preferences")}
-          className={`${styles.tab} ${
-            activeTab === "preferences" ? styles.active : ""
-          }`}
         >
+          <Settings size={16} />
           Preferences
         </button>
-      </div>
+      </nav>
 
       {/* CONTENT */}
-      <div className={styles.content}>
+      <section className={styles.content}>
         {activeTab === "events" && <MyEvents />}
         {activeTab === "reviews" && <MyReviews />}
         {activeTab === "info" && <PersonalInformation />}
         {activeTab === "preferences" && <SportsPreferences />}
-      </div>
+      </section>
     </main>
   );
 }

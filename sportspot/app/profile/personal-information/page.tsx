@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import RequireAuth from "../../components/RequireAuth";
-import { supabase } from "../../../lib/supabaseClient";
-import styles from "../profile.module.css";
+import { supabase } from "@/lib/supabaseClient";
+import styles from "./personal-information.module.css";
 
 export default function PersonalInformation() {
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -15,21 +16,14 @@ export default function PersonalInformation() {
 
   useEffect(() => {
     const loadProfile = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("profiles")
         .select("name, city")
         .eq("id", user.id)
         .single();
-
-      if (error) {
-        console.error("LOAD PROFILE ERROR:", error);
-      }
 
       setForm({
         name: data?.name ?? "",
@@ -44,19 +38,17 @@ export default function PersonalInformation() {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaving(true);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { error } = await supabase
+    await supabase
       .from("profiles")
       .update({
         name: form.name,
@@ -64,23 +56,21 @@ export default function PersonalInformation() {
       })
       .eq("id", user.id);
 
-    if (error) {
-      console.error("SAVE ERROR:", error);
-      alert("Save failed");
-      return;
-    }
-
-    alert("Profile saved");
+    setSaving(false);
+    alert("Profile updated");
   };
 
   if (loading) {
-    return <p style={{ padding: "2rem" }}>Loading profile…</p>;
+    return <p>Loading profile…</p>;
   }
 
   return (
     <RequireAuth>
-      <main className={styles.container}>
-        <h1 className={styles.title}>Personal Information</h1>
+      <div className={styles.wrapper}>
+        <h2 className={styles.title}>Personal Information</h2>
+        <p className={styles.subtitle}>
+          Update your personal details
+        </p>
 
         <form onSubmit={handleSave} className={styles.form}>
           <label className={styles.label}>
@@ -112,11 +102,17 @@ export default function PersonalInformation() {
             />
           </label>
 
-          <button type="submit" className={styles.primaryBtn}>
-            Save changes
-          </button>
+          <div className={styles.actions}>
+            <button
+              type="submit"
+              className={styles.saveBtn}
+              disabled={saving}
+            >
+              {saving ? "Saving…" : "Save changes"}
+            </button>
+          </div>
         </form>
-      </main>
+      </div>
     </RequireAuth>
   );
 }
