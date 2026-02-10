@@ -4,6 +4,8 @@ import styles from "./createEvent.module.css";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
+
 import {
   Trophy,
   Calendar,
@@ -32,6 +34,9 @@ export default function CreateEventPage() {
   const [maxParticipants, setMaxParticipants] = useState("");
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
+  const dateRef = useRef<HTMLInputElement>(null);
+const timeRef = useRef<HTMLInputElement>(null);
+
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -150,23 +155,30 @@ export default function CreateEventPage() {
               <div className={styles.field}>
                 <label>Date *</label>
 <input
+  ref={dateRef}
   type="date"
   value={date}
   min={new Date().toISOString().split("T")[0]}
-  onChange={(e) => setDate(e.target.value)}
-  className={styles.input}
+  onChange={e => setDate(e.target.value)}
+  onClick={() => dateRef.current?.showPicker()}
+ 
 />
+
 
 
               </div>
 
               <div className={styles.field}>
                 <label>Time *</label>
-                <input
-                  type="time"
-                  value={time}
-                  onChange={e => setTime(e.target.value)}
-                />
+              <input
+  ref={timeRef}
+  type="time"
+  value={time}
+  onChange={e => setTime(e.target.value)}
+  onClick={() => timeRef.current?.showPicker()}
+ 
+/>
+
               </div>
             </div>
           </section>

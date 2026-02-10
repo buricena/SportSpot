@@ -272,10 +272,7 @@
   opacity: 0.6;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
-}
+
 
 .search-btn {
   background: #ff6b35;
