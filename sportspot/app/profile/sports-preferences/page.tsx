@@ -120,7 +120,7 @@ export default function SportsPreferences() {
       {/* ✅ TOAST */}
       {showSaved && (
         <div className={styles.toast}>
-          Preferences saved successfully ✅
+          Preferences saved successfully 
         </div>
       )}
     </div>

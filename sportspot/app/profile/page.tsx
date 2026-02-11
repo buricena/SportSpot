@@ -49,10 +49,11 @@ export default function ProfilePage() {
         .select("*", { count: "exact", head: true })
         .eq("user_id", user.id);
 
-      const { count: reviewsCount } = await supabase
-        .from("reviews")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id);
+const { count: reviewsCount } = await supabase
+  .from("event_reviews")
+  .select("*", { count: "exact", head: true })
+  .eq("user_id", user.id);
+
 
       setProfile({
         name: data?.name ?? "",

@@ -13,14 +13,15 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [favoriteSport, setFavoriteSport] = useState("Football");
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async () => {
+  async function handleRegister() {
     setError(null);
     setLoading(true);
 
-    // 1️⃣ CREATE AUTH USER
+    /* 1️⃣ CREATE AUTH USER */
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -32,22 +33,25 @@ export default function RegisterPage() {
       return;
     }
 
-    // 2️⃣ INSERT PROFILE
-    const { error: profileError } = await supabase.from("profiles").insert({
-      id: data.user.id,
-      name,
-      favorite_sport: favoriteSport,
-    });
+    /* 2️⃣ INSERT PROFILE (⚠️ favorite_sport MORA BITI ARRAY) */
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .insert({
+        id: data.user.id,
+        name,
+        favorite_sport: [favoriteSport], // ✅ KLJUČNI FIX
+      });
 
     if (profileError) {
-      setError("Profile creation failed");
+      console.error(profileError);
+      setError("Profile creation failed. Please try again.");
       setLoading(false);
       return;
     }
 
-    // 3️⃣ REDIRECT
+    /* 3️⃣ REDIRECT */
     router.push("/profile");
-  };
+  }
 
   return (
     <main className={styles.page}>
@@ -106,20 +110,19 @@ export default function RegisterPage() {
               <option>Basketball</option>
               <option>Tennis</option>
               <option>Volleyball</option>
-               <option value="None">None of the above</option>
+              <option value="None">None of the above</option>
             </select>
           </label>
 
           {error && <p className={styles.error}>{error}</p>}
 
-      <button
-  type="submit"
-  disabled={loading}
-  className={styles.button}
->
-  {loading ? "Creating account..." : "Create Account"}
-</button>
-
+          <button
+            type="submit"
+            disabled={loading}
+            className={styles.button}
+          >
+            {loading ? "Creating account..." : "Create Account"}
+          </button>
         </form>
 
         <p className={styles.footerText}>

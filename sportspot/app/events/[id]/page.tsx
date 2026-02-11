@@ -99,7 +99,11 @@ export default function EventDetailsPage() {
     if (!event) return;
 
     const isPast = new Date(event.event_date) < new Date();
-    if (isPast) return;
+    const isFull =
+      event.max_participants !== null &&
+      participantsCount >= event.max_participants;
+
+    if (isPast || isFull) return;
 
     if (!user) {
       router.push("/login");
@@ -152,8 +156,6 @@ export default function EventDetailsPage() {
     }, 2000);
   }
 
-  /* ================= STATES ================= */
-
   if (loading) {
     return <main className={styles.page}>Loading…</main>;
   }
@@ -169,6 +171,9 @@ export default function EventDetailsPage() {
   if (!event) return null;
 
   const isPast = new Date(event.event_date) < new Date();
+  const isFull =
+    event.max_participants !== null &&
+    participantsCount >= event.max_participants;
 
   return (
     <main className={styles.page}>
@@ -221,7 +226,9 @@ export default function EventDetailsPage() {
             <Users size={20} />
             <strong>
               {participantsCount}
-              {event.max_participants && ` / ${event.max_participants}`}
+              {event.max_participants
+                ? ` / ${event.max_participants}`
+                : " / Unlimited"}
             </strong>
           </div>
         </div>
@@ -230,13 +237,17 @@ export default function EventDetailsPage() {
         <div className={styles.joinCard}>
           {isPast ? (
             <p className={styles.pastNotice}>
-              This event has already ended. You can no longer join.
+              This event has already ended.
+            </p>
+          ) : isFull ? (
+            <p className={styles.pastNotice}>
+              This event is full. You can no longer join.
             </p>
           ) : (
             <>
               <div>
                 <strong>Want to participate?</strong>
-                <p>Join this event and appear in the participants count.</p>
+                <p>Join this event and appear in the participants list.</p>
               </div>
 
               <button
@@ -297,7 +308,6 @@ export default function EventDetailsPage() {
         </div>
       )}
 
-      {/* SUCCESS */}
       {deleteSuccess && (
         <div className={styles.successToast}>
           Event deleted successfully

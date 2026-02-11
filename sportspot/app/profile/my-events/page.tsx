@@ -24,7 +24,9 @@ export default function MyEvents() {
   const [reviewRating, setReviewRating] = useState<Record<string, number>>({});
   const [submitting, setSubmitting] = useState<string | null>(null);
 
-  const [reviewedEventIds, setReviewedEventIds] = useState<Set<string>>(new Set());
+  const [reviewedEventIds, setReviewedEventIds] = useState<Set<string>>(
+    new Set()
+  );
   const [reviewSuccess, setReviewSuccess] = useState(false);
 
   const router = useRouter();
@@ -45,7 +47,8 @@ export default function MyEvents() {
 
     const { data } = await supabase
       .from("event_participants")
-      .select(`
+      .select(
+        `
         events (
           id,
           title,
@@ -53,7 +56,8 @@ export default function MyEvents() {
           location,
           event_date
         )
-      `)
+      `
+      )
       .eq("user_id", user.id);
 
     const mapped =
@@ -67,7 +71,7 @@ export default function MyEvents() {
       .eq("user_id", user.id);
 
     if (reviews) {
-      setReviewedEventIds(new Set(reviews.map(r => r.event_id)));
+      setReviewedEventIds(new Set(reviews.map((r) => r.event_id)));
     }
 
     setLoading(false);
@@ -88,7 +92,7 @@ export default function MyEvents() {
       .eq("user_id", user.id)
       .eq("event_id", toLeave.id);
 
-    setEvents(prev => prev.filter(e => e.id !== toLeave.id));
+    setEvents((prev) => prev.filter((e) => e.id !== toLeave.id));
     setToLeave(null);
   };
 
@@ -109,26 +113,18 @@ export default function MyEvents() {
     });
 
     setSubmitting(null);
-
     if (error) return;
 
-    setReviewedEventIds(prev => new Set(prev).add(eventId));
+    setReviewedEventIds((prev) => new Set(prev).add(eventId));
     setReviewSuccess(true);
 
-    setTimeout(() => {
-      setReviewSuccess(false);
-    }, 2000);
+    setTimeout(() => setReviewSuccess(false), 2000);
   };
 
   const now = new Date();
 
-  const upcoming = events.filter(
-    e => new Date(e.event_date) >= now
-  );
-
-  const past = events.filter(
-    e => new Date(e.event_date) < now
-  );
+  const upcoming = events.filter((e) => new Date(e.event_date) >= now);
+  const past = events.filter((e) => new Date(e.event_date) < now);
 
   if (loading) {
     return <p>Loading events…</p>;
@@ -140,7 +136,7 @@ export default function MyEvents() {
         <p>You haven’t joined any events yet.</p>
       )}
 
-      {/* UPCOMING EVENTS */}
+      {/* ================= UPCOMING ================= */}
       {upcoming.length > 0 && (
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -149,12 +145,12 @@ export default function MyEvents() {
           </div>
 
           <div className={styles.grid}>
-            {upcoming.map(event => (
+            {upcoming.map((event) => (
               <div
                 key={event.id}
                 className={styles.card}
-                onClick={() => router.push(`/events/${event.id}`)}
                 role="button"
+                onClick={() => router.push(`/events/${event.id}`)}
               >
                 <div>
                   <div className={styles.cardHeader}>
@@ -207,7 +203,7 @@ export default function MyEvents() {
         </section>
       )}
 
-      {/* PAST EVENTS */}
+      {/* ================= PAST ================= */}
       {past.length > 0 && (
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -216,12 +212,12 @@ export default function MyEvents() {
           </div>
 
           <div className={styles.grid}>
-            {past.map(event => (
+            {past.map((event) => (
               <div
                 key={event.id}
                 className={`${styles.card} ${styles.past}`}
-                onClick={() => router.push(`/events/${event.id}`)}
                 role="button"
+                onClick={() => router.push(`/events/${event.id}`)}
               >
                 <div>
                   <div className={styles.cardHeader}>
@@ -252,15 +248,16 @@ export default function MyEvents() {
                     </strong>
 
                     <div className={styles.ratingRow}>
-                      {[1, 2, 3, 4, 5].map(n => (
+                      {[1, 2, 3, 4, 5].map((n) => (
                         <button
                           key={n}
-                          type="button"
                           className={`${styles.star} ${
-                            reviewRating[event.id] >= n ? styles.activeStar : ""
+                            reviewRating[event.id] >= n
+                              ? styles.activeStar
+                              : ""
                           }`}
                           onClick={() =>
-                            setReviewRating(prev => ({
+                            setReviewRating((prev) => ({
                               ...prev,
                               [event.id]: n,
                             }))
@@ -276,7 +273,7 @@ export default function MyEvents() {
                       placeholder="How was this event?"
                       value={reviewText[event.id] || ""}
                       onChange={(e) =>
-                        setReviewText(prev => ({
+                        setReviewText((prev) => ({
                           ...prev,
                           [event.id]: e.target.value,
                         }))
@@ -288,7 +285,9 @@ export default function MyEvents() {
                       disabled={submitting === event.id}
                       onClick={() => submitReview(event.id)}
                     >
-                      {submitting === event.id ? "Saving…" : "Submit review"}
+                      {submitting === event.id
+                        ? "Saving…"
+                        : "Submit review"}
                     </button>
                   </div>
                 ) : (
@@ -315,24 +314,37 @@ export default function MyEvents() {
         </section>
       )}
 
-      {/* CONFIRM LEAVE MODAL */}
+      {/* ================= LEAVE MODAL ================= */}
       {toLeave && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
-            <p>
+            <h3 className={styles.modalTitle}>Leave event?</h3>
+
+            <p className={styles.modalText}>
               Are you sure you want to leave <br />
-              <b>{toLeave.title}</b>?
+              <strong>{toLeave.title}</strong>?
             </p>
 
             <div className={styles.modalActions}>
-              <button onClick={() => setToLeave(null)}>Cancel</button>
-              <button onClick={confirmLeave}>Leave</button>
+              <button
+                className={styles.cancelBtn}
+                onClick={() => setToLeave(null)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className={styles.confirmBtn}
+                onClick={confirmLeave}
+              >
+                Leave event
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* REVIEW SUCCESS POPUP */}
+      {/* ================= REVIEW TOAST ================= */}
       {reviewSuccess && (
         <div className={styles.successToast}>
           Review submitted successfully
