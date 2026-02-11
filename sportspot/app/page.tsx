@@ -160,9 +160,9 @@ export default function HomePage() {
 
       <div>
         <h4>Account</h4>
-        <a href="/profile">Profile</a>
-        <a href="/profile/my-events">My Events</a>
-        <a href="/profile/reviews">Reviews</a>
+        <a href="/login">Sign in</a>
+        <a href="/register">Create account</a>
+ 
       </div>
 
 <div>
