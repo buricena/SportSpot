@@ -96,7 +96,7 @@ export default function ProfilePage() {
 
           <div className={styles.stats}>
             <span>
-              <Calendar size={16} />
+              {/* <Calendar size={16} /> */}
               <b>{profile.eventsCount}</b> Events Joined
             </span>
 

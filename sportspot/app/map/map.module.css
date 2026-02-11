@@ -12,3 +12,35 @@
   text-align: center;
   color: #666;
 }
+.searchBar {
+  position: absolute;
+  top: 96px; /* ⬅️ OVO JE KLJUČNO – ispod navbara */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  display: flex;
+  gap: 8px;
+  background: white;
+  padding: 10px 12px;
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+
+.searchBar input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  width: 220px;
+}
+
+.searchBar button {
+  background: #ff5a1f;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+}

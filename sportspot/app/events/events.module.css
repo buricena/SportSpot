@@ -180,6 +180,16 @@
   padding-top: 12px;
   border-top: 1px solid #eee;
 }
+.meta span {
+  display: inline-flex;          /* 👈 KLJUČNO */
+  align-items: center;           /* 👈 KLJUČNO */
+  gap: 6px;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 8px;
+  width: fit-content;
+}
+
 .meta span:first-child {
   font-weight: 600;
   color: #111;
@@ -201,3 +211,111 @@
   font-size: 14px;
   font-weight: 600;
 }
+/* ===============================
+   CARD ACCENT (v0 style)
+================================ */
+
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: #ff5a1f;
+}
+
+/* ===============================
+   META ICONS
+================================ */
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #444;
+}
+
+.metaIcon {
+  color: #ff5a1f;
+}
+/* Kad je tab aktivan, i broj mora biti "invertiran" */
+
+/* .tab span {
+  margin-left: 6px;
+  background: #ff5a1f;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.active span {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+} */
+/* ===============================
+   TAB SLIDER ANIMATION
+================================ */
+
+.tabs {
+  position: relative;
+  overflow: hidden;
+}
+
+.slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(51% - 4px);
+  height: calc(100% - 8px);
+  background: #ff5a1f;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+
+.slideLeft {
+  transform: translateX(0);
+}
+
+.slideRight {
+  transform: translateX(100%);
+}
+
+/* tab content above slider */
+.tab {
+  position: relative;
+  z-index: 1;
+  color: #444;
+}
+
+/* active text color */
+.activeText {
+  color: white;
+}
+
+/* badge inside inactive tab */
+.tab span {
+  margin-left: 6px;
+  background: #ff5a1f;
+  color: white;
+  padding: 3px 5px;      /* ⬅️ MALO ŠIRI */
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;        /* ⬅️ KLJUČNO */
+  display: inline-flex;  /* ⬅️ KLJUČNO */
+  align-items: center;   /* ⬅️ KLJUČNO */
+}
+
+/* kad je tab aktivan */
+.activeText span {
+  background: white;
+  color: #ff5a1f;
+}
+

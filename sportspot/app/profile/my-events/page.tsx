@@ -23,6 +23,10 @@ export default function MyEvents() {
   const [events, setEvents] = useState<MyEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [toLeave, setToLeave] = useState<MyEvent | null>(null);
+  const [reviewText, setReviewText] = useState<Record<string, string>>({});
+const [reviewRating, setReviewRating] = useState<Record<string, number>>({});
+const [submitting, setSubmitting] = useState<string | null>(null);
+
 
   const router = useRouter();
 
@@ -80,6 +84,32 @@ export default function MyEvents() {
     setEvents(prev => prev.filter(e => e.id !== toLeave.id));
     setToLeave(null);
   };
+  const submitReview = async (eventId: string) => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  setSubmitting(eventId);
+
+  const { error } = await supabase.from("event_reviews").insert({
+    event_id: eventId,
+    user_id: user.id,
+    rating: reviewRating[eventId],
+    comment: reviewText[eventId],
+  });
+
+  setSubmitting(null);
+
+  if (error) {
+    alert("You already reviewed this event or something went wrong.");
+    return;
+  }
+
+  alert("Review submitted!");
+};
+
 
   const now = new Date();
 
@@ -215,6 +245,58 @@ export default function MyEvents() {
                     </div>
                   </div>
                 </div>
+              {/* REVIEW – ONLY FOR PAST EVENTS */}
+<div
+  className={styles.reviewBox}
+  onClick={(e) => e.stopPropagation()}
+>
+  <strong className={styles.reviewTitle}>
+    Leave a review
+  </strong>
+
+  {/* RATING */}
+  <div className={styles.ratingRow}>
+    {[1, 2, 3, 4, 5].map(n => (
+      <button
+        key={n}
+        type="button"
+        className={`${styles.star} ${
+          reviewRating[event.id] >= n ? styles.activeStar : ""
+        }`}
+        onClick={() =>
+          setReviewRating(prev => ({
+            ...prev,
+            [event.id]: n,
+          }))
+        }
+      >
+        ★
+      </button>
+    ))}
+  </div>
+
+  {/* COMMENT */}
+  <textarea
+    className={styles.reviewTextarea}
+    placeholder="How was this event?"
+    value={reviewText[event.id] || ""}
+    onChange={(e) =>
+      setReviewText(prev => ({
+        ...prev,
+        [event.id]: e.target.value,
+      }))
+    }
+  />
+
+  <button
+    className={styles.reviewButton}
+    disabled={submitting === event.id}
+    onClick={() => submitReview(event.id)}
+  >
+    {submitting === event.id ? "Saving…" : "Submit review"}
+  </button>
+</div>
+
 
                 <div className={styles.actions}>
                   <span />

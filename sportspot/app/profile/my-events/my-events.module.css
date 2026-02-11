@@ -139,3 +139,73 @@
   font-size: 0.85rem;
   cursor: pointer;
 }
+/* ===============================
+   REVIEW (PAST EVENTS ONLY)
+================================ */
+
+.reviewBox {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.reviewTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.reviewTextarea {
+  resize: vertical;
+  min-height: 70px;
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 0.85rem;
+}
+
+.reviewTextarea:focus {
+  outline: none;
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.15);
+}
+
+.reviewButton {
+  align-self: flex-start;
+  background: #ff6b35;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reviewButton:hover {
+  background: #e85a28;
+}
+/* ===============================
+   REVIEW RATING
+================================ */
+
+.ratingRow {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #ddd;
+  cursor: pointer;
+  padding: 0;
+}
+
+.activeStar {
+  color: #ff6b35;
+}

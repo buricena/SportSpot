@@ -55,17 +55,22 @@ export default function EventDetailsPage() {
     }
 
     setEvent(eventData);
+/* ORGANIZER */
+if (eventData.organizer_id) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("name")
+    .eq("id", eventData.organizer_id)
+    .maybeSingle();
 
-    /* ORGANIZER */
-    const { data: organizer } = await supabase
-      .from("profiles")
-      .select("name")
-      .eq("id", eventData.organizer_id)
-      .single();
+  if (profile?.name) {
+    setOrganizerName(profile.name);
+  } else {
+    setOrganizerName("Unknown");
+  }
+}
 
-    if (organizer?.name) {
-      setOrganizerName(organizer.name);
-    }
+
 
     /* AUTH USER */
     const { data: auth } = await supabase.auth.getUser();

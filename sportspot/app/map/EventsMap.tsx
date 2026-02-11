@@ -1,8 +1,9 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import Link from "next/link";
+import { useEffect } from "react";
 
 type Event = {
   id: string;
@@ -12,6 +13,16 @@ type Event = {
   lat: number;
   lng: number;
 };
+
+function ChangeView({ center }: { center: [number, number] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.setView(center, 11);
+  }, [center, map]);
+
+  return null;
+}
 
 // Leaflet icon fix
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -24,45 +35,29 @@ L.Icon.Default.mergeOptions({
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export default function EventsMap({ events }: { events: Event[] }) {
+export default function EventsMap({
+  events,
+  center,
+}: {
+  events: Event[];
+  center: [number, number];
+}) {
   if (typeof window === "undefined") return null;
-  //mora ovako radi Leafleta
-  const popupStyles = `
-  .popupBtn {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 6px 12px;
-    background: #ff5a1f;
-    color: white !important;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 999px;
-    text-decoration: none;
-    transition: background 0.15s ease, transform 0.15s ease,
-      box-shadow 0.15s ease;
-  }
-
-  .popupBtn:hover {
-    background: #e84d15;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(255, 90, 31, 0.35);
-  }
-`;
-
 
   return (
     <MapContainer
-      center={[45.815, 15.978]} // default HR
+      center={center}
       zoom={7}
       style={{ height: "100%", width: "100%" }}
     >
+      <ChangeView center={center} />
+
       <TileLayer
         attribution="© OpenStreetMap"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-<style>{popupStyles}</style>
 
-      {events.map(event => (
+      {events.map((event) => (
         <Marker key={event.id} position={[event.lat, event.lng]}>
           <Popup>
             <strong>{event.title}</strong>
@@ -71,10 +66,9 @@ export default function EventsMap({ events }: { events: Event[] }) {
             <br />
             📍 {event.location}
             <br />
-<Link href={`/events/${event.id}`} className="popupBtn">
-  View event
-</Link>
-
+            <Link href={`/events/${event.id}`} className="popupBtn">
+              View event
+            </Link>
           </Popup>
         </Marker>
       ))}

@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
+import { Calendar, MapPin } from "lucide-react";
+import { useAuth } from "@/lib/AuthProvider";
+import { useRouter } from "next/navigation";
 import styles from "./events.module.css";
 
 type Event = {
@@ -21,6 +24,12 @@ export default function EventsPage() {
   const [activeTab, setActiveTab] = useState<Tab>("upcoming");
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const { user } = useAuth();
+const router = useRouter();
+
+
+  const [upcomingCount, setUpcomingCount] = useState(0);
+  const [pastCount, setPastCount] = useState(0);
 
   useEffect(() => {
     fetchEvents();
@@ -30,6 +39,21 @@ export default function EventsPage() {
     setLoading(true);
     const today = new Date().toISOString().split("T")[0];
 
+    // 👉 COUNTOVI ZA TABOVE
+    const { data: upcoming } = await supabase
+      .from("events")
+      .select("id")
+      .gte("event_date", today);
+
+    const { data: past } = await supabase
+      .from("events")
+      .select("id")
+      .lt("event_date", today);
+
+    setUpcomingCount(upcoming?.length ?? 0);
+    setPastCount(past?.length ?? 0);
+
+    // 👉 EVENTI ZA AKTIVNI TAB
     const query =
       activeTab === "upcoming"
         ? supabase
@@ -74,24 +98,31 @@ export default function EventsPage() {
           />
 
           <div className={styles.actions}>
-            <div className={styles.tabs}>
-              <button
-                className={`${styles.tab} ${
-                  activeTab === "upcoming" ? styles.active : ""
-                }`}
-                onClick={() => setActiveTab("upcoming")}
-              >
-                Upcoming <span>{events.length}</span>
-              </button>
-              <button
-                className={`${styles.tab} ${
-                  activeTab === "past" ? styles.active : ""
-                }`}
-                onClick={() => setActiveTab("past")}
-              >
-                Past
-              </button>
-            </div>
+ <div className={styles.tabs}>
+  <div
+    className={`${styles.slider} ${
+      activeTab === "past" ? styles.slideRight : styles.slideLeft
+    }`}
+  />
+
+  <button
+    className={`${styles.tab} ${
+      activeTab === "upcoming" ? styles.activeText : ""
+    }`}
+    onClick={() => setActiveTab("upcoming")}
+  >
+    Upcoming <span>{upcomingCount}</span>
+  </button>
+
+  <button
+    className={`${styles.tab} ${
+      activeTab === "past" ? styles.activeText : ""
+    }`}
+    onClick={() => setActiveTab("past")}
+  >
+    Past <span>{pastCount}</span>
+  </button>
+</div>
 
             <Link href="/events/create" className={styles.addBtn}>
               + Add Event
@@ -110,27 +141,32 @@ export default function EventsPage() {
             key={event.id}
             className={styles.card}
           >
-           <div className={styles.cardTop}>
-  <span className={styles.sport}>{event.sport}</span>
+            <div className={styles.cardTop}>
+              <span className={styles.sport}>{event.sport}</span>
 
-  <span
-    className={`${styles.status} ${
-      activeTab === "past" ? styles.past : styles.upcoming
-    }`}
-  >
-    {activeTab === "past" ? "Past" : "Upcoming"}
-  </span>
-</div>
-
+              <span
+                className={`${styles.status} ${
+                  activeTab === "past" ? styles.past : styles.upcoming
+                }`}
+              >
+                {activeTab === "past" ? "Past" : "Upcoming"}
+              </span>
+            </div>
 
             <h3>{event.title}</h3>
             <p className={styles.desc}>{event.description}</p>
 
             <div className={styles.meta}>
-              <span>📅 {new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
-              <span>📍 {event.location}</span>
+              <span className={styles.metaItem}>
+                <Calendar size={14} className={styles.metaIcon} />
+                {new Date(event.event_date).toLocaleDateString("hr-HR")}
+              </span>
+
+              <span className={styles.metaItem}>
+                <MapPin size={14} className={styles.metaIcon} />
+                {event.location}
+              </span>
             </div>
-            {/* <span className={styles.cta}>View event</span> */}
           </Link>
         ))}
       </section>
