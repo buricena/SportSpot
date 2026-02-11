@@ -191,7 +191,7 @@ export default function CreateEventPage() {
             <h2><MapPin size={18} /> Location</h2>
 
             <div className={styles.field}>
-              <label>Venue name *</label>
+              <label>Event location *</label>
               <input
                 value={location}
                 onChange={e => setLocation(e.target.value)}
