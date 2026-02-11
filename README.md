@@ -24,7 +24,7 @@
 
 ### Semester Assignments
 
-- Link to Assignment 1: [**Assignment 1**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment1.md) <!-- Replace with actual URL -->
+- Link to Assignment 1: [**Assignment 1**](assignments/assignment1/assignment1.md) <!-- Replace with actual URL -->
 - Link to Assignment 2: [**Assignment 2**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment2/assignment2.md) <!-- Replace with actual URL -->
 - Link to Assignment 3: [**Assignment 3**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment3/assignment3.md)
 - Link to Assignment 4: [**Assignment 4**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment4/assignment4.md)
