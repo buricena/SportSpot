@@ -106,14 +106,20 @@ export default function RegisterPage() {
               <option>Basketball</option>
               <option>Tennis</option>
               <option>Volleyball</option>
+               <option value="None">None of the above</option>
             </select>
           </label>
 
           {error && <p className={styles.error}>{error}</p>}
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Creating account..." : "Create Account"}
-          </button>
+      <button
+  type="submit"
+  disabled={loading}
+  className={styles.button}
+>
+  {loading ? "Creating account..." : "Create Account"}
+</button>
+
         </form>
 
         <p className={styles.footerText}>

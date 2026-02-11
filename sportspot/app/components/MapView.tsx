@@ -16,9 +16,10 @@ type Event = {
 type Props = {
   center: [number, number];
   events?: Event[];
+  userLocation?: [number, number] | null;
 };
 
-export default function MapView({ center, events = [] }: Props) {
+export default function MapView({ center, events = [], userLocation }: Props) {
   const [Map, setMap] = useState<any>(null);
 
   useEffect(() => {
@@ -45,23 +46,25 @@ export default function MapView({ center, events = [] }: Props) {
 
   const { MapContainer, TileLayer, Marker, Popup, useMap } = Map;
 
-  // Komponenta za centriranje mape na prvi event
-  const RecenterMap = ({ lat, lng }: { lat: number; lng: number }) => {
+  // Centriranje mape
+  const RecenterMap = ({ coords }: { coords: [number, number] }) => {
     const map = useMap();
+
     useEffect(() => {
-      map.setView([lat, lng], 13);
-    }, [lat, lng, map]);
+      map.flyTo(coords, 13);
+    }, [coords, map]);
+
     return null;
   };
 
-  // Prvih 3 događaja
   const top3Events = events.slice(0, 3);
 
-  // Centar mape – prvi event ili default
-  const mapCenter =
-    top3Events.length > 0
-      ? [top3Events[0].lat, top3Events[0].lng]
-      : center;
+  // Ako korisnik odabere lokaciju, centriramo na nju
+  const mapCenter: [number, number] = userLocation
+    ? userLocation
+    : top3Events.length > 0
+    ? [top3Events[0].lat, top3Events[0].lng]
+    : center;
 
   return (
     <MapContainer
@@ -70,6 +73,8 @@ export default function MapView({ center, events = [] }: Props) {
       style={{ height: "400px", width: "100%" }}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+      <RecenterMap coords={mapCenter} />
 
       {top3Events.map((event) =>
         event.lat != null && event.lng != null ? (
@@ -86,9 +91,10 @@ export default function MapView({ center, events = [] }: Props) {
         ) : null
       )}
 
-      {/* Recenter na prvi event */}
-      {top3Events.length > 0 && (
-        <RecenterMap lat={top3Events[0].lat} lng={top3Events[0].lng} />
+      {userLocation && (
+        <Marker position={userLocation}>
+          <Popup>You are here</Popup>
+        </Marker>
       )}
     </MapContainer>
   );

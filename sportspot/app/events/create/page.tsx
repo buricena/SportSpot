@@ -56,14 +56,15 @@ const timeRef = useRef<HTMLInputElement>(null);
       return;
     }
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+   const {
+  data: { user },
+} = await supabase.auth.getUser();
 
-    if (!user) {
-      setError("You must be logged in.");
-      return;
-    }
+if (!user) {
+  router.push("/login");
+  return;
+}
+
 
     setLoading(true);
 

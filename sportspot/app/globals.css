@@ -463,17 +463,26 @@
 
 .explore-btn {
   width: 100%;
+  min-height: 52px;              /* veća meta za klik */
   background: #ff6b35;
   color: white;
   border: none;
-  padding: 0.6rem;
-  border-radius: 10px;
+  padding: 0.9rem 1rem;          /* veća klik zona */
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .explore-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(255, 107, 53, 0.35);
+}
+
+.explore-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
 }
 
 /* ================= FOOTER ================= */

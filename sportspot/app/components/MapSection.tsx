@@ -21,6 +21,7 @@ type MapSectionProps = {
 export default function MapSection({ onEventsFetched }: MapSectionProps) {
   const [center, setCenter] = useState<[number, number]>([45.815399, 15.966568]);
   const [events, setEvents] = useState<Event[]>([]);
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,8 +41,8 @@ export default function MapSection({ onEventsFetched }: MapSectionProps) {
 
     if (data) {
       setEvents(data);
-      onEventsFetched(data); // šaljemo natrag evente roditelju da ih prikaže u listi
-      // centriramo mapu na prvi event
+      onEventsFetched(data);
+
       if (data.length > 0) {
         setCenter([data[0].lat, data[0].lng]);
       }
@@ -56,7 +57,11 @@ export default function MapSection({ onEventsFetched }: MapSectionProps) {
     }
 
     navigator.geolocation.getCurrentPosition(
-      pos => setCenter([pos.coords.latitude, pos.coords.longitude]),
+      (pos) => {
+        const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+        setCenter(coords);
+        setUserLocation(coords);
+      },
       () => alert("Location access denied")
     );
   };
@@ -67,7 +72,15 @@ export default function MapSection({ onEventsFetched }: MapSectionProps) {
         My location
       </button>
 
-      {loading ? <p>Loading events...</p> : <MapView center={center} events={events} />}
+      {loading ? (
+        <p>Loading events...</p>
+      ) : (
+        <MapView
+          center={center}
+          events={events}
+          userLocation={userLocation}
+        />
+      )}
     </div>
   );
 }

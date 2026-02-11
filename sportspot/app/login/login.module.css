@@ -65,4 +65,9 @@
   margin-top: 1.5rem;
   font-size: 0.9rem;
   text-align: center;
+  
+}
+.footerText a {
+  color: #ff6b35;
+  font-weight: 600;
 }
