@@ -595,3 +595,8 @@
   opacity: 1;
   transform: translateY(0);
 }
+.hero {
+  position: relative;
+  height: calc(100vh - 70px);
+  overflow: hidden;
+}

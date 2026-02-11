@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import heroImage from "./media/background.jpeg";
 import { LandPlot, Search, Users, Trophy } from "lucide-react";
 import MapSection, { Event } from "./components/MapSection";
@@ -32,24 +33,35 @@ export default function HomePage() {
   }, []);
 
   async function fetchFeaturedEvents() {
-    const data = await sanityClient.fetch(`
+    const data = await sanityClient.fetch(
+      `
       *[_type == "featuredEvent"]{
         eventId,
         title,
         description
       }
-    `);
+    `,
+      {},
+      { next: { revalidate: 3600 } } // 🔥 cache 1h
+    );
 
     setFeaturedEvents(data || []);
   }
 
   return (
     <>
-      {/* HERO */}
-      <main
-        className="hero"
-        style={{ backgroundImage: `url(${heroImage.src})` }}
-      >
+      {/* ================= HERO ================= */}
+      <main className="hero">
+        {/* OPTIMIZED HERO IMAGE */}
+        <Image
+          src={heroImage}
+          alt="SportSpot hero background"
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
+        />
+
         <div className="hero-overlay animate">
           <h1>Find Your Game.</h1>
           <p>
@@ -65,7 +77,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      {/* HOW IT WORKS */}
+      {/* ================= HOW IT WORKS ================= */}
       <section className="how-it-works animate">
         <h2>How It Works</h2>
         <p className="how-subtitle">
@@ -99,7 +111,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* EVENTS AROUND YOU */}
+      {/* ================= EVENTS AROUND YOU ================= */}
       <section className="events-around animate">
         <h2>Events Around You</h2>
         <p className="events-subtitle">
@@ -115,9 +127,7 @@ export default function HomePage() {
           <div className="events-list animate delay-2">
             <h3>Events you might be interested in</h3>
 
-            {featuredEvents.length === 0 && (
-              <p>No upcoming events.</p>
-            )}
+            {featuredEvents.length === 0 && <p>No upcoming events.</p>}
 
             {featuredEvents.map(event => (
               <div key={event.eventId} className="event-card">
@@ -137,48 +147,46 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ================= FOOTER ================= */}
       <footer className="footer animate">
-  <div className="footer-inner">
-    {/* BRAND */}
-    <div className="footer-brand">
-      <div className="footer-logo">SportSpot</div>
-      <p>
-        Your local sports community.<br />
-        Connect, play and track your events.
-      </p>
-    </div>
+        <div className="footer-inner">
+          {/* BRAND */}
+          <div className="footer-brand">
+            <div className="footer-logo">SportSpot</div>
+            <p>
+              Your local sports community.
+              <br />
+              Connect, play and track your events.
+            </p>
+          </div>
 
-    {/* LINKS */}
-    <div className="footer-links">
-      <div>
-        <h4>Platform</h4>
-        <a href="/events">Events</a>
-        <a href="/map">Map</a>
-        <a href="/results">Results</a>
-      </div>
+          {/* LINKS */}
+          <div className="footer-links">
+            <div>
+              <h4>Platform</h4>
+              <a href="/events">Events</a>
+              <a href="/map">Map</a>
+              <a href="/results">Results</a>
+            </div>
 
-      <div>
-        <h4>Account</h4>
-        <a href="/login">Sign in</a>
-        <a href="/register">Create account</a>
- 
-      </div>
+            <div>
+              <h4>Account</h4>
+              <a href="/login">Sign in</a>
+              <a href="/register">Create account</a>
+            </div>
 
-<div>
-  <h4>About</h4>
-  <a href="/about">About us</a>
-  <a href="/contact">Contact</a>
-</div>
+            <div>
+              <h4>About</h4>
+              <a href="/about">About us</a>
+              <a href="/contact">Contact</a>
+            </div>
+          </div>
+        </div>
 
-    </div>
-  </div>
-
-  <div className="footer-bottom">
-    © 2026 SportSpot. All rights reserved.
-  </div>
-</footer>
-
+        <div className="footer-bottom">
+          © 2026 SportSpot. All rights reserved.
+        </div>
+      </footer>
     </>
   );
 }
