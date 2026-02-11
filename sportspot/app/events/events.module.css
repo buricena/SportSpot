@@ -308,7 +308,7 @@
   position: absolute;
   top: 4px;
   left: 4px;
-  width: calc(51% - 4px);
+  width: calc(51.5% - 4px);
   height: calc(100% - 8px);
   background: #ff5a1f;
   border-radius: 10px;

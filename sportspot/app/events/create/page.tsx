@@ -2,7 +2,7 @@
 
 import styles from "./createEvent.module.css";
 import dynamic from "next/dynamic";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -15,7 +15,6 @@ import {
 import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 
-// MAPA – SSR OFF
 const MapPicker = dynamic(() => import("./MapPicker"), {
   ssr: false,
 });
@@ -23,7 +22,6 @@ const MapPicker = dynamic(() => import("./MapPicker"), {
 export default function CreateEventPage() {
   const router = useRouter();
 
-  // FORM STATE
   const [title, setTitle] = useState("");
   const [sport, setSport] = useState("");
   const [description, setDescription] = useState("");
@@ -31,6 +29,7 @@ export default function CreateEventPage() {
   const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
   const [maxParticipants, setMaxParticipants] = useState("");
+
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
 
@@ -39,10 +38,35 @@ export default function CreateEventPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // ✅ TOAST STATE
   const [showSuccess, setShowSuccess] = useState(false);
 
+  /* ================= GEO CODING ================= */
+  useEffect(() => {
+    if (!location || location.length < 3) return;
+
+    const timeout = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            location
+          )}`
+        );
+
+        const data = await res.json();
+
+        if (data && data.length > 0) {
+          setLat(parseFloat(data[0].lat));
+          setLng(parseFloat(data[0].lon));
+        }
+      } catch (err) {
+        console.error("Geocoding failed");
+      }
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [location]);
+
+  /* ================= SUBMIT ================= */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -91,7 +115,6 @@ export default function CreateEventPage() {
       return;
     }
 
-    // ✅ SHOW SUCCESS TOAST
     setShowSuccess(true);
 
     setTimeout(() => {
@@ -115,10 +138,7 @@ export default function CreateEventPage() {
         <form onSubmit={handleSubmit}>
           {/* EVENT DETAILS */}
           <section className={styles.card}>
-            <h2>
-              <Trophy size={18} />
-              Event Details
-            </h2>
+            <h2><Trophy size={18} /> Event Details</h2>
 
             <div className={styles.field}>
               <label>Event title *</label>
@@ -127,28 +147,18 @@ export default function CreateEventPage() {
 
             <div className={styles.field}>
               <label>Sport *</label>
-              <input
-                placeholder="e.g. Football, Yoga, Crossfit..."
-                value={sport}
-                onChange={e => setSport(e.target.value)}
-              />
+              <input value={sport} onChange={e => setSport(e.target.value)} />
             </div>
 
             <div className={styles.field}>
               <label>Description</label>
-              <textarea
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-              />
+              <textarea value={description} onChange={e => setDescription(e.target.value)} />
             </div>
           </section>
 
           {/* DATE & TIME */}
           <section className={styles.card}>
-            <h2>
-              <Calendar size={18} />
-              Date & Time
-            </h2>
+            <h2><Calendar size={18} /> Date & Time</h2>
 
             <div className={styles.grid2}>
               <div className={styles.field}>
@@ -178,16 +188,14 @@ export default function CreateEventPage() {
 
           {/* LOCATION */}
           <section className={styles.card}>
-            <h2>
-              <MapPin size={18} />
-              Location
-            </h2>
+            <h2><MapPin size={18} /> Location</h2>
 
             <div className={styles.field}>
               <label>Venue name *</label>
               <input
                 value={location}
                 onChange={e => setLocation(e.target.value)}
+                placeholder="e.g. Zagreb Arena"
               />
             </div>
 
@@ -205,13 +213,10 @@ export default function CreateEventPage() {
 
           {/* PARTICIPANTS */}
           <section className={styles.card}>
-            <h2>
-              <Users size={18} />
-              Participants
-            </h2>
+            <h2><Users size={18} /> Participants</h2>
 
             <div className={styles.field}>
-              <label>Max participants (optional)</label>
+              <label>Max participants</label>
               <input
                 type="number"
                 min={2}
@@ -224,9 +229,7 @@ export default function CreateEventPage() {
           {error && <p className={styles.error}>{error}</p>}
 
           <div className={styles.actions}>
-            <Link href="/events" className={styles.cancel}>
-              Cancel
-            </Link>
+            <Link href="/events" className={styles.cancel}>Cancel</Link>
             <button className={styles.submit} disabled={loading}>
               {loading ? "Creating…" : "Create Event"}
             </button>
@@ -234,11 +237,8 @@ export default function CreateEventPage() {
         </form>
       </div>
 
-      {/* ✅ SUCCESS TOAST */}
       {showSuccess && (
-        <div className={styles.toast}>
-          Event created successfully!
-        </div>
+        <div className={styles.toast}>Event created successfully!</div>
       )}
     </main>
   );

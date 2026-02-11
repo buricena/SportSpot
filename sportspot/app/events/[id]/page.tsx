@@ -8,7 +8,6 @@ import { ArrowLeft, Calendar, Clock, MapPin, Users } from "lucide-react";
 import styles from "./event-details.module.css";
 import EventNotFound from "@/app/components/EventNotFound";
 
-
 const EventMap = dynamic(() => import("./EventMap"), { ssr: false });
 
 type Event = {
@@ -97,6 +96,11 @@ export default function EventDetailsPage() {
   }
 
   async function handleJoin() {
+    if (!event) return;
+
+    const isPast = new Date(event.event_date) < new Date();
+    if (isPast) return;
+
     if (!user) {
       router.push("/login");
       return;
@@ -154,14 +158,13 @@ export default function EventDetailsPage() {
     return <main className={styles.page}>Loading…</main>;
   }
 
-if (notFoundEvent) {
-  return (
-    <main className={styles.page}>
-      <EventNotFound onBack={() => router.push("/events")} />
-    </main>
-  );
-}
-
+  if (notFoundEvent) {
+    return (
+      <main className={styles.page}>
+        <EventNotFound onBack={() => router.push("/events")} />
+      </main>
+    );
+  }
 
   if (!event) return null;
 
@@ -223,19 +226,28 @@ if (notFoundEvent) {
           </div>
         </div>
 
+        {/* JOIN */}
         <div className={styles.joinCard}>
-          <div>
-            <strong>Want to participate?</strong>
-            <p>Join this event and appear on the participants list.</p>
-          </div>
+          {isPast ? (
+            <p className={styles.pastNotice}>
+              This event has already ended. You can no longer join.
+            </p>
+          ) : (
+            <>
+              <div>
+                <strong>Want to participate?</strong>
+                <p>Join this event and appear in the participants count.</p>
+              </div>
 
-          <button
-            onClick={handleJoin}
-            disabled={joined}
-            className={styles.joinBtn}
-          >
-            {joined ? "Joined" : "Join Event"}
-          </button>
+              <button
+                onClick={handleJoin}
+                disabled={joined}
+                className={styles.joinBtn}
+              >
+                {joined ? "Joined" : "Join Event"}
+              </button>
+            </>
+          )}
         </div>
 
         <div className={styles.contentGrid}>
