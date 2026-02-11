@@ -19,7 +19,7 @@
 ### Semester Project
 
 - Link to production version: [**Production Version**](https://sport-spot-lake.vercel.app/) <!-- Replace with actual URL -->
-- Link to final report: [**Final Report**](URL_TO_FINAL_REPORT) <!-- Replace with actual URL -->
+- Link to final report: [**Final Report**](https://www.notion.so/SportSpot-Report-304cb4e14adc80cd82fce8c9dce383f2?source=copy_link) <!-- Replace with actual URL -->
 <!-- Add more as necessary -->
 
 ### Semester Assignments
