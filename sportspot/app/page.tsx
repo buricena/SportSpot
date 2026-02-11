@@ -1,12 +1,12 @@
 "use client";
 
 import heroImage from "./media/background.jpeg";
-import { LandPlot } from "lucide-react";
+import { LandPlot, Search, Users, Trophy } from "lucide-react";
 import MapSection, { Event } from "./components/MapSection";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search, Users, Trophy } from "lucide-react";
 import { sanityClient } from "@/lib/sanity";
+import { useScrollAnimation } from "./hooks/useScrollAnimation";
 
 // ---------------- TYPES ----------------
 
@@ -21,6 +21,9 @@ type FeaturedEvent = {
 export default function HomePage() {
   const [nearbyEvents, setNearbyEvents] = useState<Event[]>([]);
   const [featuredEvents, setFeaturedEvents] = useState<FeaturedEvent[]>([]);
+
+  // 🔥 activate scroll animations
+  useScrollAnimation();
 
   // ---------------- FETCH CMS EVENTS ----------------
 
@@ -47,7 +50,7 @@ export default function HomePage() {
         className="hero"
         style={{ backgroundImage: `url(${heroImage.src})` }}
       >
-        <div className="hero-overlay">
+        <div className="hero-overlay animate">
           <h1>Find Your Game.</h1>
           <p>
             Connect with local players and discover non-professional sports
@@ -63,14 +66,14 @@ export default function HomePage() {
       </main>
 
       {/* HOW IT WORKS */}
-      <section className="how-it-works">
+      <section className="how-it-works animate">
         <h2>How It Works</h2>
         <p className="how-subtitle">
           Get started in three simple steps and join your local sports community
         </p>
 
         <div className="steps">
-          <div className="step">
+          <div className="step animate delay-1">
             <div className="step-icon">
               <Search size={42} />
             </div>
@@ -78,7 +81,7 @@ export default function HomePage() {
             <p>Browse local matches and tournaments near you</p>
           </div>
 
-          <div className="step">
+          <div className="step animate delay-2">
             <div className="step-icon">
               <Users size={42} />
             </div>
@@ -86,7 +89,7 @@ export default function HomePage() {
             <p>Register for events and meet new players</p>
           </div>
 
-          <div className="step">
+          <div className="step animate delay-3">
             <div className="step-icon">
               <Trophy size={42} />
             </div>
@@ -97,7 +100,7 @@ export default function HomePage() {
       </section>
 
       {/* EVENTS AROUND YOU */}
-      <section className="events-around">
+      <section className="events-around animate">
         <h2>Events Around You</h2>
         <p className="events-subtitle">
           Explore sports events on an interactive map and find activities near
@@ -105,11 +108,11 @@ export default function HomePage() {
         </p>
 
         <div className="events-layout">
-          {/* MAPA */}
+          {/* MAP */}
           <MapSection onEventsFetched={setNearbyEvents} />
 
-          {/* CMS UPCOMING EVENTS */}
-          <div className="events-list">
+          {/* CMS FEATURED EVENTS */}
+          <div className="events-list animate delay-2">
             <h3>Events you might be interested in</h3>
 
             {featuredEvents.length === 0 && (
@@ -119,7 +122,6 @@ export default function HomePage() {
             {featuredEvents.map(event => (
               <div key={event.eventId} className="event-card">
                 <span className="tag featured">Upcoming</span>
-
                 <strong>{event.title}</strong>
                 <p>{event.description}</p>
               </div>
@@ -136,43 +138,47 @@ export default function HomePage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="footer">
-        <div className="footer-grid">
-          <div>
-            <h3 className="logo">
-              <LandPlot size={24} style={{ marginRight: "8px" }} />
-              SportSpot
-            </h3>
-            <br />
-            <p>
-              Your local sports community. Connect, play, and track your sports
-              activities.
-            </p>
-          </div>
-          <div>
-            <h4>Platform</h4>
-            <a>Events</a>
-            <a>Map</a>
-            <a>Results</a>
-          </div>
-          <div>
-            <h4>Organize</h4>
-            <a>Create Event</a>
-            <a>Manage Events</a>
-            <a>Analytics</a>
-          </div>
-          <div>
-            <h4>Support</h4>
-            <a>Help Center</a>
-            <a>Contact</a>
-            <a>Privacy Policy</a>
-          </div>
-        </div>
+      <footer className="footer animate">
+  <div className="footer-inner">
+    {/* BRAND */}
+    <div className="footer-brand">
+      <div className="footer-logo">SportSpot</div>
+      <p>
+        Your local sports community.<br />
+        Connect, play and track your events.
+      </p>
+    </div>
 
-        <div className="footer-bottom">
-          © 2026 SportSpot. All rights reserved.
-        </div>
-      </footer>
+    {/* LINKS */}
+    <div className="footer-links">
+      <div>
+        <h4>Platform</h4>
+        <a href="/events">Events</a>
+        <a href="/map">Map</a>
+        <a href="/results">Results</a>
+      </div>
+
+      <div>
+        <h4>Account</h4>
+        <a href="/profile">Profile</a>
+        <a href="/profile/my-events">My Events</a>
+        <a href="/profile/reviews">Reviews</a>
+      </div>
+
+<div>
+  <h4>About</h4>
+  <a href="/about">About us</a>
+  <a href="/contact">Contact</a>
+</div>
+
+    </div>
+  </div>
+
+  <div className="footer-bottom">
+    © 2026 SportSpot. All rights reserved.
+  </div>
+</footer>
+
     </>
   );
 }

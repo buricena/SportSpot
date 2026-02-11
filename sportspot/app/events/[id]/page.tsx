@@ -6,6 +6,8 @@ import dynamic from "next/dynamic";
 import { supabase } from "@/lib/supabaseClient";
 import { ArrowLeft, Calendar, Clock, MapPin, Users } from "lucide-react";
 import styles from "./event-details.module.css";
+import EventNotFound from "@/app/components/EventNotFound";
+
 
 const EventMap = dynamic(() => import("./EventMap"), { ssr: false });
 
@@ -31,7 +33,9 @@ export default function EventDetailsPage() {
   const [joined, setJoined] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [organizerName, setOrganizerName] = useState("Unknown");
+
   const [loading, setLoading] = useState(true);
+  const [notFoundEvent, setNotFoundEvent] = useState(false);
 
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -43,14 +47,16 @@ export default function EventDetailsPage() {
 
   async function fetchAll() {
     setLoading(true);
+    setNotFoundEvent(false);
 
     const { data: eventData } = await supabase
       .from("events")
       .select("*")
       .eq("id", id)
-      .single();
+      .maybeSingle();
 
     if (!eventData) {
+      setNotFoundEvent(true);
       setLoading(false);
       return;
     }
@@ -102,7 +108,7 @@ export default function EventDetailsPage() {
     });
 
     setJoined(true);
-    setParticipantsCount(c => c + 1);
+    setParticipantsCount((c) => c + 1);
   }
 
   function handleDelete() {
@@ -142,9 +148,22 @@ export default function EventDetailsPage() {
     }, 2000);
   }
 
-  if (loading || !event) {
+  /* ================= STATES ================= */
+
+  if (loading) {
     return <main className={styles.page}>Loading…</main>;
   }
+
+if (notFoundEvent) {
+  return (
+    <main className={styles.page}>
+      <EventNotFound onBack={() => router.push("/events")} />
+    </main>
+  );
+}
+
+
+  if (!event) return null;
 
   const isPast = new Date(event.event_date) < new Date();
 
@@ -266,7 +285,7 @@ export default function EventDetailsPage() {
         </div>
       )}
 
-      {/* SUCCESS POPUP */}
+      {/* SUCCESS */}
       {deleteSuccess && (
         <div className={styles.successToast}>
           Event deleted successfully

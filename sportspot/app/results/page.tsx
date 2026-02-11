@@ -11,6 +11,7 @@ import {
   CheckCircle,
   Clock,
   Search,
+  Star,
 } from "lucide-react";
 
 type Review = {
@@ -38,7 +39,6 @@ type Filter = "all" | "posted" | "pending";
 export default function ResultsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
-
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [comments, setComments] = useState<Record<string, string>>({});
@@ -87,15 +87,15 @@ export default function ResultsPage() {
     const text = comments[eventId]?.trim();
     if (!text) return;
 
-    const { error } = await supabase
-      .from("event_results")
-      .upsert({
-        event_id: eventId,
-        comment: text,
-      });
+    const { error } = await supabase.from("event_results").insert({
+      event_id: eventId,
+      comment: text,
+    });
 
-    if (!error) loadData();
-    else alert(error.message);
+    if (!error) {
+      setComments({});
+      loadData();
+    }
   }
 
   /* ================= FILTER + SEARCH ================= */
@@ -253,19 +253,20 @@ export default function ResultsPage() {
                 </span>
               </div>
 
-<div
-  className={`${styles.resultBox} ${
-    hasResult ? styles.resultHighlight : ""
-  }`}
->
-
+              {/* RESULT */}
+              <div
+                className={`${styles.resultBox} ${
+                  hasResult ? styles.resultHighlight : ""
+                }`}
+              >
                 {hasResult ? (
                   <p>{event.result!.comment}</p>
                 ) : (
                   <p className={styles.empty}>Result not added yet</p>
                 )}
 
-                {isOrganizer && (
+                {/* ONLY ORGANIZER & ONLY IF NO RESULT */}
+                {isOrganizer && !hasResult && (
                   <div className={styles.editor}>
                     <textarea
                       placeholder="Write how the event went..."
@@ -278,17 +279,20 @@ export default function ResultsPage() {
                       }
                     />
                     <button onClick={() => saveComment(event.id)}>
-                      Save comment
+                      Save result
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* ✅ REVIEWS – BEZ PROMJENE DIZAJNA */}
+              {/* REVIEWS */}
               <div className={styles.reviews}>
                 {avgRating ? (
                   <div className={styles.ratingSummary}>
-                    ⭐ {avgRating}
+                    <Star size={16} className={styles.starIcon} />
+                    <span className={styles.ratingValue}>
+                      {avgRating} / 5
+                    </span>
                     <span className={styles.reviewCount}>
                       ({event.reviews.length})
                     </span>
@@ -302,8 +306,12 @@ export default function ResultsPage() {
                 <ul className={styles.reviewList}>
                   {event.reviews.map((r, i) => (
                     <li key={i} className={styles.reviewItem}>
-                      ⭐ {r.rating}/5
-                      {r.comment && <p>{r.comment}</p>}
+
+                      {r.comment && (
+                        <p className={styles.reviewComment}>
+                          {r.comment}
+                        </p>
+                      )}
                     </li>
                   ))}
                 </ul>

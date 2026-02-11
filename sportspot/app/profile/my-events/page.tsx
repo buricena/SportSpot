@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
-import {
-  Calendar,
-  MapPin,
-  Users,
-} from "lucide-react";
-
+import { Calendar, MapPin, Users } from "lucide-react";
 import styles from "./my-events.module.css";
 
 type MyEvent = {
@@ -22,11 +17,15 @@ type MyEvent = {
 export default function MyEvents() {
   const [events, setEvents] = useState<MyEvent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [toLeave, setToLeave] = useState<MyEvent | null>(null);
-  const [reviewText, setReviewText] = useState<Record<string, string>>({});
-const [reviewRating, setReviewRating] = useState<Record<string, number>>({});
-const [submitting, setSubmitting] = useState<string | null>(null);
 
+  const [toLeave, setToLeave] = useState<MyEvent | null>(null);
+
+  const [reviewText, setReviewText] = useState<Record<string, string>>({});
+  const [reviewRating, setReviewRating] = useState<Record<string, number>>({});
+  const [submitting, setSubmitting] = useState<string | null>(null);
+
+  const [reviewedEventIds, setReviewedEventIds] = useState<Set<string>>(new Set());
+  const [reviewSuccess, setReviewSuccess] = useState(false);
 
   const router = useRouter();
 
@@ -44,7 +43,7 @@ const [submitting, setSubmitting] = useState<string | null>(null);
       return;
     }
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("event_participants")
       .select(`
         events (
@@ -57,10 +56,18 @@ const [submitting, setSubmitting] = useState<string | null>(null);
       `)
       .eq("user_id", user.id);
 
-    if (!error) {
-      const mapped =
-        data?.map((row: any) => row.events).filter(Boolean) ?? [];
-      setEvents(mapped);
+    const mapped =
+      data?.map((row: any) => row.events).filter(Boolean) ?? [];
+
+    setEvents(mapped);
+
+    const { data: reviews } = await supabase
+      .from("event_reviews")
+      .select("event_id")
+      .eq("user_id", user.id);
+
+    if (reviews) {
+      setReviewedEventIds(new Set(reviews.map(r => r.event_id)));
     }
 
     setLoading(false);
@@ -84,32 +91,34 @@ const [submitting, setSubmitting] = useState<string | null>(null);
     setEvents(prev => prev.filter(e => e.id !== toLeave.id));
     setToLeave(null);
   };
+
   const submitReview = async (eventId: string) => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  if (!user) return;
+    if (!user) return;
 
-  setSubmitting(eventId);
+    setSubmitting(eventId);
 
-  const { error } = await supabase.from("event_reviews").insert({
-    event_id: eventId,
-    user_id: user.id,
-    rating: reviewRating[eventId],
-    comment: reviewText[eventId],
-  });
+    const { error } = await supabase.from("event_reviews").insert({
+      event_id: eventId,
+      user_id: user.id,
+      rating: reviewRating[eventId],
+      comment: reviewText[eventId],
+    });
 
-  setSubmitting(null);
+    setSubmitting(null);
 
-  if (error) {
-    alert("You already reviewed this event or something went wrong.");
-    return;
-  }
+    if (error) return;
 
-  alert("Review submitted!");
-};
+    setReviewedEventIds(prev => new Set(prev).add(eventId));
+    setReviewSuccess(true);
 
+    setTimeout(() => {
+      setReviewSuccess(false);
+    }, 2000);
+  };
 
   const now = new Date();
 
@@ -127,7 +136,6 @@ const [submitting, setSubmitting] = useState<string | null>(null);
 
   return (
     <div className={styles.wrapper}>
-      {/* EMPTY STATE */}
       {events.length === 0 && (
         <p>You haven’t joined any events yet.</p>
       )}
@@ -137,9 +145,7 @@ const [submitting, setSubmitting] = useState<string | null>(null);
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Upcoming</h2>
-            <span className={styles.sectionCount}>
-              {upcoming.length}
-            </span>
+            <span className={styles.sectionCount}>{upcoming.length}</span>
           </div>
 
           <div className={styles.grid}>
@@ -147,17 +153,13 @@ const [submitting, setSubmitting] = useState<string | null>(null);
               <div
                 key={event.id}
                 className={styles.card}
-                onClick={() =>
-                  router.push(`/events/${event.id}`)
-                }
+                onClick={() => router.push(`/events/${event.id}`)}
                 role="button"
               >
                 <div>
                   <div className={styles.cardHeader}>
                     <h3 className={styles.title}>{event.title}</h3>
-                    <span className={styles.badge}>
-                      {event.sport}
-                    </span>
+                    <span className={styles.badge}>{event.sport}</span>
                   </div>
 
                   <div className={styles.meta}>
@@ -210,9 +212,7 @@ const [submitting, setSubmitting] = useState<string | null>(null);
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Past Events</h2>
-            <span className={styles.sectionCount}>
-              {past.length}
-            </span>
+            <span className={styles.sectionCount}>{past.length}</span>
           </div>
 
           <div className={styles.grid}>
@@ -220,17 +220,13 @@ const [submitting, setSubmitting] = useState<string | null>(null);
               <div
                 key={event.id}
                 className={`${styles.card} ${styles.past}`}
-                onClick={() =>
-                  router.push(`/events/${event.id}`)
-                }
+                onClick={() => router.push(`/events/${event.id}`)}
                 role="button"
               >
                 <div>
                   <div className={styles.cardHeader}>
                     <h3 className={styles.title}>{event.title}</h3>
-                    <span className={styles.badge}>
-                      {event.sport}
-                    </span>
+                    <span className={styles.badge}>{event.sport}</span>
                   </div>
 
                   <div className={styles.meta}>
@@ -245,58 +241,61 @@ const [submitting, setSubmitting] = useState<string | null>(null);
                     </div>
                   </div>
                 </div>
-              {/* REVIEW – ONLY FOR PAST EVENTS */}
-<div
-  className={styles.reviewBox}
-  onClick={(e) => e.stopPropagation()}
->
-  <strong className={styles.reviewTitle}>
-    Leave a review
-  </strong>
 
-  {/* RATING */}
-  <div className={styles.ratingRow}>
-    {[1, 2, 3, 4, 5].map(n => (
-      <button
-        key={n}
-        type="button"
-        className={`${styles.star} ${
-          reviewRating[event.id] >= n ? styles.activeStar : ""
-        }`}
-        onClick={() =>
-          setReviewRating(prev => ({
-            ...prev,
-            [event.id]: n,
-          }))
-        }
-      >
-        ★
-      </button>
-    ))}
-  </div>
+                {!reviewedEventIds.has(event.id) ? (
+                  <div
+                    className={styles.reviewBox}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <strong className={styles.reviewTitle}>
+                      Leave a review
+                    </strong>
 
-  {/* COMMENT */}
-  <textarea
-    className={styles.reviewTextarea}
-    placeholder="How was this event?"
-    value={reviewText[event.id] || ""}
-    onChange={(e) =>
-      setReviewText(prev => ({
-        ...prev,
-        [event.id]: e.target.value,
-      }))
-    }
-  />
+                    <div className={styles.ratingRow}>
+                      {[1, 2, 3, 4, 5].map(n => (
+                        <button
+                          key={n}
+                          type="button"
+                          className={`${styles.star} ${
+                            reviewRating[event.id] >= n ? styles.activeStar : ""
+                          }`}
+                          onClick={() =>
+                            setReviewRating(prev => ({
+                              ...prev,
+                              [event.id]: n,
+                            }))
+                          }
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
 
-  <button
-    className={styles.reviewButton}
-    disabled={submitting === event.id}
-    onClick={() => submitReview(event.id)}
-  >
-    {submitting === event.id ? "Saving…" : "Submit review"}
-  </button>
-</div>
+                    <textarea
+                      className={styles.reviewTextarea}
+                      placeholder="How was this event?"
+                      value={reviewText[event.id] || ""}
+                      onChange={(e) =>
+                        setReviewText(prev => ({
+                          ...prev,
+                          [event.id]: e.target.value,
+                        }))
+                      }
+                    />
 
+                    <button
+                      className={styles.reviewButton}
+                      disabled={submitting === event.id}
+                      onClick={() => submitReview(event.id)}
+                    >
+                      {submitting === event.id ? "Saving…" : "Submit review"}
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.reviewedBadge}>
+                    ✔ Review submitted
+                  </div>
+                )}
 
                 <div className={styles.actions}>
                   <span />
@@ -326,15 +325,17 @@ const [submitting, setSubmitting] = useState<string | null>(null);
             </p>
 
             <div className={styles.modalActions}>
-              <button onClick={() => setToLeave(null)}>
-                Cancel
-              </button>
-
-              <button onClick={confirmLeave}>
-                Leave
-              </button>
+              <button onClick={() => setToLeave(null)}>Cancel</button>
+              <button onClick={confirmLeave}>Leave</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* REVIEW SUCCESS POPUP */}
+      {reviewSuccess && (
+        <div className={styles.successToast}>
+          Review submitted successfully
         </div>
       )}
     </div>

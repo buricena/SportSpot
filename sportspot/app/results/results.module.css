@@ -331,3 +331,27 @@
   padding: 2px 10px;
   border-radius: 999px;
 }
+.starIcon {
+  color: #ff6b35;
+}
+
+.ratingValue {
+  font-weight: 600;
+  color: #ff6b35;
+  margin-left: 4px;
+}
+.ratingSummary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.reviewRating {
+  font-weight: 600;
+  color: #ff6b35;
+}
+
+.reviewComment {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #666;
+}

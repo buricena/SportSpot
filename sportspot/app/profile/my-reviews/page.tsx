@@ -10,12 +10,11 @@ type Review = {
   rating: number;
   comment: string;
   created_at: string;
-  events: {
+  event: {
     id: string;
     title: string;
-  }[];
+  } | null;
 };
-
 
 export default function MyReviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -35,6 +34,7 @@ export default function MyReviews() {
       return;
     }
 
+    // ✅ EXPLICIT FK JOIN (KEY FIX)
     const { data, error } = await supabase
       .from("event_reviews")
       .select(`
@@ -42,7 +42,7 @@ export default function MyReviews() {
         rating,
         comment,
         created_at,
-        events (
+        events!event_reviews_event_id_fkey (
           id,
           title
         )
@@ -51,7 +51,15 @@ export default function MyReviews() {
       .order("created_at", { ascending: false });
 
     if (!error && data) {
-      setReviews(data);
+      const mapped: Review[] = data.map((r: any) => ({
+        id: r.id,
+        rating: r.rating,
+        comment: r.comment,
+        created_at: r.created_at,
+        event: r.events ?? null,
+      }));
+
+      setReviews(mapped);
     }
 
     setLoading(false);
@@ -71,8 +79,7 @@ export default function MyReviews() {
         <div key={review.id} className={styles.card}>
           <div className={styles.header}>
             <h3 className={styles.eventTitle}>
-              {review.events[0]?.title
- ?? "Unknown event"}
+              {review.event?.title ?? "Unknown event"}
             </h3>
 
             {review.rating && (

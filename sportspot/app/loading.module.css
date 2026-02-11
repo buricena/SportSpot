@@ -1,0 +1,39 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+}
+
+.card {
+  background: white;
+  padding: 36px 44px;
+  border-radius: 22px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.spinner {
+  color: #ff7a1a;
+  animation: spin 1s linear infinite;
+  margin-bottom: 14px;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.card p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #777;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
