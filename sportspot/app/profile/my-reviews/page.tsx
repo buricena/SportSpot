@@ -7,14 +7,15 @@ import styles from "./my-reviews.module.css";
 
 type Review = {
   id: string;
-  rating: number | null;
-  comment: string | null;
+  rating: number;
+  comment: string;
   created_at: string;
   events: {
     id: string;
     title: string;
-  } | null;
+  }[];
 };
+
 
 export default function MyReviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -70,7 +71,8 @@ export default function MyReviews() {
         <div key={review.id} className={styles.card}>
           <div className={styles.header}>
             <h3 className={styles.eventTitle}>
-              {review.events?.title ?? "Unknown event"}
+              {review.events[0]?.title
+ ?? "Unknown event"}
             </h3>
 
             {review.rating && (
