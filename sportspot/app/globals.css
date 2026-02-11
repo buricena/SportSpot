@@ -100,11 +100,12 @@
 
 .map-container {
   flex: 2;
-  height: 320px;
+  height: 450px;        /* ⬅️ */
+  min-height: 420px;    /* ⬅️ */
   border-radius: 16px;
   overflow: hidden;
-  position: relative;
 }
+
 .map-btn {
   position: absolute;
   top: 16px;
@@ -118,12 +119,12 @@
 }
 .map-wrapper {
   flex: 2;
-  height: 320px;
-  min-height: 320px;
+  height: 420px;        /* ⬅️ povećano (bilo 320px) */
+  min-height: 420px;    /* ⬅️ bitno */
   border-radius: 16px;
   overflow: hidden;
   position: relative;
-  background: #e5e7eb;
+  background: transparent;
 }
 
 .map-btn {
@@ -378,6 +379,7 @@
   max-width: 1200px;
   margin: 0 auto;
   flex-wrap: wrap;
+  align-items: stretch;
 }
 
 .map-placeholder {
@@ -546,6 +548,12 @@
     height: auto;
     padding: 1rem;
   }
+@media (max-width: 768px) {
+  .map-wrapper {
+    height: 300px;
+    min-height: 300px;
+  }
+}
 
   .navbar-center {
     flex-direction: column;

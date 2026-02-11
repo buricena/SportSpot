@@ -74,6 +74,7 @@ setInitials(
 
       {/* CENTER NAV */}
       <nav className="navbar-center">
+        <Link href="/">Home</Link>
         <Link href="/events">Events</Link>
         <Link href="/map">Map</Link>
         <Link href="/results">Results</Link>

@@ -105,8 +105,8 @@ export default function HomePage() {
   </Link>
 ))}
 
-            <button className="explore-btn" onClick={() => window.location.href = '/events'}>
-              Explore All Events
+            <button className="explore-btn" onClick={() => window.location.href = '/map'}>
+              Explore Map view
             </button>
           </div>
         </div>

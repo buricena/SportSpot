@@ -8,6 +8,8 @@ import styles from "./personal-information.module.css";
 export default function PersonalInformation() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -16,7 +18,10 @@ export default function PersonalInformation() {
 
   useEffect(() => {
     const loadProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) return;
 
       const { data } = await supabase
@@ -45,10 +50,13 @@ export default function PersonalInformation() {
     e.preventDefault();
     setSaving(true);
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     if (!user) return;
 
-    await supabase
+    const { error } = await supabase
       .from("profiles")
       .update({
         name: form.name,
@@ -57,7 +65,11 @@ export default function PersonalInformation() {
       .eq("id", user.id);
 
     setSaving(false);
-    alert("Profile updated");
+
+    if (!error) {
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2500);
+    }
   };
 
   if (loading) {
@@ -66,6 +78,13 @@ export default function PersonalInformation() {
 
   return (
     <RequireAuth>
+      {/* 🔔 TOAST */}
+      {showToast && (
+        <div className={styles.toast}>
+          Personal information updated
+        </div>
+      )}
+
       <div className={styles.wrapper}>
         <h2 className={styles.title}>Personal Information</h2>
         <p className={styles.subtitle}>

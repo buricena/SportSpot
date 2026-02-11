@@ -26,6 +26,7 @@ export default function EventsPage() {
   const [search, setSearch] = useState("");
   const { user } = useAuth();
 const router = useRouter();
+const [showLoginNotice, setShowLoginNotice] = useState(false);
 
 
   const [upcomingCount, setUpcomingCount] = useState(0);
@@ -124,12 +125,35 @@ const router = useRouter();
   </button>
 </div>
 
-            <Link href="/events/create" className={styles.addBtn}>
-              + Add Event
-            </Link>
+<Link
+  href="/events/create"
+  className={styles.addBtn}
+  onClick={(e) => {
+    if (!user) {
+      e.preventDefault();
+      setShowLoginNotice(true);
+
+      // sakrij obavijest nakon 3 sekunde
+      setTimeout(() => {
+        setShowLoginNotice(false);
+        router.push("/login");
+      }, 2500);
+    }
+  }}
+>
+  + Add Event
+</Link>
+
+
           </div>
         </div>
       </header>
+      {showLoginNotice && (
+  <div className={styles.loginNotice}>
+    You must be logged in to create an event
+  </div>
+)}
+
 
       {/* GRID */}
       {loading && <p>Loading events...</p>}

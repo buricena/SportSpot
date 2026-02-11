@@ -13,28 +13,40 @@ const ALL_SPORTS = [
   "Cycling",
   "Gym",
   "Yoga",
+  "Volleyball",
+  "Handball",
+  "Table tennis",
+  "Pilates",
+  "Chess"
 ];
 
 export default function SportsPreferences() {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
 
   useEffect(() => {
     loadPreferences();
   }, []);
 
   const loadPreferences = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return setLoading(false);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
     const { data } = await supabase
       .from("profiles")
-      .select("sports")
+      .select("favorite_sport")
       .eq("id", user.id)
       .single();
 
-    setSelected(data?.sports ?? []);
+    setSelected(data?.favorite_sport ?? []);
     setLoading(false);
   };
 
@@ -49,16 +61,25 @@ export default function SportsPreferences() {
   const savePreferences = async () => {
     setSaving(true);
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setSaving(false);
+      return;
+    }
 
     await supabase
       .from("profiles")
-      .update({ sports: selected })
+      .update({ favorite_sport: selected })
       .eq("id", user.id);
 
     setSaving(false);
-    alert("Preferences saved");
+
+    // 👉 show popup
+    setShowSaved(true);
+    setTimeout(() => setShowSaved(false), 2500);
   };
 
   if (loading) {
@@ -95,6 +116,13 @@ export default function SportsPreferences() {
           {saving ? "Saving…" : "Save preferences"}
         </button>
       </div>
+
+      {/* ✅ TOAST */}
+      {showSaved && (
+        <div className={styles.toast}>
+          Preferences saved successfully ✅
+        </div>
+      )}
     </div>
   );
 }
