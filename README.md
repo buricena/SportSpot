@@ -18,13 +18,13 @@
 
 ### Semester Project
 
-- Link to production version: [**Production Version**](URL_TO_PRODUCTION_VERSION) <!-- Replace with actual URL -->
-- Link to final report: [**Final Report**](URL_TO_FINAL_REPORT) <!-- Replace with actual URL -->
+- Link to production version: [**Production Version**](https://sport-spot-lake.vercel.app/) <!-- Replace with actual URL -->
+- Link to final report: [**Final Report**](https://www.notion.so/SportSpot-Report-304cb4e14adc80cd82fce8c9dce383f2?source=copy_link) <!-- Replace with actual URL -->
 <!-- Add more as necessary -->
 
 ### Semester Assignments
 
-- Link to Assignment 1: [**Assignment 1**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment1.md) <!-- Replace with actual URL -->
+- Link to Assignment 1: [**Assignment 1**](assignments/assignment1/assignment1.md) <!-- Replace with actual URL -->
 - Link to Assignment 2: [**Assignment 2**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment2/assignment2.md) <!-- Replace with actual URL -->
 - Link to Assignment 3: [**Assignment 3**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment3/assignment3.md)
 - Link to Assignment 4: [**Assignment 4**](https://github.com/buricena/SportSpot/blob/main/assignments/assignment4/assignment4.md)
