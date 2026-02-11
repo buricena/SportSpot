@@ -5,6 +5,8 @@ import { LandPlot } from "lucide-react";
 import MapSection, { Event } from "./components/MapSection";
 import { useState } from "react";
 import Link from "next/link";
+import { Search, Users, Trophy } from "lucide-react";
+
 
 
 export default function HomePage() {
@@ -34,22 +36,34 @@ export default function HomePage() {
         </p>
 
         <div className="steps">
-          <div className="step">
-            <div className="step-icon">🔍<span className="step-number">1</span></div>
-            <h3>Discover Events</h3>
-            <p>Browse local matches and tournaments near you</p>
-          </div>
-          <div className="step">
-            <div className="step-icon">👥<span className="step-number">2</span></div>
-            <h3>Join & Connect</h3>
-            <p>Register for events and meet new players</p>
-          </div>
-          <div className="step">
-            <div className="step-icon">🏆<span className="step-number">3</span></div>
-            <h3>Play & Track</h3>
-            <p>Participate and follow your results</p>
-          </div>
-        </div>
+  <div className="step">
+    <div className="step-icon">
+      <Search size={42} />  {/* Lucide ikona */}
+      {/* <span className="step-number">1</span> */}
+    </div>
+    <h3>Discover Events</h3>
+    <p>Browse local matches and tournaments near you</p>
+  </div>
+
+  <div className="step">
+    <div className="step-icon">
+      <Users size={42} />
+      {/* <span className="step-number">2</span> */}
+    </div>
+    <h3>Join & Connect</h3>
+    <p>Register for events and meet new players</p>
+  </div>
+
+  <div className="step">
+    <div className="step-icon">
+      <Trophy size={42} />
+      {/* <span className="step-number">3</span> */}
+    </div>
+    <h3>Play & Track</h3>
+    <p>Participate and view final results</p>
+  </div>
+</div>
+
       </section>
 
       {/* EVENTS AROUND YOU */}
