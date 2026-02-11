@@ -3,26 +3,60 @@
 import heroImage from "./media/background.jpeg";
 import { LandPlot } from "lucide-react";
 import MapSection, { Event } from "./components/MapSection";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Search, Users, Trophy } from "lucide-react";
+import { sanityClient } from "@/lib/sanity";
 
+// ---------------- TYPES ----------------
 
+type FeaturedEvent = {
+  eventId: string;
+  title: string;
+  description: string;
+};
+
+// ---------------- COMPONENT ----------------
 
 export default function HomePage() {
   const [nearbyEvents, setNearbyEvents] = useState<Event[]>([]);
+  const [featuredEvents, setFeaturedEvents] = useState<FeaturedEvent[]>([]);
+
+  // ---------------- FETCH CMS EVENTS ----------------
+
+  useEffect(() => {
+    fetchFeaturedEvents();
+  }, []);
+
+  async function fetchFeaturedEvents() {
+    const data = await sanityClient.fetch(`
+      *[_type == "featuredEvent"]{
+        eventId,
+        title,
+        description
+      }
+    `);
+
+    setFeaturedEvents(data || []);
+  }
 
   return (
     <>
       {/* HERO */}
-      <main className="hero" style={{ backgroundImage: `url(${heroImage.src})` }}>
+      <main
+        className="hero"
+        style={{ backgroundImage: `url(${heroImage.src})` }}
+      >
         <div className="hero-overlay">
           <h1>Find Your Game.</h1>
           <p>
             Connect with local players and discover non-professional sports
             events in your area
           </p>
-          <button className="hero-btn" onClick={() => window.location.href = '/events'}>
+          <button
+            className="hero-btn"
+            onClick={() => (window.location.href = "/events")}
+          >
             Explore Events
           </button>
         </div>
@@ -36,34 +70,30 @@ export default function HomePage() {
         </p>
 
         <div className="steps">
-  <div className="step">
-    <div className="step-icon">
-      <Search size={42} />  {/* Lucide ikona */}
-      {/* <span className="step-number">1</span> */}
-    </div>
-    <h3>Discover Events</h3>
-    <p>Browse local matches and tournaments near you</p>
-  </div>
+          <div className="step">
+            <div className="step-icon">
+              <Search size={42} />
+            </div>
+            <h3>Discover Events</h3>
+            <p>Browse local matches and tournaments near you</p>
+          </div>
 
-  <div className="step">
-    <div className="step-icon">
-      <Users size={42} />
-      {/* <span className="step-number">2</span> */}
-    </div>
-    <h3>Join & Connect</h3>
-    <p>Register for events and meet new players</p>
-  </div>
+          <div className="step">
+            <div className="step-icon">
+              <Users size={42} />
+            </div>
+            <h3>Join & Connect</h3>
+            <p>Register for events and meet new players</p>
+          </div>
 
-  <div className="step">
-    <div className="step-icon">
-      <Trophy size={42} />
-      {/* <span className="step-number">3</span> */}
-    </div>
-    <h3>Play & Track</h3>
-    <p>Participate and view final results</p>
-  </div>
-</div>
-
+          <div className="step">
+            <div className="step-icon">
+              <Trophy size={42} />
+            </div>
+            <h3>Play & Track</h3>
+            <p>Participate and view final results</p>
+          </div>
+        </div>
       </section>
 
       {/* EVENTS AROUND YOU */}
@@ -75,37 +105,30 @@ export default function HomePage() {
         </p>
 
         <div className="events-layout">
-          {/* Mapa */}
+          {/* MAPA */}
           <MapSection onEventsFetched={setNearbyEvents} />
 
-          {/* Lista događaja */}
+          {/* CMS UPCOMING EVENTS */}
           <div className="events-list">
-           <h3>Upcoming Events</h3>
+            <h3>Events you might be interested in</h3>
 
-{nearbyEvents.length === 0 && <p>No upcoming events.</p>}
+            {featuredEvents.length === 0 && (
+              <p>No upcoming events.</p>
+            )}
 
-{nearbyEvents.map(event => (
-  <Link
-    key={event.id}
-    href={`/events/${event.id}`}
-    style={{ textDecoration: "none", color: "inherit" }}
-  >
-    <div className="event-card">
-      <span className={`tag ${event.sport.toLowerCase()}`}>
-        {event.sport}
-      </span>
+            {featuredEvents.map(event => (
+              <div key={event.eventId} className="event-card">
+                <span className="tag featured">Upcoming</span>
 
-      <strong>{event.title}</strong>
-      <p>{event.location}</p>
+                <strong>{event.title}</strong>
+                <p>{event.description}</p>
+              </div>
+            ))}
 
-      <span className="distance">
-        {new Date(event.event_date).toLocaleDateString("hr-HR")}
-      </span>
-    </div>
-  </Link>
-))}
-
-            <button className="explore-btn" onClick={() => window.location.href = '/map'}>
+            <button
+              className="explore-btn"
+              onClick={() => (window.location.href = "/map")}
+            >
               Explore Map view
             </button>
           </div>

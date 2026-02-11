@@ -30,10 +30,12 @@ export default function EventDetailsPage() {
   const [user, setUser] = useState<any>(null);
   const [joined, setJoined] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
-  const [organizerName, setOrganizerName] = useState<string>("Unknown");
+  const [organizerName, setOrganizerName] = useState("Unknown");
   const [loading, setLoading] = useState(true);
-  
 
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
 
   useEffect(() => {
     fetchAll();
@@ -42,7 +44,6 @@ export default function EventDetailsPage() {
   async function fetchAll() {
     setLoading(true);
 
-    /* EVENT */
     const { data: eventData } = await supabase
       .from("events")
       .select("*")
@@ -55,24 +56,17 @@ export default function EventDetailsPage() {
     }
 
     setEvent(eventData);
-/* ORGANIZER */
-if (eventData.organizer_id) {
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("name")
-    .eq("id", eventData.organizer_id)
-    .maybeSingle();
 
-  if (profile?.name) {
-    setOrganizerName(profile.name);
-  } else {
-    setOrganizerName("Unknown");
-  }
-}
+    if (eventData.organizer_id) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("name")
+        .eq("id", eventData.organizer_id)
+        .maybeSingle();
 
+      if (profile?.name) setOrganizerName(profile.name);
+    }
 
-
-    /* AUTH USER */
     const { data: auth } = await supabase.auth.getUser();
     setUser(auth.user);
 
@@ -87,7 +81,6 @@ if (eventData.organizer_id) {
       if (joinedData) setJoined(true);
     }
 
-    /* PARTICIPANTS COUNT */
     const { count } = await supabase
       .from("event_participants")
       .select("*", { count: "exact", head: true })
@@ -109,35 +102,69 @@ if (eventData.organizer_id) {
     });
 
     setJoined(true);
-    setParticipantsCount((c) => c + 1);
+    setParticipantsCount(c => c + 1);
+  }
+
+  function handleDelete() {
+    setDeleteError(null);
+
+    if (!user) {
+      setDeleteError("You must be logged in to delete an event.");
+      return;
+    }
+
+    if (user.id !== event?.organizer_id) {
+      setDeleteError("Only the event organizer can delete this event.");
+      return;
+    }
+
+    setShowConfirm(true);
+  }
+
+  async function confirmDelete() {
+    if (!event) return;
+
+    const { error } = await supabase
+      .from("events")
+      .delete()
+      .eq("id", event.id);
+
+    if (error) {
+      setDeleteError("Failed to delete event.");
+      return;
+    }
+
+    setShowConfirm(false);
+    setDeleteSuccess(true);
+
+    setTimeout(() => {
+      router.push("/events");
+    }, 2000);
   }
 
   if (loading || !event) {
     return <main className={styles.page}>Loading…</main>;
   }
-const eventDate = new Date(event.event_date);
-const isPast = eventDate < new Date();
+
+  const isPast = new Date(event.event_date) < new Date();
 
   return (
     <main className={styles.page}>
       <article className={styles.card}>
-        {/* BACK */}
         <button className={styles.back} onClick={() => router.push("/events")}>
-          <ArrowLeft size={16} />
-          Back to events
+          <ArrowLeft size={16} /> Back to events
         </button>
 
-        {/* TAGS */}
         <div className={styles.tags}>
-  <span className={styles.sport}>{event.sport}</span>
-  <span
-    className={`${styles.status} ${
-      isPast ? styles.past : styles.upcoming
-    }`}
-  >
-    {isPast ? "Past" : "Upcoming"}
-  </span>
-</div>
+          <span className={styles.sport}>{event.sport}</span>
+          <span
+            className={`${styles.status} ${
+              isPast ? styles.past : styles.upcoming
+            }`}
+          >
+            {isPast ? "Past" : "Upcoming"}
+          </span>
+        </div>
 
         <h1 className={styles.title}>{event.title}</h1>
 
@@ -146,83 +173,41 @@ const isPast = eventDate < new Date();
         </p>
 
         <div className={styles.infoGrid}>
-          {/* DATE */}
           <div className={styles.infoCard}>
-            <div className={styles.infoIcon}>
-              <Calendar size={20} />
-            </div>
-            <div className={styles.infoText}>
-              <span className={styles.infoLabel}>Date</span>
-              <span className={styles.infoValue}>
-                {new Date(event.event_date).toLocaleDateString("hr-HR")}
-              </span>
-            </div>
+            <Calendar size={20} />
+            <strong>
+              {new Date(event.event_date).toLocaleDateString("hr-HR")}
+            </strong>
           </div>
 
-          {/* TIME */}
           <div className={styles.infoCard}>
-            <div className={styles.infoIcon}>
-              <Clock size={20} />
-            </div>
-            <div className={styles.infoText}>
-              <span className={styles.infoLabel}>Time</span>
-              <span className={styles.infoValue}>
-                {new Date(event.event_date).toLocaleTimeString("hr-HR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
-            </div>
+            <Clock size={20} />
+            <strong>
+              {new Date(event.event_date).toLocaleTimeString("hr-HR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </strong>
           </div>
 
-          {/* LOCATION */}
           <div className={styles.infoCard}>
-            <div className={styles.infoIcon}>
-              <MapPin size={20} />
-            </div>
-            <div className={styles.infoText}>
-              <span className={styles.infoLabel}>Location</span>
-              <span className={styles.infoValue}>{event.location}</span>
-            </div>
+            <MapPin size={20} />
+            <strong>{event.location}</strong>
           </div>
 
-          {/* PARTICIPANTS */}
           <div className={styles.infoCard}>
-            <div className={styles.infoIcon}>
-              <Users size={20} />
-            </div>
-            <div className={styles.infoText}>
-              <span className={styles.infoLabel}>Participants</span>
-
-              {event.max_participants ? (
-                <>
-                  <span className={styles.infoValue}>
-                    {participantsCount} / {event.max_participants}
-                  </span>
-                  <span className={styles.infoHint}>
-                    {event.max_participants - participantsCount} spots remaining
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className={styles.infoValue}>{participantsCount}</span>
-                  <span className={styles.infoHint}>
-                    Unlimited participants
-                  </span>
-                </>
-              )}
-            </div>
+            <Users size={20} />
+            <strong>
+              {participantsCount}
+              {event.max_participants && ` / ${event.max_participants}`}
+            </strong>
           </div>
         </div>
 
-        {/* JOIN */}
         <div className={styles.joinCard}>
           <div>
             <strong>Want to participate?</strong>
             <p>Join this event and appear on the participants list.</p>
-            <span className={styles.participants}>
-              {participantsCount} people joined
-            </span>
           </div>
 
           <button
@@ -234,7 +219,6 @@ const isPast = eventDate < new Date();
           </button>
         </div>
 
-        {/* MAP + DESCRIPTION */}
         <div className={styles.contentGrid}>
           {event.lat && event.lng && (
             <EventMap lat={event.lat} lng={event.lng} />
@@ -245,7 +229,49 @@ const isPast = eventDate < new Date();
             <p>{event.description}</p>
           </div>
         </div>
+
+        {/* DELETE */}
+        <div className={styles.deleteSection}>
+          <button className={styles.deleteBtn} onClick={handleDelete}>
+            Delete Event
+          </button>
+
+          {deleteError && (
+            <p className={styles.deleteError}>{deleteError}</p>
+          )}
+        </div>
       </article>
+
+      {/* CONFIRM MODAL */}
+      {showConfirm && (
+        <div className={styles.confirmOverlay}>
+          <div className={styles.confirmBox}>
+            <p>Are you sure you want to delete this event?</p>
+
+            <div className={styles.confirmActions}>
+              <button
+                className={styles.confirmDelete}
+                onClick={confirmDelete}
+              >
+                Yes, delete
+              </button>
+              <button
+                className={styles.confirmCancel}
+                onClick={() => setShowConfirm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SUCCESS POPUP */}
+      {deleteSuccess && (
+        <div className={styles.successToast}>
+          Event deleted successfully
+        </div>
+      )}
     </main>
   );
 }

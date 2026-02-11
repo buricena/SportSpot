@@ -7,6 +7,8 @@ import { Calendar, MapPin } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
 import { useRouter } from "next/navigation";
 import styles from "./events.module.css";
+import { sanityClient } from '@/lib/sanity'
+
 
 type Event = {
   id: string;
