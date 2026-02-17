@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LandPlot } from "lucide-react";
 import { useAuth } from "../../lib/AuthProvider";
 import { supabase } from "../../lib/supabaseClient";
 
 export default function Navbar() {
   const { user, loading } = useAuth();
+  const pathname = usePathname();
   const [initials, setInitials] = useState<string>("");
 
   useEffect(() => {
@@ -22,15 +24,13 @@ export default function Navbar() {
 
       if (data?.name) {
         const parts = data.name.trim().split(" ");
-setInitials(
-  parts
-    .slice(0, 2)
-    .map((p: string) => p[0].toUpperCase())
-    .join("")
-);
-
+        setInitials(
+          parts
+            .slice(0, 2)
+            .map((p: string) => p[0].toUpperCase())
+            .join("")
+        );
       } else if (user.email) {
-        // fallback (realno se neće više koristiti)
         setInitials(user.email[0].toUpperCase());
       }
     };
@@ -42,6 +42,11 @@ setInitials(
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+  };
+
+  const isActive = (path: string) => {
+    if (path === "/") return pathname === "/";
+    return pathname.startsWith(path);
   };
 
   return (
@@ -74,10 +79,21 @@ setInitials(
 
       {/* CENTER NAV */}
       <nav className="navbar-center">
-        <Link href="/">Home</Link>
-        <Link href="/events">Events</Link>
-        <Link href="/map">Map</Link>
-        <Link href="/results">Results</Link>
+        <Link href="/" className={isActive("/") ? "active-link" : ""}>
+          Home
+        </Link>
+
+        <Link href="/events" className={isActive("/events") ? "active-link" : ""}>
+          Events
+        </Link>
+
+        <Link href="/map" className={isActive("/map") ? "active-link" : ""}>
+          Map
+        </Link>
+
+        <Link href="/results" className={isActive("/results") ? "active-link" : ""}>
+          Results
+        </Link>
       </nav>
 
       {/* RIGHT ACTIONS */}

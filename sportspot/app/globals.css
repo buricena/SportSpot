@@ -76,6 +76,29 @@
 .navbar-center a:hover::after {
   width: 100%;
 }
+.navbar-center a {
+  position: relative;
+  text-decoration: none;
+  padding-bottom: 4px;
+  transition: 0.2s ease;
+}
+
+.navbar-center a.active-link {
+  font-weight: 600;
+  color: #FF6B35;
+}
+
+.navbar-center a.active-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 3px;
+  background: #FF6B35;
+  border-radius: 2px;
+}
+
 .profile-avatar {
   width: 36px;
   height: 36px;
