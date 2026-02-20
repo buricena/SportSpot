@@ -200,38 +200,51 @@ export default function EventDetailsPage() {
         </p>
 
         <div className={styles.infoGrid}>
-          <div className={styles.infoCard}>
-            <Calendar size={20} />
-            <strong>
-              {new Date(event.event_date).toLocaleDateString("hr-HR")}
-            </strong>
-          </div>
+ <div className={styles.infoCard}>
+  <span className={styles.infoLabel}>Date</span>
 
-          <div className={styles.infoCard}>
-            <Clock size={20} />
-            <strong>
-              {new Date(event.event_date).toLocaleTimeString("hr-HR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </strong>
-          </div>
+  <div className={styles.infoValue}>
+    <Calendar size={18} />
+    <strong>
+      {new Date(event.event_date).toLocaleDateString("hr-HR")}
+    </strong>
+  </div>
+</div>
 
-          <div className={styles.infoCard}>
-            <MapPin size={20} />
-            <strong>{event.location}</strong>
-          </div>
+  <div className={styles.infoCard}>
+    <span className={styles.infoLabel}>Time</span>
+    <div className={styles.infoValue}>
+      <Clock size={18} />
+      <strong>
+        {new Date(event.event_date).toLocaleTimeString("hr-HR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </strong>
+    </div>
+  </div>
 
-          <div className={styles.infoCard}>
-            <Users size={20} />
-            <strong>
-              {participantsCount}
-              {event.max_participants
-                ? ` / ${event.max_participants}`
-                : " / Unlimited"}
-            </strong>
-          </div>
-        </div>
+  <div className={styles.infoCard}>
+    <span className={styles.infoLabel}>Location</span>
+    <div className={styles.infoValue}>
+      <MapPin size={18} />
+      <strong>{event.location}</strong>
+    </div>
+  </div>
+
+  <div className={styles.infoCard}>
+    <span className={styles.infoLabel}>Participants</span>
+    <div className={styles.infoValue}>
+      <Users size={18} />
+      <strong>
+        {participantsCount}
+        {event.max_participants
+          ? ` / ${event.max_participants}`
+          : " / Unlimited"}
+      </strong>
+    </div>
+  </div>
+</div>
 
         {/* JOIN */}
         <div className={styles.joinCard}>

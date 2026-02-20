@@ -1,23 +1,31 @@
 .page {
   height: calc(100vh - 80px);
   background: #fafafa;
+  position: relative;
 }
 
-.mapWrapper {
-  height: 100%;
-}
-
-.state {
-  padding: 2rem;
+/* HEADER */
+.header {
   text-align: center;
+  padding: 32px 20px 12px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.header p {
+  margin-top: 6px;
+  font-size: 14px;
   color: #666;
 }
+
+/* SEARCH BAR */
 .searchBar {
-  position: absolute;
-  top: 96px; /* ⬅️ OVO JE KLJUČNO – ispod navbara */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
+  position: relative; /* ⬅️ VIŠE NIJE ABSOLUTE */
+  margin: 0 auto 16px;
+  width: fit-content;
 
   display: flex;
   gap: 8px;
@@ -26,7 +34,6 @@
   border-radius: 999px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
-
 
 .searchBar input {
   border: none;
@@ -43,4 +50,15 @@
   border-radius: 999px;
   font-size: 13px;
   cursor: pointer;
+}
+
+/* MAP */
+.mapWrapper {
+  height: calc(100% - 160px); /* ⬅️ prostor za header + search */
+}
+
+.state {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
 }

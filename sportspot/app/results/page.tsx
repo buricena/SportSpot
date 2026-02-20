@@ -8,7 +8,6 @@ import {
   Calendar,
   MapPin,
   Users,
-  CheckCircle,
   Clock,
   Search,
   Star,
@@ -28,9 +27,7 @@ type Event = {
   organizer_id: string;
   max_participants: number | null;
   participants_count: number;
-  result?: {
-    comment: string | null;
-  };
+  result?: { comment: string | null };
   reviews: Review[];
 };
 
@@ -42,6 +39,8 @@ export default function ResultsPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [comments, setComments] = useState<Record<string, string>>({});
+  const [editing, setEditing] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -83,27 +82,34 @@ export default function ResultsPage() {
     setEvents(formatted);
   }
 
-  async function saveComment(eventId: string) {
+  async function saveResult(eventId: string) {
     const text = comments[eventId]?.trim();
-    if (!text) return;
+    if (!text || text.length < 10) {
+      setError("Result must contain at least 10 characters.");
+      return;
+    }
 
-    const { error } = await supabase.from("event_results").insert({
-      event_id: eventId,
-      comment: text,
-    });
+    const event = events.find(e => e.id === eventId);
+    if (!event) return;
+
+    const action = event.result
+      ? supabase.from("event_results").update({ comment: text }).eq("event_id", eventId)
+      : supabase.from("event_results").insert({ event_id: eventId, comment: text });
+
+    const { error } = await action;
 
     if (!error) {
       setComments({});
+      setEditing(null);
+      setError(null);
       loadData();
     }
   }
 
-  /* ================= FILTER + SEARCH ================= */
-
+  /* FILTER + SEARCH */
   const filteredEvents = useMemo(() => {
-    return events.filter((e) => {
+    return events.filter(e => {
       const hasResult = !!e.result?.comment;
-
       if (filter === "posted" && !hasResult) return false;
       if (filter === "pending" && hasResult) return false;
 
@@ -115,55 +121,32 @@ export default function ResultsPage() {
           e.location.toLowerCase().includes(q)
         );
       }
-
       return true;
     });
   }, [events, filter, search]);
 
   const stats = {
     total: events.length,
-    posted: events.filter((e) => e.result?.comment).length,
-    pending: events.filter((e) => !e.result?.comment).length,
+    posted: events.filter(e => e.result?.comment).length,
+    pending: events.filter(e => !e.result?.comment).length,
   };
 
   return (
     <main className={styles.page}>
       {/* HEADER */}
       <header className={styles.header}>
-        <div className={styles.headerIcon}>
-          <Trophy size={22} />
-        </div>
+        <div className={styles.headerIcon}><Trophy size={22} /></div>
         <div>
           <h1>Event Results</h1>
-          <p>Results and comments from past events</p>
+          <p>Final results and reviews from past events</p>
         </div>
       </header>
 
       {/* STATS */}
       <section className={styles.stats}>
-        <div className={styles.statCard}>
-          <Calendar />
-          <div>
-            <span>Past events</span>
-            <strong>{stats.total}</strong>
-          </div>
-        </div>
-
-        <div className={styles.statCardGreen}>
-          <CheckCircle />
-          <div>
-            <span>Results posted</span>
-            <strong>{stats.posted}</strong>
-          </div>
-        </div>
-
-        <div className={styles.statCardOrange}>
-          <Clock />
-          <div>
-            <span>Awaiting results</span>
-            <strong>{stats.pending}</strong>
-          </div>
-        </div>
+        <Stat icon={<Calendar />} label="Past events" value={stats.total} />
+        <Stat icon={<Trophy />} label="Results posted" value={stats.posted} green />
+        <Stat icon={<Clock />} label="Pending" value={stats.pending} orange />
       </section>
 
       {/* SEARCH */}
@@ -172,154 +155,108 @@ export default function ResultsPage() {
         <input
           placeholder="Search by name, sport or location..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={e => setSearch(e.target.value)}
         />
       </div>
 
       {/* FILTERS */}
       <div className={styles.filters}>
-        <button
-          onClick={() => setFilter("all")}
-          className={filter === "all" ? styles.active : ""}
-        >
-          All events <span>{stats.total}</span>
-        </button>
-        <button
-          onClick={() => setFilter("posted")}
-          className={filter === "posted" ? styles.active : ""}
-        >
-          Results posted <span>{stats.posted}</span>
-        </button>
-        <button
-          onClick={() => setFilter("pending")}
-          className={filter === "pending" ? styles.active : ""}
-        >
-          Pending <span>{stats.pending}</span>
-        </button>
+        <FilterBtn label="All" count={stats.total} active={filter==="all"} onClick={()=>setFilter("all")} />
+        <FilterBtn label="Results posted" count={stats.posted} active={filter==="posted"} onClick={()=>setFilter("posted")} />
+        <FilterBtn label="Pending" count={stats.pending} active={filter==="pending"} onClick={()=>setFilter("pending")} />
       </div>
 
       {/* LIST */}
       <section className={styles.list}>
-        {filteredEvents.map((event) => {
+        {filteredEvents.map(event => {
           const isOrganizer = userId === event.organizer_id;
           const hasResult = !!event.result?.comment;
+          const isEditing = editing === event.id;
 
           const avgRating =
             event.reviews.length > 0
-              ? (
-                  event.reviews.reduce((s, r) => s + r.rating, 0) /
-                  event.reviews.length
-                ).toFixed(1)
+              ? (event.reviews.reduce((s,r)=>s+r.rating,0)/event.reviews.length).toFixed(1)
               : null;
 
           return (
             <article key={event.id} className={styles.card}>
-              <div className={styles.cardHeader}>
+              <header className={styles.cardHeader}>
                 <div>
                   <h3>{event.title}</h3>
                   <div className={styles.meta}>
-                    <span>
-                      <Calendar size={14} />
-                      {new Date(event.event_date).toLocaleDateString("hr-HR")}
-                    </span>
-                    <span>
-                      <MapPin size={14} />
-                      {event.location}
-                    </span>
-                    <span>
-                      <Users size={14} />
-                      {event.participants_count}
-                      {event.max_participants
-                        ? ` / ${event.max_participants}`
-                        : ""}
-                    </span>
+                    <span><Calendar size={14} />{new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
+                    <span><MapPin size={14} />{event.location}</span>
+                    <span><Users size={14} />{event.participants_count}{event.max_participants && ` / ${event.max_participants}`}</span>
                   </div>
                 </div>
 
-                <span
-                  className={
-                    hasResult ? styles.statusDone : styles.statusPending
-                  }
-                >
-                  {hasResult ? (
-                    <>
-                      <CheckCircle size={14} /> Result posted
-                    </>
-                  ) : (
-                    <>
-                      <Clock size={14} /> Pending
-                    </>
-                  )}
+                <span className={hasResult ? styles.statusDone : styles.statusPending}>
+                  {hasResult ? "Final result" : "Pending"}
                 </span>
-              </div>
+              </header>
 
-              {/* RESULT */}
-              <div
-                className={`${styles.resultBox} ${
-                  hasResult ? styles.resultHighlight : ""
-                }`}
-              >
-                {hasResult ? (
-                  <p>{event.result!.comment}</p>
-                ) : (
-                  <p className={styles.empty}>Result not added yet</p>
-                )}
+              <div className={styles.resultBox}>
+                {hasResult && !isEditing && <p>{event.result!.comment}</p>}
+                {!hasResult && <p className={styles.empty}>Result not added yet</p>}
 
-                {/* ONLY ORGANIZER & ONLY IF NO RESULT */}
-                {isOrganizer && !hasResult && (
+                {isOrganizer && (isEditing || !hasResult) && (
                   <div className={styles.editor}>
                     <textarea
-                      placeholder="Write how the event went..."
-                      value={comments[event.id] ?? ""}
-                      onChange={(e) =>
-                        setComments({
-                          ...comments,
-                          [event.id]: e.target.value,
-                        })
-                      }
+                      value={comments[event.id] ?? event.result?.comment ?? ""}
+                      onChange={e => setComments({ ...comments, [event.id]: e.target.value })}
+                      placeholder="Write final result summary..."
                     />
-                    <button onClick={() => saveComment(event.id)}>
-                      Save result
-                    </button>
+                    {error && <p className={styles.error}>{error}</p>}
+                    <div className={styles.editorActions}>
+                      <button onClick={() => saveResult(event.id)}>Save</button>
+                      {hasResult && (
+                        <button className={styles.cancel} onClick={() => setEditing(null)}>Cancel</button>
+                      )}
+                    </div>
                   </div>
+                )}
+
+                {hasResult && isOrganizer && !isEditing && (
+                  <button className={styles.editBtn} onClick={() => setEditing(event.id)}>
+                    Edit result
+                  </button>
                 )}
               </div>
 
-              {/* REVIEWS */}
               <div className={styles.reviews}>
                 {avgRating ? (
                   <div className={styles.ratingSummary}>
-                    <Star size={16} className={styles.starIcon} />
-                    <span className={styles.ratingValue}>
-                      {avgRating} / 5
-                    </span>
-                    <span className={styles.reviewCount}>
-                      ({event.reviews.length})
-                    </span>
+                    <Star size={16} /> {avgRating} / 5 ({event.reviews.length})
                   </div>
                 ) : (
-                  <span className={styles.noReviews}>
-                    No reviews yet
-                  </span>
+                  <span className={styles.noReviews}>No reviews yet</span>
                 )}
-
-                <ul className={styles.reviewList}>
-                  {event.reviews.map((r, i) => (
-                    <li key={i} className={styles.reviewItem}>
-
-                      {r.comment && (
-                        <p className={styles.reviewComment}>
-                          {r.comment}
-                        </p>
-                      )}
-                    </li>
-                  ))}
-                </ul>
               </div>
             </article>
           );
         })}
       </section>
     </main>
+  );
+}
+
+/* helper components */
+function Stat({ icon, label, value, green, orange }: any) {
+  return (
+    <div className={`${styles.statCard} ${green ? styles.green : ""} ${orange ? styles.orange : ""}`}>
+      {icon}
+      <div>
+        <span>{label}</span>
+        <strong>{value}</strong>
+      </div>
+    </div>
+  );
+}
+
+function FilterBtn({ label, count, active, onClick }: any) {
+  return (
+    <button onClick={onClick} className={active ? styles.active : ""}>
+      {label} <span>{count}</span>
+    </button>
   );
 }

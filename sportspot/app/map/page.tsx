@@ -21,11 +21,10 @@ type Event = {
 export default function MapPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [search, setSearch] = useState("");
   const [center, setCenter] = useState<[number, number]>([
     45.815,
-    15.978, // default HR
+    15.978, // HR default
   ]);
 
   useEffect(() => {
@@ -33,11 +32,14 @@ export default function MapPage() {
   }, []);
 
   async function fetchEvents() {
+    const now = new Date().toISOString();
+
     const { data } = await supabase
       .from("events")
       .select("id, title, event_date, location, lat, lng")
       .not("lat", "is", null)
-      .not("lng", "is", null);
+      .not("lng", "is", null)
+      .gte("event_date", now); // ✅ ONLY UPCOMING
 
     setEvents(data || []);
     setLoading(false);
@@ -66,7 +68,19 @@ export default function MapPage() {
 
   return (
     <main className={styles.page}>
-      {/* SEARCH BAR */}
+      {/* HEADER */}
+      <div className={styles.header}>
+        <h1>Find events near you</h1>
+      <p>
+        Explore sports events on an interactive map and discover activities
+        happening around your location.
+        </p>
+        <p>Move the map or search by city to find events near you. Click markers
+        to see event details.
+      </p>
+      </div>
+
+      {/* SEARCH */}
       <div className={styles.searchBar}>
         <input
           placeholder="Search city or location (e.g. Split)"
@@ -77,6 +91,7 @@ export default function MapPage() {
         <button onClick={handleSearch}>Search</button>
       </div>
 
+      {/* MAP */}
       <div className={styles.mapWrapper}>
         <EventsMap events={events} center={center} />
       </div>

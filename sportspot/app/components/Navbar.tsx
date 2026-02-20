@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LandPlot } from "lucide-react";
 import { useAuth } from "../../lib/AuthProvider";
 import { supabase } from "../../lib/supabaseClient";
@@ -10,10 +10,15 @@ import { supabase } from "../../lib/supabaseClient";
 export default function Navbar() {
   const { user, loading } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
+
   const [initials, setInitials] = useState<string>("");
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setInitials("");
+      return;
+    }
 
     const loadProfileInitials = async () => {
       const { data } = await supabase
@@ -27,8 +32,7 @@ export default function Navbar() {
         setInitials(
           parts
             .slice(0, 2)
-            .map((p: string) => p[0].toUpperCase())
-            .join("")
+.map((p: string) => p[0].toUpperCase())            .join("")
         );
       } else if (user.email) {
         setInitials(user.email[0].toUpperCase());
@@ -40,9 +44,10 @@ export default function Navbar() {
 
   if (loading) return null;
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-  };
+const handleLogout = async () => {
+  await supabase.auth.signOut();
+  window.location.href = "/";
+};
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
@@ -55,7 +60,6 @@ export default function Navbar() {
       <div className="logo">
         <Link
           href="/"
-          className="logo-link"
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -79,19 +83,19 @@ export default function Navbar() {
 
       {/* CENTER NAV */}
       <nav className="navbar-center">
-        <Link href="/" className={isActive("/") ? "active-link" : ""}>
+        <Link href="/" className={isActive("/") ? "active" : ""}>
           Home
         </Link>
 
-        <Link href="/events" className={isActive("/events") ? "active-link" : ""}>
+        <Link href="/events" className={isActive("/events") ? "active" : ""}>
           Events
         </Link>
 
-        <Link href="/map" className={isActive("/map") ? "active-link" : ""}>
+        <Link href="/map" className={isActive("/map") ? "active" : ""}>
           Map
         </Link>
 
-        <Link href="/results" className={isActive("/results") ? "active-link" : ""}>
+        <Link href="/results" className={isActive("/results") ? "active" : ""}>
           Results
         </Link>
       </nav>

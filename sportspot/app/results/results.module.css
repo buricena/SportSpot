@@ -53,7 +53,6 @@
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
-
 .cardHeader {
   display: flex;
   justify-content: space-between;
@@ -67,7 +66,6 @@
   font-weight: 600;
   margin-bottom: 6px;
 }
-
 
 .meta {
   display: flex;
@@ -101,9 +99,8 @@
 
 .statusPending {
   background: #fff4e5;
-  color: #e38b00;
+  color: #ff7a1a;
 }
-
 
 .resultBox {
   background: #fafafa;
@@ -154,10 +151,13 @@
 }
 
 .editor button:hover {
-  background: #e86b10;
+  background: #ff7a1a;
 }
 
-/* STATS */
+/* ===============================
+   STATS  ✅ PORAVNANJE FIX
+================================ */
+
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -172,35 +172,42 @@
   border-radius: 16px;
   padding: 16px;
   display: flex;
-  gap: 12px;
   align-items: center;
+  gap: 14px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
 }
 
-.statCard svg {
-  color: #777;
-}
-
-.statCardGreen svg {
-  color: #1e9e5c;
-}
-
+/* ikona – fiksna veličina i poravnanje */
+.statCard svg,
+.statCardGreen svg,
 .statCardOrange svg {
-  color: #ff5a1f;
+  flex-shrink: 0;
 }
 
+/* tekstni blok */
+.statCard > div,
+.statCardGreen > div,
+.statCardOrange > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* label */
 .statCard span,
 .statCardGreen span,
 .statCardOrange span {
   font-size: 13px;
   color: #777;
+  line-height: 1.2;
 }
 
+/* broj */
 .statCard strong,
 .statCardGreen strong,
 .statCardOrange strong {
-  display: block;
   font-size: 22px;
+  line-height: 1;
 }
 
 /* SEARCH */
@@ -265,9 +272,8 @@
 .filters button.active span {
   background: rgba(255, 255, 255, 0.25);
 }
-/* ===============================
-   REVIEWS
-================================ */
+
+/* REVIEWS */
 
 .reviews {
   margin-top: 0.8rem;
@@ -276,15 +282,12 @@
 }
 
 .ratingSummary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-weight: 600;
   color: #ff6b35;
   margin-bottom: 0.4rem;
-}
-
-.reviewCount {
-  color: #888;
-  font-weight: 400;
-  margin-left: 0.3rem;
 }
 
 .reviewList {
@@ -299,59 +302,39 @@
   margin-bottom: 0.5rem;
 }
 
-.reviewItem p {
-  margin: 0.2rem 0 0;
-  color: #666;
-}
-
 .noReviews {
   font-size: 0.85rem;
   color: #999;
   font-style: italic;
 }
-/* ===============================
-   RESULT HIGHLIGHT
-================================ */
 
-.resultHighlight {
-  background: #fff3e8;              /* blaga narančasta */
-  border: 1px solid #ff7a1a;
-  position: relative;
-}
-
-.resultHighlight::before {
-  content: "RESULT";
-  position: absolute;
-  top: -10px;
-  left: 16px;
-  background: #ff7a1a;
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 10px;
-  border-radius: 999px;
-}
-.starIcon {
-  color: #ff6b35;
-}
-
-.ratingValue {
-  font-weight: 600;
-  color: #ff6b35;
-  margin-left: 4px;
-}
-.ratingSummary {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.reviewRating {
-  font-weight: 600;
-  color: #ff6b35;
-}
-
-.reviewComment {
-  margin-top: 4px;
+.error {
+  color: #d92d20;
   font-size: 13px;
-  color: #666;
+  margin-top: 6px;
+}
+
+.editorActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancel {
+  background: transparent;
+  border: 1px solid #ddd;
+  color: #555;
+}
+
+.editBtn {
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  color: #ff7a1a;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.editBtn:hover {
+  text-decoration: underline;
 }
