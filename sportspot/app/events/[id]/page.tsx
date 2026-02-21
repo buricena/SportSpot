@@ -286,15 +286,17 @@ export default function EventDetailsPage() {
         </div>
 
         {/* DELETE */}
-        <div className={styles.deleteSection}>
-          <button className={styles.deleteBtn} onClick={handleDelete}>
-            Delete Event
-          </button>
+        {user && user.id === event.organizer_id && (
+  <div className={styles.deleteSection}>
+    <button className={styles.deleteBtn} onClick={handleDelete}>
+      Delete Event
+    </button>
 
-          {deleteError && (
-            <p className={styles.deleteError}>{deleteError}</p>
-          )}
-        </div>
+    {deleteError && (
+      <p className={styles.deleteError}>{deleteError}</p>
+    )}
+  </div>
+)}
       </article>
 
       {/* CONFIRM MODAL */}

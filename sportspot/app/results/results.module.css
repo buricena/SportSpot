@@ -1,20 +1,28 @@
+
 .page {
   max-width: 980px;
   margin: 0 auto;
-  padding: 40px 20px 80px;
+  padding: 40px 24px 80px;       /* P: generous bottom breathing room */
 }
 
+
+/* ===============================
+   HEADER  (C + A + P)
+================================ */
 .header {
   display: flex;
-  gap: 14px;
-  align-items: center;
-  margin-bottom: 32px;
+  gap: 16px;                     /* P: icon-to-text coupling */
+  align-items: flex-start;       /* A: top-align icon with title line */
+  margin-bottom: 36px;           /* P: space before stat cards */
 }
 
+/* A: Fixed-size icon cell – guarantees title text always starts at
+   the same horizontal offset regardless of icon content. */
 .headerIcon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 48px;                   /* A: explicit fixed dimension */
+  height: 48px;
+  min-width: 48px;               /* A: prevent flex shrink */
+  border-radius: 12px;           /* R: shared radius token */
   background: #fff3e8;
   color: #ff7a1a;
   display: flex;
@@ -22,74 +30,356 @@
   justify-content: center;
 }
 
+/* A: force SVG inside header icon to a known size */
+.headerIcon svg {
+  width: 24px;                   /* A: explicit, repeatable icon size */
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* C: large title dominates the section */
 .header h1 {
   margin: 0;
   font-size: 28px;
+             /* C: heaviest weight for main heading */
+  line-height: 1.2;
+  color: #111;
 }
 
+/* P: subtitle sits tight under title */
 .header p {
-  margin: 2px 0 0;
+  margin: 4px 0 0;
   color: #777;
+  font-size: 15px;
+  line-height: 1.45;
 }
 
+
+/* ===============================
+   STATS ROW  (A + P + R)
+   Professor focus: icon alignment
+================================ */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;                     /* P: even spacing between cards */
+  margin-bottom: 28px;           /* P: separation before search */
+}
+
+/* Shared base for all three stat card variants
+   A (CRAP): align-items: flex-start keeps the icon pinned to the
+   TOP of the text column – this is the alignment fix the professor
+   specifically called out. Center-aligning icons with multi-line
+   text creates a visual disconnect; top-aligning anchors the icon
+   to the label, which the eye scans first. */
+.statCard,
+.statCardGreen,
+.statCardOrange {
+  background: white;
+  border-radius: 16px;           /* R: card-level radius */
+  padding: 20px;                 /* A: consistent inner padding */
+  display: flex;
+  align-items: flex-start;       /* A (CRAP): TOP-ALIGN icon with text */
+  gap: 16px;                     /* P: icon-to-text gap, uniform */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.statCard:hover,
+.statCardGreen:hover,
+.statCardOrange:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ---- ICON ALIGNMENT FIX (A + R) ----
+   Every stat icon sits inside a fixed-dimension cell so that
+   regardless of the SVG's intrinsic size, the text column to
+   its right always begins at the exact same x-offset.
+   This is the critical alignment fix the professor emphasized. */
+
+.statCard svg,
+.statCardGreen svg,
+.statCardOrange svg {
+  width: 28px;                   /* A: fixed icon width */
+  height: 28px;                  /* A: fixed icon height */
+  min-width: 28px;               /* A: prevent flex shrink */
+  flex-shrink: 0;                /* A: never collapse */
+  display: block;                /* A: remove inline baseline offset */
+  color: inherit;
+  margin-top: 2px;               /* A: optically align icon top with label baseline */
+}
+
+/* C: Colour-coded stat card backgrounds – subtle tints let users
+   instantly differentiate "Past events" / "Results posted" / "Pending"
+   at a glance without reading the label.  Combined with coloured
+   icons this gives each card a distinct visual identity. */
+.statCard        { background: #f5f7fa; }         /* neutral blue-grey tint */
+.statCardGreen   { background: #eef9f2; }         /* light green tint */
+.statCardOrange  { background: #fff6ee; }         /* light orange tint */
+
+/* Icon colour per variant (C: colour-coded meaning) */
+.statCard svg        { color: #5a6a7e; }
+.statCardGreen svg   { color: #1e9e5c; }
+.statCardOrange svg  { color: #ff7a1a; }
+
+/* C: matching border accent on left edge for added emphasis */
+.statCard        { border-left: 4px solid #b0bec5; }
+.statCardGreen   { border-left: 4px solid #1e9e5c; }
+.statCardOrange  { border-left: 4px solid #ff7a1a; }
+
+/* ---- TEXT COLUMN ALIGNMENT (A) ----
+   Column layout forces label above number at the same position. */
+.statCard > div,
+.statCardGreen > div,
+.statCardOrange > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;                      /* P: tight label-to-number coupling */
+}
+
+/* Label text */
+.statCard span,
+.statCardGreen span,
+.statCardOrange span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #777;
+  line-height: 1.2;
+}
+
+/* Number – heaviest contrast element in the card (C) */
+.statCard strong,
+.statCardGreen strong,
+.statCardOrange strong {
+  font-size: 24px;
+  font-weight: 800;              /* C: bold numbers stand out */
+  line-height: 1;
+  color: #111;
+}
+
+
+/* ===============================
+   SEARCH  (Fitts + A)
+================================ */
+.search {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+/* A: icon pinned to a fixed left position */
+.search svg {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  color: #999;
+  width: 18px;                   /* A: explicit icon size */
+  height: 18px;
+  pointer-events: none;
+}
+
+/* Fitts: tall input with generous padding – easy to acquire */
+.search input {
+  width: 100%;
+  padding: 14px 18px 14px 44px;  /* Fitts: 44px min-height, icon offset */
+  border-radius: 12px;           /* R: shared radius token */
+  border: 1px solid #ddd;
+  font-size: 15px;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search input:focus {
+  outline: none;
+  border-color: #ff5a1f;
+  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.12);  /* C: visible focus ring */
+}
+
+
+/* ===============================
+   FILTER TABS  (C + R + Fitts)
+================================ */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 28px;           /* P: spacing before card list */
+  flex-wrap: wrap;
+}
+
+/* Fitts: every filter button meets the 44 px minimum hit area */
+.filters button {
+  border: 1px solid #e0e0e0;
+  background: white;
+  padding: 10px 18px;            /* Fitts: generous padding */
+  min-height: 44px; 
+  border-color: #ff5a1f;             /* Fitts: explicit minimum */
+  border-radius: 12px;           /* R: shared radius token */
+  font-size: 14px;
+  font-weight: 600;              /* C: bolder label for legibility */
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: #444;
+  transition: background 0.2s ease, color 0.2s ease,
+              border-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Hover feedback – Fitts: confirms the target is interactive */
+.filters button:hover {
+  background: rgba(255, 90, 31, 0.06);
+  border-color: #ff5a1f;
+  color: #ff5a1f;
+}
+
+/* Press feedback */
+.filters button:active {
+  transform: scale(0.97);
+}
+
+/* Count badge inside each filter button */
+.filters button span {
+  background: #f1f1f1;
+  padding: 3px 10px;
+  border-radius: 999px;          /* R: pill badge */
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Active filter state (C) */
+.filters button.active {
+  background: #ff5a1f;
+  color: white;
+  border-color: #ff5a1f;
+}
+
+.filters button.active:hover {
+  background: #e5501a;
+}
+
+.filters button.active span {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+
+/* ===============================
+   RESULT CARD LIST
+================================ */
 .list {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;                     /* P: consistent card spacing */
 }
 
+
+/* ===============================
+   RESULT CARD  (C + A + P + Fitts)
+================================ */
 .card {
   background: white;
-  border-radius: 18px;
-  padding: 20px;
-  margin-bottom: 18px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-radius: 16px;           /* R: card-level radius */
+  padding: 24px;                 /* A: uniform inner padding */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   border-left: 5px solid #ff7a1a;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* Fitts: cards lift on hover – visual feedback */
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
 }
 
+/* C: status-aware left border colour on result cards.
+   Pending cards get orange, completed cards get green,
+   so users can scan the list and spot status at a glance. */
+.card.cardPending  { border-left-color: #ff7a1a; }
+.card.cardDone     { border-left-color: #1e9e5c; }
+
+
+/* ===============================
+   CARD HEADER  (A + P)
+================================ */
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;           /* P: space before result box */
 }
 
+/* C: card title stands out */
 .cardHeader h3 {
   font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-weight: 700;              /* C: bold heading */
+  margin-bottom: 8px;
+  color: #111;
+  line-height: 1.3;
 }
 
+
+/* ===============================
+   META (inside cards)  (A + R)
+   Professor focus: icon alignment
+================================ */
 .meta {
   display: flex;
-  gap: 16px;
+  gap: 20px;                     /* P: clear separation between meta items */
   font-size: 13px;
   color: #666;
+  flex-wrap: wrap;
 }
 
+/* A: Every meta span uses inline-flex with centred icon.
+   Icons are given explicit dimensions so they never shift
+   the text baseline. This is the key alignment fix. */
 .meta span {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;                      /* P: icon-to-label proximity */
+  line-height: 1;
 }
 
+/* A + R: All icons within meta share the same fixed size */
+.meta span svg {
+  width: 16px;                   /* A: fixed, repeatable */
+  height: 16px;
+  min-width: 16px;               /* A: prevent squish */
+  flex-shrink: 0;                /* A: never collapse */
+  display: block;                /* A: remove inline baseline gap */
+  color: #999;
+  vertical-align: middle;
+}
+
+
+/* ===============================
+   STATUS BADGES  (C + R)
+================================ */
 .statusDone,
 .statusPending {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-weight: 500;
+  font-weight: 700;              /* C: bolder for emphasis */
+  padding: 6px 14px;             /* Fitts: bigger hit area if clickable */
+  border-radius: 999px;          /* R: pill shape */
   white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+/* A: icon inside status badge has fixed size */
+.statusDone svg,
+.statusPending svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .statusDone {
@@ -102,16 +392,21 @@
   color: #ff7a1a;
 }
 
+
+/* ===============================
+   RESULT BOX  (P + R)
+================================ */
 .resultBox {
-  background: #fafafa;
-  border-radius: 14px;
-  padding: 14px;
-  margin-top: 12px;
+  background: #f8f8f8;
+  border-radius: 12px;           /* R: shared radius */
+  padding: 16px;
+  margin-top: 14px;
 }
 
 .resultBox p {
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.55;             /* readability */
+  color: #333;
 }
 
 .empty {
@@ -120,174 +415,131 @@
   font-style: italic;
 }
 
+
+/* ===============================
+   EDITOR (add/edit result)
+   (Fitts + R)
+================================ */
 .editor {
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
+/* Fitts: tall textarea – easy to click into */
 .editor textarea {
   width: 100%;
-  min-height: 90px;
+  min-height: 100px;
   resize: vertical;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;           /* R: shared radius */
   border: 1px solid #ddd;
   font-size: 14px;
+  line-height: 1.5;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .editor textarea:focus {
   outline: none;
   border-color: #ff7a1a;
+  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.12);  /* C: focus ring */
 }
 
+/* Fitts: submit button with generous padding */
 .editor button {
   margin-top: 10px;
   background: #ff7a1a;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-size: 13px;
+  padding: 10px 20px;            /* Fitts: ≥ 44 px min-height */
+  min-height: 44px;
+  border-radius: 12px;           /* R: shared radius */
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .editor button:hover {
-  background: #ff7a1a;
+  background: #e56e15;
 }
+
+.editor button:active {
+  transform: scale(0.97);
+}
+
+.editorActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
 
 /* ===============================
-   STATS  ✅ PORAVNANJE FIX
+   CANCEL BUTTON  (C + Fitts)
 ================================ */
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.statCard,
-.statCardGreen,
-.statCardOrange {
-  background: white;
-  border-radius: 16px;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-}
-
-/* ikona – fiksna veličina i poravnanje */
-.statCard svg,
-.statCardGreen svg,
-.statCardOrange svg {
-  flex-shrink: 0;
-}
-
-/* tekstni blok */
-.statCard > div,
-.statCardGreen > div,
-.statCardOrange > div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* label */
-.statCard span,
-.statCardGreen span,
-.statCardOrange span {
-  font-size: 13px;
-  color: #777;
-  line-height: 1.2;
-}
-
-/* broj */
-.statCard strong,
-.statCardGreen strong,
-.statCardOrange strong {
-  font-size: 22px;
-  line-height: 1;
-}
-
-/* SEARCH */
-.search {
-  position: relative;
-  margin-bottom: 18px;
-}
-
-.search svg {
-  position: absolute;
-  top: 50%;
-  left: 14px;
-  transform: translateY(-50%);
-  color: #aaa;
-}
-
-.search input {
-  width: 100%;
-  padding: 12px 14px 12px 40px;
-  border-radius: 999px;
+.cancel {
+  background: transparent;
   border: 1px solid #ddd;
+  color: #555;
+  min-height: 44px;              /* Fitts */
+  padding: 10px 20px;
+  border-radius: 12px;           /* R */
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.cancel:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+
+/* ===============================
+   EDIT BUTTON  (C + Fitts)
+================================ */
+.editBtn {
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  color: #ff7a1a;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0;                /* Fitts: extra vertical hit area */
+  transition: color 0.2s ease;
+}
+
+.editBtn:hover {
+  color: #e56e15;
+  text-decoration: underline;
+}
+
+
+/* ===============================
+   REVIEWS SECTION  (A + P)
+================================ */
+.reviews {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;    /* A: clear visual divider */
+}
+
+/* A: rating summary icons align with text */
+.ratingSummary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #ff6b35;
+  margin-bottom: 8px;
   font-size: 14px;
 }
 
-.search input:focus {
-  outline: none;
-  border-color: #ff5a1f;
-}
-
-/* FILTERS */
-.filters {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.filters button {
-  border: 1px solid #eee;
-  background: white;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.filters button span {
-  background: #f1f1f1;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-}
-
-.filters button.active {
-  background: #ff5a1f;
-  color: white;
-  border-color: #ff5a1f;
-}
-
-.filters button.active span {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-/* REVIEWS */
-
-.reviews {
-  margin-top: 0.8rem;
-  padding-top: 0.8rem;
-  border-top: 1px solid #eee;
-}
-
-.ratingSummary {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
-  color: #ff6b35;
-  margin-bottom: 0.4rem;
+.ratingSummary svg {
+  width: 16px;                   /* A: fixed icon size */
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .reviewList {
@@ -297,44 +549,48 @@
 }
 
 .reviewItem {
-  font-size: 0.85rem;
+  font-size: 14px;
   color: #444;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
 
 .noReviews {
-  font-size: 0.85rem;
+  font-size: 13px;
   color: #999;
   font-style: italic;
 }
 
+
+/* ===============================
+   ERROR MESSAGE  (C)
+================================ */
 .error {
   color: #d92d20;
   font-size: 13px;
-  margin-top: 6px;
+  font-weight: 500;
+  margin-top: 8px;
 }
 
-.editorActions {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
 
-.cancel {
-  background: transparent;
-  border: 1px solid #ddd;
-  color: #555;
-}
+/* ===============================
+   RESPONSIVE  (Fitts + A)
+================================ */
+@media (max-width: 768px) {
+  .stats {
+    grid-template-columns: 1fr;  /* stack on mobile */
+  }
 
-.editBtn {
-  margin-top: 10px;
-  background: transparent;
-  border: none;
-  color: #ff7a1a;
-  font-size: 13px;
-  cursor: pointer;
-}
+  .meta {
+    flex-direction: column;
+    gap: 8px;
+  }
 
-.editBtn:hover {
-  text-decoration: underline;
+  .cardHeader {
+    flex-direction: column;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+  }
 }

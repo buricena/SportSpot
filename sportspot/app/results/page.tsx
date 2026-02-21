@@ -106,7 +106,6 @@ export default function ResultsPage() {
     }
   }
 
-  /* FILTER + SEARCH */
   const filteredEvents = useMemo(() => {
     return events.filter(e => {
       const hasResult = !!e.result?.comment;
@@ -145,8 +144,8 @@ export default function ResultsPage() {
       {/* STATS */}
       <section className={styles.stats}>
         <Stat icon={<Calendar />} label="Past events" value={stats.total} />
-        <Stat icon={<Trophy />} label="Results posted" value={stats.posted} green />
-        <Stat icon={<Clock />} label="Pending" value={stats.pending} orange />
+        <Stat icon={<Trophy />} label="Results posted" value={stats.posted} variant="green" />
+        <Stat icon={<Clock />} label="Pending" value={stats.pending} variant="orange" />
       </section>
 
       {/* SEARCH */}
@@ -179,7 +178,10 @@ export default function ResultsPage() {
               : null;
 
           return (
-            <article key={event.id} className={styles.card}>
+            <article
+              key={event.id}
+              className={`${styles.card} ${hasResult ? styles.cardDone : styles.cardPending}`}
+            >
               <header className={styles.cardHeader}>
                 <div>
                   <h3>{event.title}</h3>
@@ -241,9 +243,17 @@ export default function ResultsPage() {
 }
 
 /* helper components */
-function Stat({ icon, label, value, green, orange }: any) {
+
+function Stat({ icon, label, value, variant }: any) {
+  const className =
+    variant === "green"
+      ? styles.statCardGreen
+      : variant === "orange"
+      ? styles.statCardOrange
+      : styles.statCard;
+
   return (
-    <div className={`${styles.statCard} ${green ? styles.green : ""} ${orange ? styles.orange : ""}`}>
+    <div className={className}>
       {icon}
       <div>
         <span>{label}</span>

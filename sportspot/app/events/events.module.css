@@ -1,94 +1,200 @@
+
 .page {
-  padding: 40px;
+  padding: 40px 40px 60px;       /* P: more bottom breathing room */
   background: #fafafa;
+  min-height: 100vh;              /* full viewport fill */
 }
 
-/* HEADER */
+/* ===============================
+   HEADER  (C + A + P)
+================================ */
 .header {
   max-width: 1200px;
-  margin-bottom: 40px;
+  margin-bottom: 48px;            /* P: extra space before controls */
 }
 
+/* C: small, loud kicker for contrast against the large title */
 .kicker {
   color: #ff5a1f;
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 1px;
+  font-weight: 700;              /* C: heavier than before */
+  font-size: 13px;
+  letter-spacing: 1.5px;         /* C: wider tracking for small caps feel */
+  text-transform: uppercase;     /* R: consistent label treatment */
+  margin-bottom: 4px;            /* P: tight coupling to heading */
 }
 
+/* C: large title dominates the page */
 .header h1 {
-  font-size: 42px;
-  margin: 10px 0;
+  font-size: 44px;
+  
+  line-height: 1.15;             /* A: tighter leading for display type */
+  margin: 8px 0 12px;            /* P: tight to kicker, slight gap to subtitle */
+  color: #111;
 }
 
+/* Subtitle set apart from title but grouped with header block */
 .subtitle {
   color: #666;
-  max-width: 600px;
+  font-size: 16px;
+  line-height: 1.55;
+  max-width: 540px;              /* A: narrower measure for readability */
 }
 
-/* TOP BAR */
+/* ===============================
+   TOP BAR  (A + P + Fitts)
+================================ */
 .topBar {
-  margin-top: 30px;
+  margin-top: 32px;
   display: flex;
-  gap: 20px;
+  gap: 16px;                     /* P: tighter coupling of related controls */
   align-items: center;
   flex-wrap: wrap;
 }
 
+/* Fitts: tall, wide search field – easy to acquire */
 .search {
   flex: 1;
-  padding: 14px 16px;
-  border-radius: 10px;
+  min-width: 200px;
+  padding: 14px 18px;            /* Fitts: ≥ 44 px total height */
+  border-radius: 12px;           /* R: shared radius token */
   border: 1px solid #ddd;
   font-size: 15px;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.search:focus {
+  outline: none;
+  border-color: #ff5a1f;
+  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.12);  /* C: visible focus ring */
+}
+
+/* Group: actions sit together */
 .actions {
   display: flex;
-  gap: 16px;
+  gap: 12px;                     /* P: tight coupling between tabs & button */
   align-items: center;
 }
 
-/* TABS */
+/* ===============================
+   TABS  (C + R + Fitts)
+================================ */
+/* ===============================
+   TABS  (FIXED)
+================================ */
+
 .tabs {
+  position: relative;
   display: flex;
   background: #f1f1f1;
   border-radius: 12px;
   padding: 4px;
+  overflow: hidden;
+  border: 1px solid #ff5a1f;   /* tanki obrub */
 }
 
+/* TAB BUTTON */
 .tab {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: none;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  padding: 12px 20px;
+  border: none;                /* uklonjen border koji je pravio problem */
   background: transparent;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 14px;
+  color: #444;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
 }
 
+/* Hover samo za neaktivni */
+.tab:hover {
+  
+  color: #ff5a1f;
+}
+
+/* Aktivni tekst */
+.tab.activeText {
+  color: white;
+}
+
+.tab.activeText span {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* Press feedback */
+.tab:active {
+  transform: scale(0.96);
+}
+
+/* Badge */
 .tab span {
   margin-left: 6px;
   background: #ff5a1f;
   color: white;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-size: 12px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
 }
 
-.active {
+/* SLIDER */
+.slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
   background: #ff5a1f;
-  color: white;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  z-index: 0;
 }
 
-/* ADD BUTTON */
+.slideLeft {
+  transform: translateX(0);
+}
+
+.slideRight {
+  transform: translateX(100%);
+}
+/* ===============================
+   ADD BUTTON  (C + Fitts)
+================================ */
+/* Fitts: largest interactive target – primary CTA */
 .addBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: #ff5a1f;
   color: white;
-  padding: 12px 18px;
-  border-radius: 12px;
+  padding: 14px 24px;            /* Fitts: generous hit area */
+  border-radius: 12px;           /* R: consistent radius */
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 15px;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 90, 31, 0.25);  /* C: elevated CTA */
 }
+
+.addBtn:hover {
+  background: #e5501a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(255, 90, 31, 0.35);
+}
+
+.addBtn:active {
+  transform: translateY(0);
+}
+
 /* ===============================
    LOGIN NOTICE TOAST
 ================================ */
@@ -98,8 +204,8 @@
   right: 24px;
   background: #111;
   color: white;
-  padding: 0.8rem 1.2rem;
-  border-radius: 12px;
+  padding: 0.85rem 1.3rem;
+  border-radius: 12px;           /* R */
   font-size: 0.9rem;
   font-weight: 500;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
@@ -125,20 +231,27 @@
   }
 }
 
-
-/* GRID */
+/* ===============================
+   GRID  (A + P)
+================================ */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  gap: 24px;                     /* P: consistent card spacing */
+  margin-top: 8px;               /* P: slight separation from controls */
 }
 
-/* CARD */
+/* ===============================
+   CARD  (C + A + P + Fitts)
+================================ */
+/* Fitts: entire card is a large click surface */
 .card {
+  position: relative;
+  overflow: hidden;
   background: white;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  border-radius: 16px;           /* R: slightly larger for cards */
+  padding: 24px;                 /* A: uniform inner padding */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -147,129 +260,132 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
-}
-
-/* CARD TOP */
-.cardTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-/* SPORT BADGE */
-.sport {
-  background: #ff5a1f;;
-  color: #fffefe;
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* STATUS */
-.status {
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 999px;
-  text-transform: uppercase;
-}
-.upcoming {
-  background: #e6f7ef;
-  color: #1e7f5c;
-}
-
-/* Past – crven */
-.past {
-  background: #fde8e8;
-  color: #c53030;
-}
-
-/* TITLE */
-.card h3 {
-  font-size: 20px;
-  font-weight: 800;
-  margin-bottom: 6px;
-  color: #111;
-}
-
-/* DESCRIPTION */
-.desc {
-  color: #666;
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 16px;
-}
-
-/* META */
-.meta {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 13px;
-  color: #444;
-  margin-bottom: 16px;
-  padding-top: 12px;
-  border-top: 1px solid #eee;
-}
-.meta span {
-  display: inline-flex;          /* 👈 KLJUČNO */
-  align-items: center;           /* 👈 KLJUČNO */
-  gap: 6px;
-  background: #f5f5f5;
-  padding: 4px 8px;
-  border-radius: 8px;
-  width: fit-content;
-}
-
-.meta span:first-child {
-  font-weight: 600;
-  color: #111;
-}
-.meta span:last-child {
-  display: inline-block;
-  background: #f5f5f5;
-  padding: 4px 8px;
-  border-radius: 8px;
-  width: fit-content;
-}
-
-
-/* CTA */
-.cta {
-  margin-top: auto;
-  align-self: flex-start;
-  color: #ff5a1f;
-  font-size: 14px;
-  font-weight: 600;
-}
-/* ===============================
-   CARD ACCENT (v0 style)
-================================ */
-
-.card {
-  position: relative;
-  overflow: hidden;
-}
-
+/* C: accent stripe at top – strong colour signal */
 .card::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
-  height: 6px;
+  height: 5px;
   width: 100%;
   background: #ff5a1f;
 }
 
-/* ===============================
-   META ICONS
-================================ */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
+}
 
+/* ===============================
+   CARD TOP  (A + P)
+================================ */
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;           /* P: space before title block */
+}
+
+/* ===============================
+   SPORT BADGE  (C + R)
+================================ */
+.sport {
+  background: #ff5a1f;
+  color: #fff;
+  padding: 5px 14px;             /* Fitts: larger tap target */
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: capitalize;
+}
+
+/* ===============================
+   STATUS BADGE  (C + R)
+================================ */
+.status {
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;         /* C: more distinct from body text */
+}
+
+.upcoming {
+  background: #e6f7ef;
+  color: #1e7f5c;
+
+}
+
+.past {
+  background: #fde8e8;
+  color: #c53030;
+}
+
+/* ===============================
+   CARD TITLE  (C)
+================================ */
+.card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 8px;            /* P: tight coupling to description */
+  color: #111;
+  line-height: 1.25;
+}
+
+/* ===============================
+   CARD DESCRIPTION  (P)
+================================ */
+.desc {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.55;             /* readability */
+  margin-bottom: 18px;           /* P: space before meta divider */
+  flex-grow: 1;                  /* A: push meta to consistent position */
+}
+
+/* ===============================
+   META  (A + P + R)
+================================ */
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;                      /* P: consistent inner spacing */
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #eee;   /* A: clear section divider */
+}
+
+.meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f5f5f5;
+  padding: 5px 10px;
+  border-radius: 8px;           /* R */
+  width: fit-content;
+}
+
+.meta span:first-child {
+  font-weight: 700;             /* C: date stands out */
+  color: #111;
+}
+
+.meta span:last-child {
+  display: inline-flex;         /* A: consistent with siblings */
+  align-items: center;
+  background: #f5f5f5;
+  padding: 5px 10px;
+  border-radius: 8px;
+  width: fit-content;
+}
+
+/* ===============================
+   META ITEM / ICON  (R)
+================================ */
 .metaItem {
   display: flex;
   align-items: center;
@@ -279,79 +395,22 @@
 
 .metaIcon {
   color: #ff5a1f;
-}
-/* Kad je tab aktivan, i broj mora biti "invertiran" */
-
-/* .tab span {
-  margin-left: 6px;
-  background: #ff5a1f;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-size: 12px;
+  flex-shrink: 0;
 }
 
-.active span {
-  background: rgba(255, 255, 255, 0.25);
-  color: white;
-} */
 /* ===============================
-   TAB SLIDER ANIMATION
+   CTA LINK  (C + Fitts)
 ================================ */
-
-.tabs {
-  position: relative;
-  overflow: hidden;
-}
-
-.slider {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: calc(51.5% - 4px);
-  height: calc(100% - 8px);
-  background: #ff5a1f;
-  border-radius: 10px;
-  transition: transform 0.3s ease;
-  z-index: 0;
-}
-
-.slideLeft {
-  transform: translateX(0);
-}
-
-.slideRight {
-  transform: translateX(100%);
-}
-
-/* tab content above slider */
-.tab {
-  position: relative;
-  z-index: 1;
-  color: #444;
-}
-
-/* active text color */
-.activeText {
-  color: white;
-}
-
-/* badge inside inactive tab */
-.tab span {
-  margin-left: 6px;
-  background: #ff5a1f;
-  color: white;
-  padding: 3px 5px;      /* ⬅️ MALO ŠIRI */
-  border-radius: 999px;
-  font-size: 12px;
-  line-height: 1;        /* ⬅️ KLJUČNO */
-  display: inline-flex;  /* ⬅️ KLJUČNO */
-  align-items: center;   /* ⬅️ KLJUČNO */
-}
-
-/* kad je tab aktivan */
-.activeText span {
-  background: white;
+.cta {
+  margin-top: auto;
+  align-self: flex-start;
   color: #ff5a1f;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 0;               /* Fitts: extra vertical hit area */
+  transition: opacity 0.15s ease;
 }
 
+.cta:hover {
+  opacity: 0.8;
+}
