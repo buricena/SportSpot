@@ -182,57 +182,114 @@ export default function ResultsPage() {
               key={event.id}
               className={`${styles.card} ${hasResult ? styles.cardDone : styles.cardPending}`}
             >
-              <header className={styles.cardHeader}>
-                <div>
-                  <h3>{event.title}</h3>
-                  <div className={styles.meta}>
-                    <span><Calendar size={14} />{new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
-                    <span><MapPin size={14} />{event.location}</span>
-                    <span><Users size={14} />{event.participants_count}{event.max_participants && ` / ${event.max_participants}`}</span>
-                  </div>
-                </div>
+              {/* C: Status indicator strip at top for immediate scanning */}
+              <div className={hasResult ? styles.cardTopStripDone : styles.cardTopStripPending} />
 
-                <span className={hasResult ? styles.statusDone : styles.statusPending}>
-                  {hasResult ? "Final result" : "Pending"}
-                </span>
-              </header>
-
-              <div className={styles.resultBox}>
-                {hasResult && !isEditing && <p>{event.result!.comment}</p>}
-                {!hasResult && <p className={styles.empty}>Result not added yet</p>}
-
-                {isOrganizer && (isEditing || !hasResult) && (
-                  <div className={styles.editor}>
-                    <textarea
-                      value={comments[event.id] ?? event.result?.comment ?? ""}
-                      onChange={e => setComments({ ...comments, [event.id]: e.target.value })}
-                      placeholder="Write final result summary..."
-                    />
-                    {error && <p className={styles.error}>{error}</p>}
-                    <div className={styles.editorActions}>
-                      <button onClick={() => saveResult(event.id)}>Save</button>
-                      {hasResult && (
-                        <button className={styles.cancel} onClick={() => setEditing(null)}>Cancel</button>
-                      )}
+              <div className={styles.cardInner}>
+                {/* A+P: Header row — title & status are visually grouped */}
+                <header className={styles.cardHeader}>
+                  <div className={styles.cardTitleGroup}>
+                    {/* C: Sport icon provides instant visual recognition */}
+                    <div className={hasResult ? styles.sportIconDone : styles.sportIconPending}>
+                      <Trophy size={18} />
+                    </div>
+                    <div>
+                      <h3>{event.title}</h3>
+                      {/* P: Meta sits directly under its title — tight coupling */}
+                      <div className={styles.meta}>
+                        <span><Calendar size={14} />{new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
+                        <span><MapPin size={14} />{event.location}</span>
+                        <span><Users size={14} />{event.participants_count}{event.max_participants && ` / ${event.max_participants}`}</span>
+                      </div>
                     </div>
                   </div>
-                )}
 
-                {hasResult && isOrganizer && !isEditing && (
-                  <button className={styles.editBtn} onClick={() => setEditing(event.id)}>
-                    Edit result
-                  </button>
-                )}
-              </div>
+                  {/* C: Larger, bolder status badge — scannable at a glance */}
+                  <span className={hasResult ? styles.statusDone : styles.statusPending}>
+                    {hasResult ? <><Trophy size={13} /> Final result</> : <><Clock size={13} /> Pending</>}
+                  </span>
+                </header>
 
-              <div className={styles.reviews}>
-                {avgRating ? (
-                  <div className={styles.ratingSummary}>
-                    <Star size={16} /> {avgRating} / 5 ({event.reviews.length})
-                  </div>
-                ) : (
-                  <span className={styles.noReviews}>No reviews yet</span>
-                )}
+                {/* R+P: Result section — visually distinct from header */}
+                <div className={hasResult ? styles.resultBoxDone : styles.resultBoxPending}>
+                  {hasResult && !isEditing && (
+                    <div className={styles.resultContent}>
+                      <span className={styles.resultLabel}>Result</span>
+                      <p>{event.result!.comment}</p>
+                    </div>
+                  )}
+
+                  {/* C+P: Empty state with clear visual call-to-action */}
+                  {!hasResult && !isOrganizer && (
+                    <div className={styles.emptyState}>
+                      <Clock size={20} />
+                      <div>
+                        <p className={styles.emptyTitle}>Awaiting result</p>
+                        <p className={styles.emptySubtitle}>The organizer has not posted a result yet</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Fitts: Large, prominent CTA button for organizer to add result */}
+                  {!hasResult && isOrganizer && !isEditing && (
+                    <button
+                      className={styles.addResultBtn}
+                      onClick={() => setEditing(event.id)}
+                    >
+                      <Trophy size={16} />
+                      Add result
+                    </button>
+                  )}
+
+                  {isOrganizer && (isEditing || (!hasResult && isEditing)) && (
+                    <div className={styles.editor}>
+                      <label className={styles.editorLabel}>Result summary</label>
+                      <textarea
+                        value={comments[event.id] ?? event.result?.comment ?? ""}
+                        onChange={e => setComments({ ...comments, [event.id]: e.target.value })}
+                        placeholder="Write final result summary (min. 10 characters)..."
+                      />
+                      {error && <p className={styles.error}>{error}</p>}
+                      {/* Fitts: Action buttons are large, clearly grouped, primary action is prominent */}
+                      <div className={styles.editorActions}>
+                        <button onClick={() => saveResult(event.id)}>
+                          <Trophy size={14} /> Save result
+                        </button>
+                        {hasResult && (
+                          <button className={styles.cancel} onClick={() => setEditing(null)}>Cancel</button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Fitts: Edit button is now a proper button with padding, not just a text link */}
+                  {hasResult && isOrganizer && !isEditing && (
+                    <button className={styles.editBtn} onClick={() => setEditing(event.id)}>
+                      Edit result
+                    </button>
+                  )}
+                </div>
+
+                {/* A+P: Reviews section — clear divider, aligned with card structure */}
+                <div className={styles.reviews}>
+                  {avgRating ? (
+                    <div className={styles.ratingRow}>
+                      <div className={styles.ratingStars}>
+                        {[1,2,3,4,5].map(i => (
+                          <Star
+                            key={i}
+                            size={14}
+                            className={i <= Math.round(Number(avgRating)) ? styles.starFilled : styles.starEmpty}
+                          />
+                        ))}
+                      </div>
+                      <span className={styles.ratingValue}>{avgRating}</span>
+                      <span className={styles.ratingCount}>({event.reviews.length} {event.reviews.length === 1 ? 'review' : 'reviews'})</span>
+                    </div>
+                  ) : (
+                    <span className={styles.noReviews}>No reviews yet</span>
+                  )}
+                </div>
               </div>
             </article>
           );
