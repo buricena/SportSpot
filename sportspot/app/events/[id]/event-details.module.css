@@ -225,6 +225,54 @@
     grid-template-columns: 1fr;
   }
 }
+@media (max-width: 768px) {
+  .page {
+    padding: 20px 12px 40px;
+  }
+
+  .card {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .joinCard {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .joinBtn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .confirmBox {
+    margin: 0 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}
 /* DELETE SECTION */
 .deleteSection {
   margin-top: 40px;
