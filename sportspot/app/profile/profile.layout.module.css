@@ -36,7 +36,7 @@
 }
 
 .welcome {
-  color: #666;
+  color: #555;
   font-size: 0.9rem;
 }
 
@@ -50,7 +50,7 @@
 
 .meta span {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.45rem;
   line-height: 1;
 }
@@ -87,12 +87,13 @@
    TABS
 ================================ */
 .tabs {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   background: #f4f4f4;
   border-radius: 14px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding: 0.3rem;
+  overflow-x: auto;
 }
 
 .tabs button {
@@ -103,13 +104,14 @@
 
   border: none;
   background: transparent;
-  padding: 0.75rem 0;
+  padding: 0.75rem 0.5rem;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   border-radius: 10px;
   transition: all 0.2s ease;
   color: #444;
+  white-space: nowrap;
 }
 .tabs button svg {
   flex-shrink: 0;

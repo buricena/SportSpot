@@ -98,13 +98,11 @@ const { count: reviewsCount } = await supabase
           <div className={styles.stats}>
             <span>
               {/* <Calendar size={16} /> */}
-              <b>{profile.eventsCount}</b> Events Joined
-            </span>
+<b>{profile.eventsCount}</b> {profile.eventsCount === 1 ? "Event" : "Events"} Joined            </span>
 
             <span>
               <Star size={16} />
-              <b>{profile.reviewsCount}</b> Reviews
-            </span>
+<b>{profile.reviewsCount}</b> {profile.reviewsCount === 1 ? "Review" : "Reviews"}            </span>
           </div>
         </div>
       </section>

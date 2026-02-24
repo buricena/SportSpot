@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
-import { Calendar, MapPin, Users } from "lucide-react";
+import { Calendar, MapPin, Star } from "lucide-react";
 import styles from "./my-events.module.css";
 
 type MyEvent = {
@@ -169,10 +169,7 @@ export default function MyEvents() {
                       {event.location}
                     </div>
 
-                    <div className={styles.metaRow}>
-                      <Users size={16} />
-                      participants
-                    </div>
+
                   </div>
                 </div>
 
@@ -244,7 +241,8 @@ export default function MyEvents() {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <strong className={styles.reviewTitle}>
-                      Leave a review
+                      <Star size={16} />
+                      Rate this event
                     </strong>
 
                     <div className={styles.ratingRow}>
@@ -282,7 +280,7 @@ export default function MyEvents() {
 
                     <button
                       className={styles.reviewButton}
-                      disabled={submitting === event.id}
+                      disabled={submitting === event.id || !reviewRating[event.id]}
                       onClick={() => submitReview(event.id)}
                     >
                       {submitting === event.id
