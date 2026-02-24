@@ -39,6 +39,7 @@ export default function CreateEventPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   /* ================= GEO CODING ================= */
   useEffect(() => {
@@ -51,14 +52,13 @@ export default function CreateEventPage() {
             location
           )}`
         );
-
         const data = await res.json();
 
         if (data && data.length > 0) {
           setLat(parseFloat(data[0].lat));
           setLng(parseFloat(data[0].lon));
         }
-      } catch (err) {
+      } catch {
         console.error("Geocoding failed");
       }
     }, 500);
@@ -116,10 +116,7 @@ export default function CreateEventPage() {
     }
 
     setShowSuccess(true);
-
-    setTimeout(() => {
-      router.push("/events");
-    }, 2000);
+    setTimeout(() => router.push("/events"), 2000);
   }
 
   return (
@@ -152,7 +149,10 @@ export default function CreateEventPage() {
 
             <div className={styles.field}>
               <label>Description</label>
-              <textarea value={description} onChange={e => setDescription(e.target.value)} />
+              <textarea
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
             </div>
           </section>
 
@@ -229,7 +229,14 @@ export default function CreateEventPage() {
           {error && <p className={styles.error}>{error}</p>}
 
           <div className={styles.actions}>
-            <Link href="/events" className={styles.cancel}>Cancel</Link>
+            <button
+              type="button"
+              className={styles.cancelButton}
+              onClick={() => setShowCancelModal(true)}
+            >
+              Cancel
+            </button>
+
             <button className={styles.submit} disabled={loading}>
               {loading ? "Creating…" : "Create Event"}
             </button>
@@ -237,8 +244,32 @@ export default function CreateEventPage() {
         </form>
       </div>
 
+      {/* CANCEL MODAL */}
+      {showCancelModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <h3>Leave this page?</h3>
+            <p>Your changes will be lost.</p>
+
+            <div className={styles.modalActions}>
+              <button onClick={() => setShowCancelModal(false)}>
+                Stay
+              </button>
+              <button
+                className={styles.danger}
+                onClick={() => router.push("/events")}
+              >
+                Yes, leave
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showSuccess && (
-        <div className={styles.toast}>Event created successfully!</div>
+        <div className={styles.toast}>
+          Event created successfully!
+        </div>
       )}
     </main>
   );

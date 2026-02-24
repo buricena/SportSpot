@@ -92,7 +92,7 @@ const handleLogout = async () => {
         </Link>
 
         <Link href="/map" className={isActive("/map") ? "active" : ""}>
-          Map
+          Event map
         </Link>
 
         <Link href="/results" className={isActive("/results") ? "active" : ""}>

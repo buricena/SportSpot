@@ -189,8 +189,11 @@ export default function ResultsPage() {
                       <div className={styles.meta}>
                         <span><Calendar size={14} />{new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
                         <span><MapPin size={14} />{event.location}</span>
-                        <span><Users size={14} />{event.participants_count}{event.max_participants && ` / ${event.max_participants}`}</span>
-                      </div>
+<span>
+  <Users size={14} />
+  {event.participants_count}
+  {event.participants_count === 1 ? " participant" : " participants"}
+</span>                      </div>
                     </div>
                   </div>
 

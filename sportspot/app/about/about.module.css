@@ -56,15 +56,16 @@
   background: #ff6b35;
   color: white;
   border: none;
-  padding: 12px 28px;
+  padding: 14px 32px;
   border-radius: 999px;
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.25);
 }
 
 .ctaBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(255, 122, 26, 0.35);
+  box-shadow: 0 10px 24px rgba(255, 107, 53, 0.35);
 }

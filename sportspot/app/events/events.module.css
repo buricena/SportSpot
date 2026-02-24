@@ -1,62 +1,56 @@
-
 .page {
-  padding: 40px 40px 60px;       /* P: more bottom breathing room */
+  padding: 40px 40px 60px;
   background: #fafafa;
-  min-height: 100vh;              /* full viewport fill */
+  min-height: 100vh;
 }
 
 /* ===============================
-   HEADER  (C + A + P)
+   HEADER
 ================================ */
 .header {
   max-width: 1200px;
-  margin-bottom: 48px;            /* P: extra space before controls */
+  margin-bottom: 48px;
 }
 
-/* C: small, loud kicker for contrast against the large title */
 .kicker {
-  color: #ff5a1f;
-  font-weight: 700;              /* C: heavier than before */
+  color: #ff6b35;
+  font-weight: 700;
   font-size: 13px;
-  letter-spacing: 1.5px;         /* C: wider tracking for small caps feel */
-  text-transform: uppercase;     /* R: consistent label treatment */
-  margin-bottom: 4px;            /* P: tight coupling to heading */
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
 }
 
-/* C: large title dominates the page */
 .header h1 {
   font-size: 44px;
-  
-  line-height: 1.15;             /* A: tighter leading for display type */
-  margin: 8px 0 12px;            /* P: tight to kicker, slight gap to subtitle */
+  line-height: 1.15;
+  margin: 8px 0 12px;
   color: #111;
 }
 
-/* Subtitle set apart from title but grouped with header block */
 .subtitle {
   color: #666;
   font-size: 16px;
   line-height: 1.55;
-  max-width: 540px;              /* A: narrower measure for readability */
+  max-width: 540px;
 }
 
 /* ===============================
-   TOP BAR  (A + P + Fitts)
+   TOP BAR
 ================================ */
 .topBar {
   margin-top: 32px;
   display: flex;
-  gap: 16px;                     /* P: tighter coupling of related controls */
+  gap: 16px;
   align-items: center;
   flex-wrap: wrap;
 }
 
-/* Fitts: tall, wide search field – easy to acquire */
 .search {
   flex: 1;
   min-width: 200px;
-  padding: 14px 18px;            /* Fitts: ≥ 44 px total height */
-  border-radius: 12px;           /* R: shared radius token */
+  padding: 14px 18px;
+  border-radius: 12px;
   border: 1px solid #ddd;
   font-size: 15px;
   background: #fff;
@@ -65,24 +59,19 @@
 
 .search:focus {
   outline: none;
-  border-color: #ff5a1f;
-  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.12);  /* C: visible focus ring */
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.12);
 }
 
-/* Group: actions sit together */
 .actions {
   display: flex;
-  gap: 12px;                     /* P: tight coupling between tabs & button */
+  gap: 12px;
   align-items: center;
 }
 
 /* ===============================
-   TABS  (C + R + Fitts)
+   TABS
 ================================ */
-/* ===============================
-   TABS  (FIXED)
-================================ */
-
 .tabs {
   position: relative;
   display: flex;
@@ -90,16 +79,15 @@
   border-radius: 12px;
   padding: 4px;
   overflow: hidden;
-  border: 1px solid #ff5a1f;   /* tanki obrub */
+  border: 1px solid #ff6b35;
 }
 
-/* TAB BUTTON */
 .tab {
   position: relative;
   z-index: 1;
   flex: 1;
   padding: 12px 20px;
-  border: none;                /* uklonjen border koji je pravio problem */
+  border: none;
   background: transparent;
   cursor: pointer;
   font-weight: 600;
@@ -109,34 +97,27 @@
   white-space: nowrap;
 }
 
-/* Hover samo za neaktivni */
 .tab:hover {
-  
-  color: #ff5a1f;
+  color: #ff6b35;
 }
 
-/* Aktivni tekst */
 .tab.activeText {
   color: white;
   text-align: center;
-
 }
 
 .tab.activeText span {
   background: rgba(255, 255, 255, 0.3);
   color: #fff;
- 
 }
 
-/* Press feedback */
 .tab:active {
   transform: scale(0.96);
 }
 
-/* Badge */
 .tab span {
   margin-left: 6px;
-  background: #ff5a1f;
+  background: #ff6b35;
   color: white;
   padding: 2px 12px;
   border-radius: 999px;
@@ -148,14 +129,13 @@
   vertical-align: middle;
 }
 
-/* SLIDER */
 .slider {
   position: absolute;
   top: 4px;
   left: 4px;
   width: calc(50% - 4px);
   height: calc(100% - 8px);
-  background: #ff5a1f;
+  background: #ff6b35;
   border-radius: 10px;
   transition: transform 0.3s ease;
   z-index: 0;
@@ -168,36 +148,83 @@
 .slideRight {
   transform: translateX(100%);
 }
+
 /* ===============================
-   ADD BUTTON  (C + Fitts)
+   ADD BUTTON
 ================================ */
-/* Fitts: largest interactive target – primary CTA */
 .addBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ff5a1f;
+  background: #ff6b35;
   color: white;
-  padding: 14px 24px;            /* Fitts: generous hit area */
-  border-radius: 12px;           /* R: consistent radius */
+  padding: 14px 28px;
+  border-radius: 999px;
   text-decoration: none;
   font-weight: 700;
   font-size: 15px;
   white-space: nowrap;
-  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 8px rgba(255, 90, 31, 0.25);  /* C: elevated CTA */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.25);
 }
 
 .addBtn:hover {
-  background: #e5501a;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(255, 90, 31, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(255, 107, 53, 0.35);
 }
 
 .addBtn:active {
   transform: translateY(0);
 }
 
+/* ===============================
+   CUSTOM DATE PICKER
+================================ */
+.customDate {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 36px;
+}
+
+.customDate:hover {
+  border-color: #ff6b35;
+  color: #ff6b35;
+}
+
+.hiddenDateInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.clearDate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+
+  cursor: pointer;
+  color: #999;
+  line-height: 1;
+}
+
+.clearDate:hover {
+  color: #ff6b35;
+}
 /* ===============================
    LOGIN NOTICE TOAST
 ================================ */
@@ -208,7 +235,7 @@
   background: #111;
   color: white;
   padding: 0.85rem 1.3rem;
-  border-radius: 12px;           /* R */
+  border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 500;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
@@ -235,25 +262,24 @@
 }
 
 /* ===============================
-   GRID  (A + P)
+   GRID
 ================================ */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;                     /* P: consistent card spacing */
-  margin-top: 8px;               /* P: slight separation from controls */
+  gap: 24px;
+  margin-top: 8px;
 }
 
 /* ===============================
-   CARD  (C + A + P + Fitts)
+   CARD
 ================================ */
-/* Fitts: entire card is a large click surface */
 .card {
   position: relative;
   overflow: hidden;
   background: white;
-  border-radius: 16px;           /* R: slightly larger for cards */
-  padding: 24px;                 /* A: uniform inner padding */
+  border-radius: 16px;
+  padding: 24px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
@@ -263,7 +289,6 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* C: accent stripe at top – strong colour signal */
 .card::before {
   content: "";
   position: absolute;
@@ -271,7 +296,7 @@
   left: 0;
   height: 5px;
   width: 100%;
-  background: #ff5a1f;
+  background: #ff6b35;
 }
 
 .card:hover {
@@ -279,23 +304,17 @@
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* ===============================
-   CARD TOP  (A + P)
-================================ */
 .cardTop {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;           /* P: space before title block */
+  margin-bottom: 16px;
 }
 
-/* ===============================
-   SPORT BADGE  (C + R)
-================================ */
 .sport {
-  background: #ff5a1f;
+  background: #ff6b35;
   color: #fff;
-  padding: 5px 14px;             /* Fitts: larger tap target */
+  padding: 5px 14px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
@@ -303,22 +322,18 @@
   text-transform: capitalize;
 }
 
-/* ===============================
-   STATUS BADGE  (C + R)
-================================ */
 .status {
   padding: 5px 12px;
   font-size: 11px;
   font-weight: 700;
   border-radius: 999px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;         /* C: more distinct from body text */
+  letter-spacing: 0.5px;
 }
 
 .upcoming {
   background: #e6f7ef;
   color: #1e7f5c;
-
 }
 
 .past {
@@ -326,40 +341,31 @@
   color: #c53030;
 }
 
-/* ===============================
-   CARD TITLE  (C)
-================================ */
 .card h3 {
   font-size: 20px;
   font-weight: 800;
-  margin-bottom: 8px;            /* P: tight coupling to description */
+  margin-bottom: 8px;
   color: #111;
   line-height: 1.25;
 }
 
-/* ===============================
-   CARD DESCRIPTION  (P)
-================================ */
 .desc {
   color: #666;
   font-size: 14px;
-  line-height: 1.55;             /* readability */
-  margin-bottom: 18px;           /* P: space before meta divider */
-  flex-grow: 1;                  /* A: push meta to consistent position */
+  line-height: 1.55;
+  margin-bottom: 18px;
+  flex-grow: 1;
 }
 
-/* ===============================
-   META  (A + P + R)
-================================ */
 .meta {
   display: flex;
   flex-direction: column;
-  gap: 8px;                      /* P: consistent inner spacing */
+  gap: 8px;
   font-size: 13px;
   color: #444;
   margin-bottom: 16px;
   padding-top: 14px;
-  border-top: 1px solid #eee;   /* A: clear section divider */
+  border-top: 1px solid #eee;
 }
 
 .meta span {
@@ -368,17 +374,17 @@
   gap: 6px;
   background: #f5f5f5;
   padding: 5px 10px;
-  border-radius: 8px;           /* R */
+  border-radius: 8px;
   width: fit-content;
 }
 
 .meta span:first-child {
-  font-weight: 700;             /* C: date stands out */
+  font-weight: 700;
   color: #111;
 }
 
 .meta span:last-child {
-  display: inline-flex;         /* A: consistent with siblings */
+  display: inline-flex;
   align-items: center;
   background: #f5f5f5;
   padding: 5px 10px;
@@ -386,9 +392,6 @@
   width: fit-content;
 }
 
-/* ===============================
-   META ITEM / ICON  (R)
-================================ */
 .metaItem {
   display: flex;
   align-items: center;
@@ -397,26 +400,184 @@
 }
 
 .metaIcon {
-  color: #ff5a1f;
+  color: #ff6b35;
   flex-shrink: 0;
 }
 
-/* ===============================
-   CTA LINK  (C + Fitts)
-================================ */
 .cta {
   margin-top: auto;
   align-self: flex-start;
-  color: #ff5a1f;
+  color: #ff6b35;
   font-size: 14px;
   font-weight: 700;
-  padding: 6px 0;               /* Fitts: extra vertical hit area */
+  padding: 6px 0;
   transition: opacity 0.15s ease;
 }
 
 .cta:hover {
   opacity: 0.8;
 }
+
+/* ===============================
+   EMPTY STATE
+================================ */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.emptyHeading {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 8px;
+}
+
+.emptyText {
+  font-size: 15px;
+  color: #888;
+  line-height: 1.5;
+}
+
+.emptyCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  background: #ff6b35;
+  color: white;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.25);
+}
+
+.emptyCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(255, 107, 53, 0.35);
+}
+
+/* ===============================
+   FILTERS
+================================ */
+.filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.pill:hover {
+  border-color: #ff6b35;
+  color: #ff6b35;
+}
+
+.pillActive {
+  background: #ff6b35;
+  color: white;
+  border-color: #ff6b35;
+}
+
+.pillActive:hover {
+  background: #e5601a;
+  color: white;
+}
+
+.filterSelect {
+  padding: 8px 32px 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.12);
+}
+
+.clearFilters {
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  color: #ff6b35;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+  align-self: flex-end;
+}
+
+.clearFilters:hover {
+  opacity: 0.7;
+}
+
 @media (max-width: 768px) {
   .page {
     padding: 24px 16px 40px;
@@ -477,5 +638,28 @@
 
   .desc {
     font-size: 13px;
+  }
+
+  .filters {
+    gap: 14px;
+  }
+
+  .pills {
+    gap: 6px;
+  }
+
+  .pill {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .filterSelect {
+    width: 100%;
+  }
+
+  .emptyCta {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 14px;
   }
 }

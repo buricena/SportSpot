@@ -23,7 +23,6 @@ export default function HomePage() {
   const [nearbyEvents, setNearbyEvents] = useState<Event[]>([]);
   const [featuredEvents, setFeaturedEvents] = useState<FeaturedEvent[]>([]);
 
-  // 🔥 activate scroll animations
   useScrollAnimation();
 
   // ---------------- FETCH CMS EVENTS ----------------
@@ -42,7 +41,7 @@ export default function HomePage() {
       }
     `,
       {},
-      { next: { revalidate: 3600 } } // 🔥 cache 1h
+      { next: { revalidate: 3600 } }
     );
 
     setFeaturedEvents(data || []);
@@ -52,7 +51,6 @@ export default function HomePage() {
     <>
       {/* ================= HERO ================= */}
       <main className="hero">
-        {/* OPTIMIZED HERO IMAGE */}
         <Image
           src={heroImage}
           alt="SportSpot hero background"
@@ -81,7 +79,7 @@ export default function HomePage() {
       <section className="how-it-works animate">
         <h2>How It Works</h2>
         <p className="how-subtitle">
-          Get started in three simple steps and join your local sports community
+          From finding a game to stepping on the field — here's how SportSpot gets you playing
         </p>
 
         <div className="steps">
@@ -89,24 +87,33 @@ export default function HomePage() {
             <div className="step-icon">
               <Search size={42} />
             </div>
-            <h3>Discover Events</h3>
-            <p>Browse local matches and tournaments near you</p>
+            <h3>Search by Sport & Location</h3>
+            <p>
+              Filter events by sport type, city, or use the interactive map to
+              find games happening near you — today, this week, or anytime.
+            </p>
           </div>
 
           <div className="step animate delay-2">
             <div className="step-icon">
               <Users size={42} />
             </div>
-            <h3>Join & Connect</h3>
-            <p>Register for events and meet new players</p>
+            <h3>Sign Up & Reserve Your Spot</h3>
+            <p>
+              Create a free account, pick an event, and confirm your attendance.
+              The organizer gets notified and you're on the roster.
+            </p>
           </div>
 
           <div className="step animate delay-3">
             <div className="step-icon">
               <Trophy size={42} />
             </div>
-            <h3>Play & Track</h3>
-            <p>Participate and view final results</p>
+            <h3>Play & See the Results</h3>
+            <p>
+              Show up, compete, and check back afterwards for scores, standings,
+              and stats from every event you've joined.
+            </p>
           </div>
         </div>
       </section>
@@ -120,10 +127,8 @@ export default function HomePage() {
         </p>
 
         <div className="events-layout">
-          {/* MAP */}
           <MapSection onEventsFetched={setNearbyEvents} />
 
-          {/* CMS FEATURED EVENTS */}
           <div className="events-list animate delay-2">
             <h3>Events you might be interested in</h3>
 
@@ -147,46 +152,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ================= FOOTER ================= */}
-      <footer className="footer animate">
-        <div className="footer-inner">
-          {/* BRAND */}
-          <div className="footer-brand">
-            <div className="footer-logo">SportSpot</div>
-            <p>
-              Your local sports community.
-              <br />
-              Connect, play and track your events.
-            </p>
-          </div>
 
-          {/* LINKS */}
-          <div className="footer-links">
-            <div>
-              <h4>Platform</h4>
-              <a href="/events">Events</a>
-              <a href="/map">Map</a>
-              <a href="/results">Results</a>
-            </div>
-
-            <div>
-              <h4>Account</h4>
-              <a href="/login">Sign in</a>
-              <a href="/register">Create account</a>
-            </div>
-
-            <div>
-              <h4>About</h4>
-              <a href="/about">About us</a>
-              <a href="/contact">Contact</a>
-            </div>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          © 2026 SportSpot. All rights reserved.
-        </div>
-      </footer>
     </>
   );
 }
