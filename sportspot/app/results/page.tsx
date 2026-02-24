@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import styles from "./results.module.css";
+import { ChevronDown } from "lucide-react";
 import {
   Trophy,
   Calendar,
@@ -41,6 +42,7 @@ export default function ResultsPage() {
   const [comments, setComments] = useState<Record<string, string>>({});
   const [editing, setEditing] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [openReviews, setOpenReviews] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -132,7 +134,6 @@ export default function ResultsPage() {
 
   return (
     <main className={styles.page}>
-      {/* HEADER */}
       <header className={styles.header}>
         <div className={styles.headerIcon}><Trophy size={22} /></div>
         <div>
@@ -141,14 +142,12 @@ export default function ResultsPage() {
         </div>
       </header>
 
-      {/* STATS */}
       <section className={styles.stats}>
         <Stat icon={<Calendar />} label="Past events" value={stats.total} />
         <Stat icon={<Trophy />} label="Results posted" value={stats.posted} variant="green" />
         <Stat icon={<Clock />} label="Pending" value={stats.pending} variant="orange" />
       </section>
 
-      {/* SEARCH */}
       <div className={styles.search}>
         <Search size={16} />
         <input
@@ -158,17 +157,15 @@ export default function ResultsPage() {
         />
       </div>
 
-      {/* FILTERS */}
       <div className={styles.filters}>
         <FilterBtn label="All" count={stats.total} active={filter==="all"} onClick={()=>setFilter("all")} />
         <FilterBtn label="Results posted" count={stats.posted} active={filter==="posted"} onClick={()=>setFilter("posted")} />
         <FilterBtn label="Pending" count={stats.pending} active={filter==="pending"} onClick={()=>setFilter("pending")} />
       </div>
 
-      {/* LIST */}
       <section className={styles.list}>
         {filteredEvents.map(event => {
-          const isOrganizer = userId === event.organizer_id;
+          const isOrganizer = !!userId && userId === event.organizer_id;
           const hasResult = !!event.result?.comment;
           const isEditing = editing === event.id;
 
@@ -178,24 +175,17 @@ export default function ResultsPage() {
               : null;
 
           return (
-            <article
-              key={event.id}
-              className={`${styles.card} ${hasResult ? styles.cardDone : styles.cardPending}`}
-            >
-              {/* C: Status indicator strip at top for immediate scanning */}
+            <article key={event.id} className={`${styles.card} ${hasResult ? styles.cardDone : styles.cardPending}`}>
               <div className={hasResult ? styles.cardTopStripDone : styles.cardTopStripPending} />
 
               <div className={styles.cardInner}>
-                {/* A+P: Header row — title & status are visually grouped */}
                 <header className={styles.cardHeader}>
                   <div className={styles.cardTitleGroup}>
-                    {/* C: Sport icon provides instant visual recognition */}
                     <div className={hasResult ? styles.sportIconDone : styles.sportIconPending}>
                       <Trophy size={18} />
                     </div>
                     <div>
                       <h3>{event.title}</h3>
-                      {/* P: Meta sits directly under its title — tight coupling */}
                       <div className={styles.meta}>
                         <span><Calendar size={14} />{new Date(event.event_date).toLocaleDateString("hr-HR")}</span>
                         <span><MapPin size={14} />{event.location}</span>
@@ -204,13 +194,11 @@ export default function ResultsPage() {
                     </div>
                   </div>
 
-                  {/* C: Larger, bolder status badge — scannable at a glance */}
                   <span className={hasResult ? styles.statusDone : styles.statusPending}>
                     {hasResult ? <><Trophy size={13} /> Final result</> : <><Clock size={13} /> Pending</>}
                   </span>
                 </header>
 
-                {/* R+P: Result section — visually distinct from header */}
                 <div className={hasResult ? styles.resultBoxDone : styles.resultBoxPending}>
                   {hasResult && !isEditing && (
                     <div className={styles.resultContent}>
@@ -219,7 +207,6 @@ export default function ResultsPage() {
                     </div>
                   )}
 
-                  {/* C+P: Empty state with clear visual call-to-action */}
                   {!hasResult && !isOrganizer && (
                     <div className={styles.emptyState}>
                       <Clock size={20} />
@@ -230,39 +217,30 @@ export default function ResultsPage() {
                     </div>
                   )}
 
-                  {/* Fitts: Large, prominent CTA button for organizer to add result */}
                   {!hasResult && isOrganizer && !isEditing && (
-                    <button
-                      className={styles.addResultBtn}
-                      onClick={() => setEditing(event.id)}
-                    >
+                    <button className={styles.addResultBtn} onClick={() => setEditing(event.id)}>
                       <Trophy size={16} />
                       Add result
                     </button>
                   )}
 
-                  {isOrganizer && (isEditing || (!hasResult && isEditing)) && (
+                  {isOrganizer && isEditing && (
                     <div className={styles.editor}>
                       <label className={styles.editorLabel}>Result summary</label>
                       <textarea
                         value={comments[event.id] ?? event.result?.comment ?? ""}
                         onChange={e => setComments({ ...comments, [event.id]: e.target.value })}
-                        placeholder="Write final result summary (min. 10 characters)..."
                       />
                       {error && <p className={styles.error}>{error}</p>}
-                      {/* Fitts: Action buttons are large, clearly grouped, primary action is prominent */}
                       <div className={styles.editorActions}>
                         <button onClick={() => saveResult(event.id)}>
                           <Trophy size={14} /> Save result
                         </button>
-                        {hasResult && (
-                          <button className={styles.cancel} onClick={() => setEditing(null)}>Cancel</button>
-                        )}
+                        <button className={styles.cancel} onClick={() => setEditing(null)}>Cancel</button>
                       </div>
                     </div>
                   )}
 
-                  {/* Fitts: Edit button is now a proper button with padding, not just a text link */}
                   {hasResult && isOrganizer && !isEditing && (
                     <button className={styles.editBtn} onClick={() => setEditing(event.id)}>
                       Edit result
@@ -270,26 +248,58 @@ export default function ResultsPage() {
                   )}
                 </div>
 
-                {/* A+P: Reviews section — clear divider, aligned with card structure */}
+                {/* REVIEWS WITH TOOLTIP */}
                 <div className={styles.reviews}>
                   {avgRating ? (
-                    <div className={styles.ratingRow}>
-                      <div className={styles.ratingStars}>
-                        {[1,2,3,4,5].map(i => (
-                          <Star
-                            key={i}
-                            size={14}
-                            className={i <= Math.round(Number(avgRating)) ? styles.starFilled : styles.starEmpty}
-                          />
-                        ))}
+                    <div
+                      className={styles.ratingRow}
+                      onClick={() => setOpenReviews(openReviews === event.id ? null : event.id)}
+                    >
+                      <div className={styles.ratingLeft}>
+                        <div className={styles.ratingStars}>
+                          {[1,2,3,4,5].map(i => (
+                            <Star
+                              key={i}
+                              size={14}
+                              className={i <= Math.round(Number(avgRating)) ? styles.starFilled : styles.starEmpty}
+                            />
+                          ))}
+                        </div>
+                        <span className={styles.ratingValue}>{avgRating}</span>
+                        <span className={styles.ratingCount}>({event.reviews.length})</span>
+                          <span className={styles.tooltip}>Show reviews</span>
                       </div>
-                      <span className={styles.ratingValue}>{avgRating}</span>
-                      <span className={styles.ratingCount}>({event.reviews.length} {event.reviews.length === 1 ? 'review' : 'reviews'})</span>
+
+                      <ChevronDown
+                        size={16}
+                        className={`${styles.chevron} ${openReviews === event.id ? styles.chevronOpen : ""}`}
+                      />
+
+                      {/* TOOLTIP */}
+                    
                     </div>
                   ) : (
                     <span className={styles.noReviews}>No reviews yet</span>
                   )}
+
+                  <div className={`${styles.reviewList} ${openReviews === event.id ? styles.reviewListOpen : ""}`}>
+                    {event.reviews.map((r, i) => (
+                      <div key={i} className={styles.reviewItem}>
+                        <div className={styles.reviewStars}>
+                          {[1,2,3,4,5].map(n => (
+                            <Star
+                              key={n}
+                              size={12}
+                              className={n <= r.rating ? styles.starFilled : styles.starEmpty}
+                            />
+                          ))}
+                        </div>
+                        {r.comment && <p>{r.comment}</p>}
+                      </div>
+                    ))}
+                  </div>
                 </div>
+
               </div>
             </article>
           );
@@ -298,8 +308,6 @@ export default function ResultsPage() {
     </main>
   );
 }
-
-/* helper components */
 
 function Stat({ icon, label, value, variant }: any) {
   const className =

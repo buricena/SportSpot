@@ -418,7 +418,7 @@
   flex-shrink: 0;                /* A: never collapse */
   display: block;                /* A: remove inline baseline gap */
   color: #999;
-  vertical-align: middle;
+
 }
 
 
@@ -768,8 +768,92 @@
   color: #bbb;
   font-style: italic;
 }
+/* === REVIEWS EXPAND ANIMATION === */
+
+/* ===== CLICKABLE RATING ===== */
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+  position: relative;
+}
+
+.ratingRow:hover {
+  opacity: 0.75;
+  transform: translateY(-1px);
+}
+
+.ratingLeft {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* hover hint */
+
+.showReviews {
+  font-size: 12px;
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ratingRow:hover .showReviews {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ===== REVIEWS EXPAND ===== */
+
+.reviewList {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-4px);
+
+  transition: 
+    max-height 0.35s ease,
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.reviewListOpen {
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
+}
+.showReviewsText {
+  font-size: 12px;
+  color: #555;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateY(-2px);
+}
+
+.ratingRow:hover .showReviewsText {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 
+/* ===== REVIEW ITEMS ===== */
+
+.reviewItem {
+  margin-bottom: 10px;
+}
+
+.reviewStars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 2px;
+}
 /* ===============================
    ERROR MESSAGE  (C)
 ================================ */
@@ -778,6 +862,30 @@
   font-size: 13px;
   font-weight: 500;
   margin-top: 8px;
+}
+.ratingRow {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tooltip {
+ 
+  background: #333;
+  color: #fff;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.ratingRow:hover .tooltip {
+  opacity: 1;
 }
 
 
