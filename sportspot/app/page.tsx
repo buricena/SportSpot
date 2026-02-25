@@ -101,7 +101,6 @@ export default function HomePage() {
             <h3>Sign Up & Reserve Your Spot</h3>
             <p>
               Create a free account, pick an event, and confirm your attendance.
-              The organizer gets notified and you're on the roster.
             </p>
           </div>
 
@@ -111,8 +110,7 @@ export default function HomePage() {
             </div>
             <h3>Play & See the Results</h3>
             <p>
-              Show up, compete, and check back afterwards for scores, standings,
-              and stats from every event you've joined.
+              Show up, compete, and check back afterwards for results from every event you've joined.
             </p>
           </div>
         </div>
