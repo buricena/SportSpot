@@ -40,6 +40,8 @@ export default function EventDetailsPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
 
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+
   useEffect(() => {
     fetchAll();
   }, [id]);
@@ -98,25 +100,55 @@ export default function EventDetailsPage() {
   async function handleJoin() {
     if (!event) return;
 
-    const isPast = new Date(event.event_date) < new Date();
-    const isFull =
-      event.max_participants !== null &&
-      participantsCount >= event.max_participants;
-
-    if (isPast || isFull) return;
-
     if (!user) {
       router.push("/login");
       return;
     }
 
-    await supabase.from("event_participants").insert({
-      event_id: id,
-      user_id: user.id,
-    });
+    const isPast = new Date(event.event_date) < new Date();
+    const isFull =
+      event.max_participants !== null &&
+      participantsCount >= event.max_participants;
 
-    setJoined(true);
-    setParticipantsCount((c) => c + 1);
+    if (!joined) {
+      if (isPast || isFull) return;
+
+      setJoined(true);
+      setParticipantsCount((c) => c + 1);
+
+      const { error } = await supabase.from("event_participants").insert({
+        event_id: id,
+        user_id: user.id,
+      });
+
+      if (error) {
+        setJoined(false);
+        setParticipantsCount((c) => c - 1);
+        alert("Failed to join event.");
+      }
+    } else {
+      setShowLeaveConfirm(true);
+    }
+  }
+
+  async function confirmLeave() {
+    if (!event || !user) return;
+
+    setShowLeaveConfirm(false);
+    setJoined(false);
+    setParticipantsCount((c) => c - 1);
+
+    const { error } = await supabase
+      .from("event_participants")
+      .delete()
+      .eq("event_id", id)
+      .eq("user_id", user.id);
+
+    if (error) {
+      setJoined(true);
+      setParticipantsCount((c) => c + 1);
+      alert("Failed to leave event.");
+    }
   }
 
   function handleDelete() {
@@ -156,9 +188,7 @@ export default function EventDetailsPage() {
     }, 2000);
   }
 
-  if (loading) {
-    return <main className={styles.page}>Loading…</main>;
-  }
+  if (loading) return <main className={styles.page}>Loading…</main>;
 
   if (notFoundEvent) {
     return (
@@ -200,59 +230,58 @@ export default function EventDetailsPage() {
         </p>
 
         <div className={styles.infoGrid}>
- <div className={styles.infoCard}>
-  <span className={styles.infoLabel}>Date</span>
+          <div className={styles.infoCard}>
+            <span className={styles.infoLabel}>Date</span>
+            <div className={styles.infoValue}>
+              <Calendar size={18} />
+              <strong>
+                {new Date(event.event_date).toLocaleDateString("hr-HR")}
+              </strong>
+            </div>
+          </div>
 
-  <div className={styles.infoValue}>
-    <Calendar size={18} />
-    <strong>
-      {new Date(event.event_date).toLocaleDateString("hr-HR")}
-    </strong>
-  </div>
-</div>
+          <div className={styles.infoCard}>
+            <span className={styles.infoLabel}>Time</span>
+            <div className={styles.infoValue}>
+              <Clock size={18} />
+              <strong>
+                {new Date(event.event_date).toLocaleTimeString("hr-HR", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </strong>
+            </div>
+          </div>
 
-  <div className={styles.infoCard}>
-    <span className={styles.infoLabel}>Time</span>
-    <div className={styles.infoValue}>
-      <Clock size={18} />
-      <strong>
-        {new Date(event.event_date).toLocaleTimeString("hr-HR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
-      </strong>
-    </div>
-  </div>
+          <div className={styles.infoCard}>
+            <span className={styles.infoLabel}>Location</span>
+            <div className={styles.infoValue}>
+              <MapPin size={18} />
+              <strong>{event.location}</strong>
+            </div>
+          </div>
 
-  <div className={styles.infoCard}>
-    <span className={styles.infoLabel}>Location</span>
-    <div className={styles.infoValue}>
-      <MapPin size={18} />
-      <strong>{event.location}</strong>
-    </div>
-  </div>
+          <div className={styles.infoCard}>
+            <span className={styles.infoLabel}>Participants</span>
+            <div className={styles.infoValue}>
+              <Users size={18} />
+              <strong>
+                {participantsCount}
+                {event.max_participants
+                  ? ` / ${event.max_participants}`
+                  : " / Unlimited"}
+              </strong>
+            </div>
+          </div>
+        </div>
 
-  <div className={styles.infoCard}>
-    <span className={styles.infoLabel}>Participants</span>
-    <div className={styles.infoValue}>
-      <Users size={18} />
-      <strong>
-        {participantsCount}
-        {event.max_participants
-          ? ` / ${event.max_participants}`
-          : " / Unlimited"}
-      </strong>
-    </div>
-  </div>
-</div>
-
-        {/* JOIN */}
+        {/* JOIN / LEAVE */}
         <div className={styles.joinCard}>
           {isPast ? (
             <p className={styles.pastNotice}>
               This event has already ended.
             </p>
-          ) : isFull ? (
+          ) : isFull && !joined ? (
             <p className={styles.pastNotice}>
               This event is full. You can no longer join.
             </p>
@@ -265,10 +294,9 @@ export default function EventDetailsPage() {
 
               <button
                 onClick={handleJoin}
-                disabled={joined}
-                className={styles.joinBtn}
+                className={`${styles.joinBtn} ${joined ? styles.joined : ""}`}
               >
-                {joined ? "Joined" : "Join Event"}
+                {joined ? "Leave" : "Join Event"}
               </button>
             </>
           )}
@@ -285,21 +313,20 @@ export default function EventDetailsPage() {
           </div>
         </div>
 
-        {/* DELETE */}
         {user && user.id === event.organizer_id && (
-  <div className={styles.deleteSection}>
-    <button className={styles.deleteBtn} onClick={handleDelete}>
-      Delete Event
-    </button>
+          <div className={styles.deleteSection}>
+            <button className={styles.deleteBtn} onClick={handleDelete}>
+              Delete Event
+            </button>
 
-    {deleteError && (
-      <p className={styles.deleteError}>{deleteError}</p>
-    )}
-  </div>
-)}
+            {deleteError && (
+              <p className={styles.deleteError}>{deleteError}</p>
+            )}
+          </div>
+        )}
       </article>
 
-      {/* CONFIRM MODAL */}
+      {/* DELETE CONFIRM */}
       {showConfirm && (
         <div className={styles.confirmOverlay}>
           <div className={styles.confirmBox}>
@@ -315,6 +342,30 @@ export default function EventDetailsPage() {
               <button
                 className={styles.confirmCancel}
                 onClick={() => setShowConfirm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* LEAVE CONFIRM */}
+      {showLeaveConfirm && (
+        <div className={styles.confirmOverlay}>
+          <div className={styles.confirmBox}>
+            <p>Are you sure you want to leave this event?</p>
+
+            <div className={styles.confirmActions}>
+              <button
+                className={styles.confirmDelete}
+                onClick={confirmLeave}
+              >
+                Yes, leave
+              </button>
+              <button
+                className={styles.confirmCancel}
+                onClick={() => setShowLeaveConfirm(false)}
               >
                 Cancel
               </button>
