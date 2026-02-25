@@ -240,18 +240,21 @@
 
 .modalActions {
   display: flex;
-  gap: 12px;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 20px;
 }
 
 .modalActions button {
   flex: 1;
-  padding: 10px 14px;
-  border-radius: 10px;
+  background: #eee;
   border: none;
-  font-size: 14px;
-  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 700;
   cursor: pointer;
 }
+
 
 .modalActions button:first-child {
   background: #eee;
