@@ -270,7 +270,9 @@ export default function ResultsPage() {
                         </div>
                         <span className={styles.ratingValue}>{avgRating}</span>
                         <span className={styles.ratingCount}>({event.reviews.length})</span>
-                          <span className={styles.tooltip}>Show reviews</span>
+                         <span className={styles.tooltip}>
+  {openReviews === event.id ? "Hide reviews" : "Show reviews"}
+</span>
                       </div>
 
                       <ChevronDown

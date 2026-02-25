@@ -77,6 +77,7 @@
   font-weight: 600;
 }
 
+
 /* ===============================
    SPORT BADGE
 ================================ */
@@ -136,9 +137,14 @@
 .details {
   background: none;
   border: none;
-  color: #555;
+  color: #ff6b35; /* narandžasta boja */
   font-size: 0.85rem;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.details:hover {
+  color: #ff7a1a; /* malo svjetlija narandžasta na hover */
 }
 /* ===============================
    REVIEW (PAST EVENTS ONLY)

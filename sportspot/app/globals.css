@@ -97,7 +97,50 @@
   background: #ff6b35;
   border-radius: 2px;
 }
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.confirmBox {
+  background: white;
+  padding: 28px 32px;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  text-align: center;
+}
 
+.confirmActions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.confirmDelete {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confirmCancel {
+  background: #eee;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+}
 .profile-avatar {
   width: 36px;
   height: 36px;
@@ -116,7 +159,7 @@
 
 .profile-avatar:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 14px 
 }
 
 
@@ -183,12 +226,12 @@
   cursor: pointer;
 
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.25);
+  box-shadow: 0 2px 8px;
 }
 
 .signin-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(255, 107, 53, 0.35);
+  box-shadow: 0 10px 24px;
 }
 
 

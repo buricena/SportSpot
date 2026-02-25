@@ -186,6 +186,7 @@ export default function MyEvents() {
 
                   <button
                     className={styles.details}
+                    style={{ color: "#ff6b35" }}
                     onClick={(e) => {
                       e.stopPropagation();
                       router.push(`/events/${event.id}`);

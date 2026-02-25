@@ -613,7 +613,7 @@
 }
 
 .editor button {
-  background: #ff7a1a;
+  background: #ff6b35;
   color: white;
   border: none;
   padding: 10px 22px;            /* Fitts: >= 44 px min-height */
@@ -633,7 +633,7 @@
 }
 
 .editor button:hover {
-  background: #e56e15;
+  background:#ec815b;
 }
 
 .editor button:active {

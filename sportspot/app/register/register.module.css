@@ -69,7 +69,10 @@
   font-weight: 600;
   cursor: pointer;
 }
-
+.button:hover {
+  background:#fc622b;
+  box-shadow: 0 10px 25px ;
+}
 .button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -89,4 +92,9 @@
 .footerText a {
   color: #ff6b35;
   font-weight: 600;
+  text-decoration: none;
+}
+.footerText a:hover {
+  color:#ec815b;
+ 
 }
