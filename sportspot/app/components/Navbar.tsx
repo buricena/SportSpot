@@ -101,7 +101,7 @@ export default function Navbar() {
           </Link>
 
           <Link href="/map" className={isActive("/map") ? "active" : ""}>
-            Map
+             Event map
           </Link>
 
           <Link

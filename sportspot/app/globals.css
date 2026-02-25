@@ -401,10 +401,10 @@
 }
 
 .featured-hint {
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #9ca3af;
-  margin-top: -1rem;
-  margin-bottom: 1rem;
+  /* margin-top: -1rem; */
+  margin-bottom: 1.6rem;
 }
 
 .map-placeholder {

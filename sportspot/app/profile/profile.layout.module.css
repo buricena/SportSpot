@@ -165,7 +165,7 @@
 
 
 .tabs button:hover {
-   background: rgba(255, 90, 31, 0.06);
+  background: rgba(255, 90, 31, 0.06);
   border-color: #ff5a1f;
   color: #ff5a1f;
 }
@@ -175,7 +175,10 @@
   color: white;
   box-shadow: 0 6px 18px rgba(255, 107, 53, 0.35);
 }
-
+.tabs .active:hover {
+  background: #e85f2a; /* malo tamnija nijansa */
+  color: white;
+}
 /* ===============================
    CONTENT
 ================================ */
