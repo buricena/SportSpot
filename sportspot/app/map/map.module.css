@@ -1,7 +1,7 @@
 .page {
-  height: calc(100vh - 80px);
   background: #fafafa;
   position: relative;
+  padding-bottom: 4rem; /* ✅ prostor za footer */
 }
 
 /* HEADER */
@@ -54,7 +54,9 @@
 
 /* MAP */
 .mapWrapper {
-  height: calc(100% - 160px); /* ⬅️ prostor za header + search */
+  height: 500px;
+  max-height: 70vh;
+  overflow: hidden;
 }
 
 .state {
@@ -63,21 +65,9 @@
   color: #666;
 }
 @media (max-width: 768px) {
-  .map-wrapper,
-  .map-container {
+  .mapWrapper {
     height: 280px;
-    min-height: 280px;
-    max-height: 60vh; /* ✅ ključno */
-  }
-}
-.map-wrapper {
-  overflow: hidden; /* ✅ */
-}
-.events-around {
-  padding-bottom: 4rem; /* ✅ prostor za footer */
-}
-@media (max-width: 768px) {
-  .map-wrapper {
+    max-height: 55vh;
     border-radius: 12px;
   }
 }
