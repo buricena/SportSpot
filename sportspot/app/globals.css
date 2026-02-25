@@ -359,8 +359,8 @@
 .featured-hint {
   font-size: 0.8rem;
   color: #9ca3af;
-  margin-top: -1.2rem;
-  margin-bottom: 1.5rem;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
 }
 
 .map-placeholder {
@@ -404,6 +404,7 @@
 }
 .events-list h3{
   margin-bottom: 2rem;
+  font-size: 1.5rem;
 }
 
 /* Event cards */

@@ -46,25 +46,20 @@ export default function MapView({ center, events = [], userLocation }: Props) {
 
   const { MapContainer, TileLayer, Marker, Popup, useMap } = Map;
 
-  // Centriranje mape
+  // centriranje mape kad se promijeni center
   const RecenterMap = ({ coords }: { coords: [number, number] }) => {
     const map = useMap();
 
     useEffect(() => {
-      map.flyTo(coords, 13);
+      map.flyTo(coords, map.getZoom(), { animate: true });
     }, [coords, map]);
 
     return null;
   };
 
-  const top3Events = events.slice(0, 3);
-
-  // Ako korisnik odabere lokaciju, centriramo na nju
-  const mapCenter: [number, number] = userLocation
-    ? userLocation
-    : top3Events.length > 0
-    ? [top3Events[0].lat, top3Events[0].lng]
-    : center;
+  // PRIORITET: userLocation → featured center → fallback
+  const mapCenter: [number, number] =
+    userLocation ?? center ?? [45.815399, 15.966568];
 
   return (
     <MapContainer
@@ -76,21 +71,29 @@ export default function MapView({ center, events = [], userLocation }: Props) {
 
       <RecenterMap coords={mapCenter} />
 
-      {top3Events.map((event) =>
-        event.lat != null && event.lng != null ? (
-          <Marker key={event.id} position={[event.lat, event.lng]}>
-            <Popup>
-              <strong>{event.title}</strong>
-              {event.sport && <div>{event.sport}</div>}
-              {event.location && <div>{event.location}</div>}
-              {event.event_date && (
-                <div>{new Date(event.event_date).toLocaleDateString("hr-HR")}</div>
-              )}
-            </Popup>
-          </Marker>
-        ) : null
-      )}
+      {/* FEATURED / GLAVNI PIN – ISTI KAO OSTALI */}
+      <Marker position={mapCenter}>
+        <Popup>
+          <strong>Selected location</strong>
+        </Popup>
+      </Marker>
 
+      {/* EVENTI IZ BAZE */}
+      {events.map((event) => (
+        <Marker key={event.id} position={[event.lat, event.lng]}>
+          <Popup>
+            <strong>{event.title}</strong>
+            {event.location && <div>{event.location}</div>}
+            {event.event_date && (
+              <div>
+                {new Date(event.event_date).toLocaleDateString("hr-HR")}
+              </div>
+            )}
+          </Popup>
+        </Marker>
+      ))}
+
+      {/* MY LOCATION */}
       {userLocation && (
         <Marker position={userLocation}>
           <Popup>You are here</Popup>

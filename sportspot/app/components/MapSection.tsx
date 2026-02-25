@@ -19,16 +19,15 @@ type MapSectionProps = {
 };
 
 export default function MapSection({ externalCenter }: MapSectionProps) {
-  const [center, setCenter] = useState<[number, number]>([45.815399, 15.966568]);
+  const [center, setCenter] = useState<[number, number] | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchEvents();
   }, []);
 
-  // Pan map when a featured event is clicked
+  // Featured event ima prioritet
   useEffect(() => {
     if (externalCenter) {
       setCenter(externalCenter);
@@ -36,7 +35,6 @@ export default function MapSection({ externalCenter }: MapSectionProps) {
   }, [externalCenter]);
 
   async function fetchEvents() {
-    setLoading(true);
     const today = new Date().toISOString().split("T")[0];
 
     const { data } = await supabase
@@ -48,28 +46,15 @@ export default function MapSection({ externalCenter }: MapSectionProps) {
 
     if (data) {
       setEvents(data);
-
-      if (data.length > 0) {
-        setCenter([data[0].lat, data[0].lng]);
-      }
     }
-    setLoading(false);
   }
 
   const handleMyLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation not supported");
-      return;
-    }
+    if (!navigator.geolocation) return;
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
-        setCenter(coords);
-        setUserLocation(coords);
-      },
-      () => alert("Location access denied")
-    );
+    navigator.geolocation.getCurrentPosition((pos) => {
+      setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+    });
   };
 
   return (
@@ -78,15 +63,11 @@ export default function MapSection({ externalCenter }: MapSectionProps) {
         My location
       </button>
 
-      {loading ? (
-        <p>Loading events...</p>
-      ) : (
-        <MapView
-          center={center}
-          events={events}
-          userLocation={userLocation}
-        />
-      )}
+      <MapView
+        center={center ?? [45.815399, 15.966568]} // fallback Zagreb
+        events={events}
+        userLocation={userLocation}
+      />
     </div>
   );
 }
