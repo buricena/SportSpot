@@ -259,10 +259,10 @@
 }
 
 .modalActions .danger {
-  background: #ff5a1f;
+  background: #dc2626;
   color: white;
 }
 
 .modalActions .danger:hover {
-  background: #ff7a1a;
+  background: #dc2626;
 }
