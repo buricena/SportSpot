@@ -86,10 +86,7 @@ export default function ResultsPage() {
 
   async function saveResult(eventId: string) {
     const text = comments[eventId]?.trim();
-    if (!text || text.length < 10) {
-      setError("Result must contain at least 10 characters.");
-      return;
-    }
+   
 
     const event = events.find(e => e.id === eventId);
     if (!event) return;

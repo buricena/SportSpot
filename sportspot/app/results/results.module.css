@@ -1,28 +1,21 @@
-
 .page {
   max-width: 980px;
   margin: 0 auto;
-  padding: 40px 24px 80px;       /* P: generous bottom breathing room */
+  padding: 40px 24px 80px;
 }
 
-
-/* ===============================
-   HEADER  (C + A + P)
-================================ */
 .header {
   display: flex;
-  gap: 16px;                     /* P: icon-to-text coupling */
-  align-items: flex-start;       /* A: top-align icon with title line */
-  margin-bottom: 36px;           /* P: space before stat cards */
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 36px;
 }
 
-/* A: Fixed-size icon cell – guarantees title text always starts at
-   the same horizontal offset regardless of icon content. */
 .headerIcon {
-  width: 48px;                   /* A: explicit fixed dimension */
+  width: 48px;
   height: 48px;
-  min-width: 48px;               /* A: prevent flex shrink */
-  border-radius: 12px;           /* R: shared radius token */
+  min-width: 48px;
+  border-radius: 12px;
   background: #fff3e8;
   color: #ff7a1a;
   display: flex;
@@ -30,23 +23,19 @@
   justify-content: center;
 }
 
-/* A: force SVG inside header icon to a known size */
 .headerIcon svg {
-  width: 24px;                   /* A: explicit, repeatable icon size */
+  width: 24px;
   height: 24px;
   flex-shrink: 0;
 }
 
-/* C: large title dominates the section */
 .header h1 {
   margin: 0;
   font-size: 28px;
-             /* C: heaviest weight for main heading */
   line-height: 1.2;
   color: #111;
 }
 
-/* P: subtitle sits tight under title */
 .header p {
   margin: 4px 0 0;
   color: #777;
@@ -54,33 +43,22 @@
   line-height: 1.45;
 }
 
-
-/* ===============================
-   STATS ROW  (A + P + R)
-   Professor focus: icon alignment
-================================ */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;                     /* P: even spacing between cards */
-  margin-bottom: 28px;           /* P: separation before search */
+  gap: 16px;
+  margin-bottom: 28px;
 }
 
-/* Shared base for all three stat card variants
-   A (CRAP): align-items: flex-start keeps the icon pinned to the
-   TOP of the text column – this is the alignment fix the professor
-   specifically called out. Center-aligning icons with multi-line
-   text creates a visual disconnect; top-aligning anchors the icon
-   to the label, which the eye scans first. */
 .statCard,
 .statCardGreen,
 .statCardOrange {
   background: white;
-  border-radius: 16px;           /* R: card-level radius */
-  padding: 20px;                 /* A: consistent inner padding */
+  border-radius: 16px;
+  padding: 20px;
   display: flex;
-  align-items: flex-start;       /* A (CRAP): TOP-ALIGN icon with text */
-  gap: 16px;                     /* P: icon-to-text gap, uniform */
+  align-items: flex-start;
+  gap: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -92,54 +70,39 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* ---- ICON ALIGNMENT FIX (A + R) ----
-   Every stat icon sits inside a fixed-dimension cell so that
-   regardless of the SVG's intrinsic size, the text column to
-   its right always begins at the exact same x-offset.
-   This is the critical alignment fix the professor emphasized. */
-
 .statCard svg,
 .statCardGreen svg,
 .statCardOrange svg {
-  width: 28px;                   /* A: fixed icon width */
-  height: 28px;                  /* A: fixed icon height */
-  min-width: 28px;               /* A: prevent flex shrink */
-  flex-shrink: 0;                /* A: never collapse */
-  display: block;                /* A: remove inline baseline offset */
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  flex-shrink: 0;
+  display: block;
   color: inherit;
-  margin-top: 2px;               /* A: optically align icon top with label baseline */
+  margin-top: 2px;
 }
 
-/* C: Colour-coded stat card backgrounds – subtle tints let users
-   instantly differentiate "Past events" / "Results posted" / "Pending"
-   at a glance without reading the label.  Combined with coloured
-   icons this gives each card a distinct visual identity. */
-.statCard        { background: #f5f7fa; }         /* neutral blue-grey tint */
-.statCardGreen   { background: #eef9f2; }         /* light green tint */
-.statCardOrange  { background: #fff6ee; }         /* light orange tint */
+.statCard { background: #f5f7fa; }
+.statCardGreen { background: #eef9f2; }
+.statCardOrange { background: #fff6ee; }
 
-/* Icon colour per variant (C: colour-coded meaning) */
-.statCard svg        { color: #5a6a7e; }
-.statCardGreen svg   { color: #1e9e5c; }
-.statCardOrange svg  { color: #ff7a1a; }
+.statCard svg { color: #5a6a7e; }
+.statCardGreen svg { color: #1e9e5c; }
+.statCardOrange svg { color: #ff7a1a; }
 
-/* C: matching border accent on left edge for added emphasis */
-.statCard        { border-left: 4px solid #b0bec5; }
-.statCardGreen   { border-left: 4px solid #1e9e5c; }
-.statCardOrange  { border-left: 4px solid #ff7a1a; }
+.statCard { border-left: 4px solid #b0bec5; }
+.statCardGreen { border-left: 4px solid #1e9e5c; }
+.statCardOrange { border-left: 4px solid #ff7a1a; }
 
-/* ---- TEXT COLUMN ALIGNMENT (A) ----
-   Column layout forces label above number at the same position. */
 .statCard > div,
 .statCardGreen > div,
 .statCardOrange > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;                      /* P: tight label-to-number coupling */
+  gap: 2px;
 }
 
-/* Label text */
 .statCard span,
 .statCardGreen span,
 .statCardOrange span {
@@ -149,42 +112,35 @@
   line-height: 1.2;
 }
 
-/* Number – heaviest contrast element in the card (C) */
 .statCard strong,
 .statCardGreen strong,
 .statCardOrange strong {
   font-size: 24px;
-  font-weight: 800;              /* C: bold numbers stand out */
+  font-weight: 800;
   line-height: 1;
   color: #111;
 }
 
-
-/* ===============================
-   SEARCH  (Fitts + A)
-================================ */
 .search {
   position: relative;
   margin-bottom: 18px;
 }
 
-/* A: icon pinned to a fixed left position */
 .search svg {
   position: absolute;
   top: 50%;
   left: 16px;
   transform: translateY(-50%);
   color: #999;
-  width: 18px;                   /* A: explicit icon size */
+  width: 18px;
   height: 18px;
   pointer-events: none;
 }
 
-/* Fitts: tall input with generous padding – easy to acquire */
 .search input {
   width: 100%;
-  padding: 14px 18px 14px 44px;  /* Fitts: 44px min-height, icon offset */
-  border-radius: 12px;           /* R: shared radius token */
+  padding: 14px 18px 14px 44px;
+  border-radius: 12px;
   border: 1px solid #ddd;
   font-size: 15px;
   background: #fff;
@@ -194,30 +150,25 @@
 .search input:focus {
   outline: none;
   border-color: #ff5a1f;
-  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.12);  /* C: visible focus ring */
+  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.12);
 }
 
-
-/* ===============================
-   FILTER TABS  (C + R + Fitts)
-================================ */
 .filters {
   display: flex;
   gap: 10px;
-  margin-bottom: 28px;           /* P: spacing before card list */
+  margin-bottom: 28px;
   flex-wrap: wrap;
 }
 
-/* Fitts: every filter button meets the 44 px minimum hit area */
 .filters button {
   border: 1px solid #e0e0e0;
   background: white;
-  padding: 10px 18px;            /* Fitts: generous padding */
-  min-height: 44px; 
-  border-color: #ff5a1f;             /* Fitts: explicit minimum */
-  border-radius: 12px;           /* R: shared radius token */
+  padding: 10px 18px;
+  min-height: 44px;
+  border-color: #ff5a1f;
+  border-radius: 12px;
   font-size: 14px;
-  font-weight: 600;              /* C: bolder label for legibility */
+  font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   gap: 8px;
@@ -227,23 +178,20 @@
               border-color 0.2s ease, transform 0.1s ease;
 }
 
-/* Hover feedback – Fitts: confirms the target is interactive */
 .filters button:hover {
   background: rgba(255, 90, 31, 0.06);
   border-color: #ff5a1f;
   color: #ff5a1f;
 }
 
-/* Press feedback */
 .filters button:active {
   transform: scale(0.97);
 }
 
-/* Count badge inside each filter button */
 .filters button span {
   background: #f1f1f1;
   padding: 3px 10px;
-  border-radius: 999px;          /* R: pill badge */
+  border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
@@ -251,7 +199,6 @@
   align-items: center;
 }
 
-/* Active filter state (C) */
 .filters button.active {
   background: #ff5a1f;
   color: white;
@@ -267,179 +214,127 @@
   color: #fff;
 }
 
-
-/* ===============================
-   RESULT CARD LIST
-================================ */
 .list {
   display: flex;
   flex-direction: column;
-  gap: 20px;                     /* P: consistent card spacing */
+  gap: 20px;
 }
-
-
-/* ===============================
-   RESULT CARD  (C + A + P + Fitts)
-   
-   CRAP improvements:
-   C – Added top colour strip for immediate status scanning;
-       sport icon provides visual anchor; stronger hierarchy.
-   R – Consistent spacing rhythm (16px inner gaps); repeated
-       border-radius tokens; icon sizes locked.
-   A – Title group (icon + text) shares a single flex-start axis;
-       result box & reviews are visually separated but aligned
-       to the same left edge inside cardInner.
-   P – Related items grouped tighter (title+meta, result+label,
-       stars+count). Unrelated items pushed apart (header vs
-       result box vs reviews via margin).
-   
-   Fitts's Law:
-   – "Add result" CTA is now a large, full-width button (big target).
-   – "Edit result" upgraded from text link to padded button.
-   – Card hover lifts to confirm interactivity.
-================================ */
 
 .card {
   background: white;
-  border-radius: 16px;           /* R: card-level radius */
-  overflow: hidden;              /* clip the top strip */
+  border-radius: 16px;
+  overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  border: 1px solid #eee;       /* C: subtle boundary */
+  border: 1px solid #eee;
 }
 
-/* Fitts: cards lift on hover – visual feedback */
 .card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.09);
 }
 
-/* C (CRAP): Colour strip at the top of the card.
-   Users can scan status by colour alone – orange = pending,
-   green = done – without reading text. The strip is thin (4px)
-   to avoid visual noise but wide (100%) for strong contrast. */
 .cardTopStripPending,
 .cardTopStripDone {
   height: 4px;
   width: 100%;
 }
-.cardTopStripPending { background: #ff7a1a; }
-.cardTopStripDone    { background: #1e9e5c; }
 
-/* A: Inner padding container – all card content is aligned
-   to the same horizontal edges. */
+.cardTopStripPending { background: #ff7a1a; }
+.cardTopStripDone { background: #1e9e5c; }
+
 .cardInner {
-  padding: 20px 24px 24px;      /* A: uniform inner padding */
+  padding: 20px 24px 24px;
 }
 
-
-/* ===============================
-   CARD HEADER  (A + P)
-================================ */
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
-  margin-bottom: 18px;           /* P: separation before result box */
+  margin-bottom: 18px;
 }
 
-/* P: title + icon grouped tightly */
 .cardTitleGroup {
   display: flex;
   align-items: flex-start;
-  gap: 14px;                     /* P: icon-to-title coupling */
+  gap: 14px;
 }
 
-/* C + R: Sport icon provides instant visual anchor.
-   Colour matches card status for reinforced repetition. */
 .sportIconPending,
 .sportIconDone {
-  width: 40px;                   /* A: fixed icon cell */
+  width: 40px;
   height: 40px;
   min-width: 40px;
-  border-radius: 10px;           /* R: shared sub-radius */
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
+
 .sportIconPending {
   background: #fff4e5;
   color: #ff7a1a;
 }
+
 .sportIconDone {
   background: #e8f7ef;
   color: #1e9e5c;
 }
+
 .sportIconPending svg,
 .sportIconDone svg {
   width: 18px;
   height: 18px;
 }
 
-/* C: card title stands out — strongest text element in the card */
 .cardHeader h3 {
   font-size: 17px;
-  font-weight: 700;              /* C: bold heading */
+  font-weight: 700;
   margin-bottom: 8px;
   color: #111;
   line-height: 1.3;
 }
 
-
-/* ===============================
-   META (inside cards)  (A + R)
-   Professor focus: icon alignment
-================================ */
 .meta {
   display: flex;
-  gap: 18px;                     /* P: clear separation between meta items */
+  gap: 18px;
   font-size: 13px;
   color: #666;
   flex-wrap: wrap;
 }
 
-/* A: Every meta span uses inline-flex with centred icon.
-   Icons are given explicit dimensions so they never shift
-   the text baseline. This is the key alignment fix. */
 .meta span {
   display: inline-flex;
   align-items: center;
-  gap: 6px;                      /* P: icon-to-label proximity */
+  gap: 6px;
   line-height: 1;
 }
 
-/* A + R: All icons within meta share the same fixed size */
 .meta span svg {
-  width: 15px;                   /* A: fixed, repeatable */
+  width: 15px;
   height: 15px;
-  min-width: 15px;               /* A: prevent squish */
-  flex-shrink: 0;                /* A: never collapse */
-  display: block;                /* A: remove inline baseline gap */
+  min-width: 15px;
+  flex-shrink: 0;
+  display: block;
   color: #999;
-
 }
 
-
-/* ===============================
-   STATUS BADGES  (C + R)
-================================ */
 .statusDone,
 .statusPending {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  font-weight: 700;              /* C: bolder for emphasis */
-  padding: 7px 14px;             /* Fitts: bigger hit area */
-  border-radius: 999px;          /* R: pill shape */
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 999px;
   white-space: nowrap;
   letter-spacing: 0.3px;
   flex-shrink: 0;
 }
 
-/* A: icon inside status badge has fixed size */
 .statusDone svg,
 .statusPending svg {
   width: 13px;
@@ -450,44 +345,32 @@
 .statusDone {
   background: #e8f7ef;
   color: #1e9e5c;
-  border: 1px solid #c5ecd5;    /* C: green border reinforces "done" */
+  border: 1px solid #c5ecd5;
 }
 
 .statusPending {
   background: #fff4e5;
   color: #e06a10;
-  border: 1px solid #ffddb8;    /* C: orange border reinforces "pending" */
+  border: 1px solid #ffddb8;
 }
 
-
-/* ===============================
-   RESULT BOX – TWO VARIANTS  (C + P + R)
-   
-   Contrast: Done cards get a green-tinted result background;
-   pending cards get a warm orange-tinted background. This
-   reinforces status without requiring the user to read.
-   
-   Proximity: "Result" label sits directly above the text,
-   grouping them as a single conceptual unit.
-================================ */
 .resultBoxDone,
 .resultBoxPending {
-  border-radius: 12px;           /* R: shared radius */
+  border-radius: 12px;
   padding: 16px 18px;
   margin-top: 2px;
 }
 
 .resultBoxDone {
-  background: #f0faf4;          /* C: green tint = success */
+  background: #f0faf4;
   border: 1px solid #d5f0de;
 }
 
 .resultBoxPending {
-  background: #fffaf5;          /* C: warm tint = action needed */
+  background: #fffaf5;
   border: 1px solid #ffe8d0;
 }
 
-/* P: label sits tight above the result text */
 .resultLabel {
   display: block;
   font-size: 11px;
@@ -500,40 +383,38 @@
 
 .resultContent p {
   font-size: 14px;
-  line-height: 1.6;             /* readability */
+  line-height: 1.6;
   color: #333;
   margin: 0;
 }
 
-/* C + P: Empty state is structured, not just italic text.
-   Icon + title + subtitle form a clear group that signals
-   "nothing here yet" with higher contrast than before. */
 .emptyState {
   display: flex;
   align-items: center;
   gap: 14px;
   padding: 4px 0;
 }
+
 .emptyState svg {
   width: 22px;
   height: 22px;
   color: #cc7a33;
   flex-shrink: 0;
 }
+
 .emptyTitle {
   font-size: 14px;
   font-weight: 600;
   color: #996226;
   margin: 0 0 2px;
 }
+
 .emptySubtitle {
   font-size: 12px;
   color: #b08650;
   margin: 0;
 }
 
-/* Fitts: Large, full-width CTA button for organizer to add result.
-   Big target area is easy to click. Stands out with brand colour. */
 .addResultBtn {
   display: flex;
   align-items: center;
@@ -541,7 +422,7 @@
   gap: 8px;
   width: 100%;
   padding: 12px 20px;
-  min-height: 46px;              /* Fitts: exceeds 44px minimum */
+  min-height: 46px;
   border: 2px dashed #ff7a1a;
   border-radius: 10px;
   background: rgba(255, 122, 26, 0.05);
@@ -551,26 +432,21 @@
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
 }
+
 .addResultBtn:hover {
   background: rgba(255, 122, 26, 0.12);
   border-color: #e56e15;
 }
+
 .addResultBtn:active {
   transform: scale(0.98);
 }
+
 .addResultBtn svg {
   width: 16px;
   height: 16px;
 }
 
-
-/* ===============================
-   EDITOR (add/edit result)
-   (Fitts + R + P)
-   
-   Proximity: Editor label sits right above the textarea,
-   grouping them. Action buttons are grouped at the bottom.
-================================ */
 .editor {
   margin-top: 14px;
 }
@@ -585,13 +461,12 @@
   letter-spacing: 0.5px;
 }
 
-/* Fitts: tall textarea – easy to click into */
 .editor textarea {
   width: 100%;
   min-height: 100px;
   resize: vertical;
   padding: 12px 14px;
-  border-radius: 10px;           /* R: shared radius */
+  border-radius: 10px;
   border: 1px solid #ddd;
   font-size: 14px;
   line-height: 1.5;
@@ -602,10 +477,9 @@
 .editor textarea:focus {
   outline: none;
   border-color: #ff7a1a;
-  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.12);  /* C: focus ring */
+  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.12);
 }
 
-/* Fitts: submit button with generous padding, icon reinforces action */
 .editorActions {
   display: flex;
   gap: 10px;
@@ -616,9 +490,9 @@
   background: #ff6b35;
   color: white;
   border: none;
-  padding: 10px 22px;            /* Fitts: >= 44 px min-height */
+  padding: 10px 22px;
   min-height: 44px;
-  border-radius: 10px;           /* R: shared radius */
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -627,30 +501,27 @@
   gap: 6px;
   transition: background 0.2s ease, transform 0.1s ease;
 }
+
 .editor button svg {
   width: 14px;
   height: 14px;
 }
 
 .editor button:hover {
-  background:#ec815b;
+  background: #ec815b;
 }
 
 .editor button:active {
   transform: scale(0.97);
 }
 
-
-/* ===============================
-   CANCEL BUTTON  (C + Fitts)
-================================ */
 .cancel {
   background: transparent !important;
   border: 1px solid #ddd !important;
   color: #555 !important;
-  min-height: 44px;              /* Fitts */
+  min-height: 44px;
   padding: 10px 20px;
-  border-radius: 10px;           /* R */
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -662,25 +533,17 @@
   border-color: #ccc !important;
 }
 
-
-/* ===============================
-   EDIT BUTTON  (C + Fitts)
-   
-   Fitts: Previously a tiny text link — easy to miss.
-   Now a proper padded button with clear boundaries.
-   Min-height of 36px + padding makes it an easy target.
-================================ */
 .editBtn {
   margin-top: 12px;
   background: transparent;
-  border: 1px solid #d5f0de;    /* C: green border ties to "done" state */
+  border: 1px solid #d5f0de;
   color: #1e9e5c;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  padding: 8px 16px;             /* Fitts: generous padding */
+  padding: 8px 16px;
   min-height: 36px;
-  border-radius: 8px;            /* R: consistent radius */
+  border-radius: 8px;
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -690,91 +553,16 @@
   color: #167a47;
 }
 
-
-/* ===============================
-   REVIEWS SECTION  (A + P + C)
-   
-   Alignment: Stars form a clear horizontal row, aligned
-   with the rating value and count text.
-   
-   Proximity: Stars + number + count are tightly grouped
-   as a single "rating unit", separated from the rest of
-   the card by a top border.
-   
-   Contrast: Filled stars use the brand orange for emphasis;
-   empty stars are a light grey to fade into the background.
-================================ */
 .reviews {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid #eee;    /* A: clear visual divider */
+  border-top: 1px solid #eee;
 }
 
 .ratingRow {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.ratingStars {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
-
-/* C: Filled star stands out with brand colour */
-.starFilled {
-  color: #ff7a1a;
-  fill: #ff7a1a;                 /* C: solid fill for emphasis */
-}
-
-/* C: Empty star recedes with very light grey */
-.starEmpty {
-  color: #ddd;
-  fill: none;
-}
-
-.ratingValue {
-  font-size: 15px;
-  font-weight: 800;              /* C: bold number */
-  color: #111;
-}
-
-.ratingCount {
-  font-size: 13px;
-  color: #888;
-  font-weight: 500;
-}
-
-/* A: rating summary icons align with text */
-.ratingSummary {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 700;
-  color: #ff6b35;
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-.ratingSummary svg {
-  width: 16px;                   /* A: fixed icon size */
-  height: 16px;
-  flex-shrink: 0;
-}
-
-.noReviews {
-  font-size: 13px;
-  color: #bbb;
-  font-style: italic;
-}
-/* === REVIEWS EXPAND ANIMATION === */
-
-/* ===== CLICKABLE RATING ===== */
-
-.ratingRow {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
   cursor: pointer;
   transition: opacity 0.2s ease, transform 0.15s ease;
@@ -792,8 +580,6 @@
   gap: 6px;
 }
 
-/* hover hint */
-
 .showReviews {
   font-size: 12px;
   opacity: 0;
@@ -806,22 +592,15 @@
   transform: translateX(0);
 }
 
-/* ===== REVIEWS EXPAND ===== */
-
 .reviewList {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid #eee;
-
   max-height: 0;
   overflow: hidden;
   opacity: 0;
   transform: translateY(-4px);
-
-  transition: 
-    max-height 0.35s ease,
-    opacity 0.25s ease,
-    transform 0.25s ease;
+  transition: max-height 0.35s ease, opacity 0.25s ease, transform 0.25s ease;
 }
 
 .reviewListOpen {
@@ -829,6 +608,7 @@
   opacity: 1;
   transform: translateY(0);
 }
+
 .showReviewsText {
   font-size: 12px;
   color: #555;
@@ -842,9 +622,6 @@
   transform: translateY(0);
 }
 
-
-/* ===== REVIEW ITEMS ===== */
-
 .reviewItem {
   margin-bottom: 10px;
 }
@@ -854,25 +631,52 @@
   gap: 2px;
   margin-bottom: 2px;
 }
-/* ===============================
-   ERROR MESSAGE  (C)
-================================ */
-.error {
-  color: #d92d20;
-  font-size: 13px;
-  font-weight: 500;
-  margin-top: 8px;
+
+.starFilled {
+  color: #ff7a1a;
+  fill: #ff7a1a;
 }
-.ratingRow {
-  position: relative;
-  cursor: pointer;
-  display: flex;
+
+.starEmpty {
+  color: #ddd;
+  fill: none;
+}
+
+.ratingValue {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111;
+}
+
+.ratingCount {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+.ratingSummary {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 6px;
+  font-weight: 700;
+  color: #ff6b35;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.ratingSummary svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.noReviews {
+  font-size: 13px;
+  color: #bbb;
+  font-style: italic;
 }
 
 .tooltip {
- 
   background: #333;
   color: #fff;
   font-size: 12px;
@@ -888,13 +692,9 @@
   opacity: 1;
 }
 
-
-/* ===============================
-   RESPONSIVE  (Fitts + A)
-================================ */
 @media (max-width: 768px) {
   .stats {
-    grid-template-columns: 1fr;  /* stack on mobile */
+    grid-template-columns: 1fr;
   }
 
   .meta {
@@ -914,9 +714,7 @@
     flex-wrap: wrap;
   }
 
-  /* Fitts: On mobile, the "Add result" button stays full-width
-     — easy thumb target at the bottom of the card. */
   .addResultBtn {
-    min-height: 50px;            /* Fitts: even taller on mobile */
+    min-height: 50px;
   }
 }
