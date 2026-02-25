@@ -15,10 +15,10 @@ export type Event = {
 };
 
 type MapSectionProps = {
-  onEventsFetched: (events: Event[]) => void;
+  externalCenter?: [number, number] | null;
 };
 
-export default function MapSection({ onEventsFetched }: MapSectionProps) {
+export default function MapSection({ externalCenter }: MapSectionProps) {
   const [center, setCenter] = useState<[number, number]>([45.815399, 15.966568]);
   const [events, setEvents] = useState<Event[]>([]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
@@ -27,6 +27,13 @@ export default function MapSection({ onEventsFetched }: MapSectionProps) {
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  // Pan map when a featured event is clicked
+  useEffect(() => {
+    if (externalCenter) {
+      setCenter(externalCenter);
+    }
+  }, [externalCenter]);
 
   async function fetchEvents() {
     setLoading(true);
@@ -41,7 +48,6 @@ export default function MapSection({ onEventsFetched }: MapSectionProps) {
 
     if (data) {
       setEvents(data);
-      onEventsFetched(data);
 
       if (data.length > 0) {
         setCenter([data[0].lat, data[0].lng]);

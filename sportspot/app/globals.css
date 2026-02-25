@@ -344,6 +344,24 @@
   flex-wrap: wrap;
   align-items: stretch;
 }
+/* Clickable featured event cards */
+.event-card-clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.event-card-active {
+  border-color: #ff6b35;
+  background: #fff5f0;
+  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.3);
+}
+
+.featured-hint {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-top: -1.2rem;
+  margin-bottom: 1.5rem;
+}
 
 .map-placeholder {
   flex: 2 1 300px;
@@ -516,16 +534,36 @@
   color: #9ca3af;
 }
 
-/* MOBILE */
+/* FOOTER MOBILE */
 @media (max-width: 768px) {
+  .footer {
+    padding: 2.5rem 1.2rem 1.5rem;
+  }
+
   .footer-inner {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 2rem;
+  }
+
+  .footer-brand {
+    max-width: 100%;
+    text-align: center;
   }
 
   .footer-links {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+  }
+
+  .footer-bottom {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .footer-links {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
   }
 }
 

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import heroImage from "./media/background.jpeg";
 import { LandPlot, Search, Users, Trophy } from "lucide-react";
-import MapSection, { Event } from "./components/MapSection";
+import MapSection from "./components/MapSection";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { sanityClient } from "@/lib/sanity";
@@ -17,15 +17,20 @@ type FeaturedEvent = {
   description: string;
 };
 
+// Hardcoded locations for featured events
+const FEATURED_LOCATIONS: [number, number][] = [
+  [43.5381, 16.4920],  // Solin, Croatia
+  [43.3438, 17.8078],  // Mostar, BiH
+];
+
 // ---------------- COMPONENT ----------------
 
 export default function HomePage() {
-  const [nearbyEvents, setNearbyEvents] = useState<Event[]>([]);
   const [featuredEvents, setFeaturedEvents] = useState<FeaturedEvent[]>([]);
+  const [mapCenter, setMapCenter] = useState<[number, number] | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   useScrollAnimation();
-
-  // ---------------- FETCH CMS EVENTS ----------------
 
   useEffect(() => {
     fetchFeaturedEvents();
@@ -45,6 +50,14 @@ export default function HomePage() {
     );
 
     setFeaturedEvents(data || []);
+  }
+
+  function handleFeaturedClick(index: number) {
+    setActiveIndex(index);
+    const coords = FEATURED_LOCATIONS[index];
+    if (coords) {
+      setMapCenter(coords);
+    }
   }
 
   return (
@@ -125,15 +138,22 @@ export default function HomePage() {
         </p>
 
         <div className="events-layout">
-          <MapSection onEventsFetched={setNearbyEvents} />
+          <MapSection
+            externalCenter={mapCenter}
+          />
 
           <div className="events-list animate delay-2">
-            <h3>Events you might be interested in</h3>
+            <h3>Featured Events</h3>
+            <p className="featured-hint">Click an event to see it on the map</p>
 
             {featuredEvents.length === 0 && <p>No upcoming events.</p>}
 
-            {featuredEvents.map(event => (
-              <div key={event.eventId} className="event-card">
+            {featuredEvents.map((event, index) => (
+              <div
+                key={event.eventId}
+                className={`event-card event-card-clickable ${activeIndex === index ? "event-card-active" : ""}`}
+                onClick={() => handleFeaturedClick(index)}
+              >
                 <span className="tag featured">Upcoming</span>
                 <strong>{event.title}</strong>
                 <p>{event.description}</p>
@@ -144,13 +164,11 @@ export default function HomePage() {
               className="explore-btn"
               onClick={() => (window.location.href = "/map")}
             >
-              Explore Map view
+              Open Full Map
             </button>
           </div>
         </div>
       </section>
-
-
     </>
   );
 }
