@@ -110,6 +110,13 @@ export default function Navbar() {
           >
             Results
           </Link>
+                    <Link
+            href="/faq"
+            className={isActive("/faq") ? "active" : ""}
+          >
+            FAQ
+          </Link>
+          
         </nav>
 
         {/* RIGHT ACTIONS */}

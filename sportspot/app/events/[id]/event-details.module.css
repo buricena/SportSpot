@@ -267,6 +267,38 @@
     margin: 0 16px;
   }
 }
+/* JOIN BUTTON STATES */
+/* JOINED (Leave state) */
+.joined {
+  background: #b91c1c;        /* light red */
+  color: white;             /* red text */
+  box-shadow: none;
+}
+
+.joined:hover {
+  background: #d3a7a7;        /* darker on hover */
+}
+
+/* JUST JOINED (success) */
+.justJoined {
+  background: #16a34a;        /* green success */
+  color: white;
+  box-shadow: 0 10px 24px rgba(22, 163, 74, 0.35);
+  animation: popIn 0.25s ease;
+  cursor: default;
+}
+
+/* small success animation */
+@keyframes popIn {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
 @media (max-width: 400px) {
   .infoGrid {

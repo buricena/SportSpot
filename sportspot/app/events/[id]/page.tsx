@@ -30,6 +30,7 @@ export default function EventDetailsPage() {
   const [event, setEvent] = useState<Event | null>(null);
   const [user, setUser] = useState<any>(null);
   const [joined, setJoined] = useState(false);
+  const [justJoined, setJustJoined] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [organizerName, setOrganizerName] = useState("Unknown");
 
@@ -114,6 +115,7 @@ export default function EventDetailsPage() {
       if (isPast || isFull) return;
 
       setJoined(true);
+      setJustJoined(true);
       setParticipantsCount((c) => c + 1);
 
       const { error } = await supabase.from("event_participants").insert({
@@ -123,9 +125,15 @@ export default function EventDetailsPage() {
 
       if (error) {
         setJoined(false);
+        setJustJoined(false);
         setParticipantsCount((c) => c - 1);
         alert("Failed to join event.");
+        return;
       }
+
+      setTimeout(() => {
+        setJustJoined(false);
+      }, 1200);
     } else {
       setShowLeaveConfirm(true);
     }
@@ -275,7 +283,6 @@ export default function EventDetailsPage() {
           </div>
         </div>
 
-        {/* JOIN / LEAVE */}
         <div className={styles.joinCard}>
           {isPast ? (
             <p className={styles.pastNotice}>
@@ -294,9 +301,12 @@ export default function EventDetailsPage() {
 
               <button
                 onClick={handleJoin}
-                className={`${styles.joinBtn} ${joined ? styles.joined : ""}`}
+                className={`${styles.joinBtn} ${
+                  justJoined ? styles.justJoined : joined ? styles.joined : ""
+                }`}
+                disabled={justJoined}
               >
-                {joined ? "Leave" : "Join Event"}
+                {justJoined ? "Joined ✓" : joined ? "Leave" : "Join Event"}
               </button>
             </>
           )}
@@ -326,7 +336,6 @@ export default function EventDetailsPage() {
         )}
       </article>
 
-      {/* DELETE CONFIRM */}
       {showConfirm && (
         <div className={styles.confirmOverlay}>
           <div className={styles.confirmBox}>
@@ -350,7 +359,6 @@ export default function EventDetailsPage() {
         </div>
       )}
 
-      {/* LEAVE CONFIRM */}
       {showLeaveConfirm && (
         <div className={styles.confirmOverlay}>
           <div className={styles.confirmBox}>
