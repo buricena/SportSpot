@@ -588,11 +588,12 @@
   .footer-inner {
     grid-template-columns: 1fr;
     gap: 2rem;
+    align-items: flex-start;
   }
 
   .footer-brand {
     max-width: 100%;
-    text-align: center;
+    text-align: left;
   }
 
   .footer-links {
@@ -676,7 +677,10 @@
   .map-container {
     height: 280px;
     min-height: 280px;
+    max-height: 60vh;
     width: 100%;
+      overflow: hidden; /* ✅ */
+
   }
 
   .events-list {
@@ -705,6 +709,7 @@
 
   .events-around {
     padding: 3rem 1.2rem;
+    padding-bottom: 4rem;
   }
 
   .events-around h2 {
