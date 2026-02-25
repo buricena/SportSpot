@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { sanityClient } from "@/lib/sanity";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
+import Footer from "./components/Footer";
 
 // ---------------- TYPES ----------------
 

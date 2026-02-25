@@ -7,6 +7,7 @@ import { Calendar, MapPin, X } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
 import { useRouter } from "next/navigation";
 import styles from "./events.module.css";
+import Footer from "../components/Footer";
 
 type Event = {
   id: string;
@@ -121,6 +122,7 @@ export default function EventsPage() {
   }
 
   return (
+    <>
     <main className={styles.page}>
       {/* HEADER */}
       <header className={styles.header}>
@@ -359,5 +361,7 @@ export default function EventsPage() {
         </section>
       )}
     </main>
+    <Footer></Footer>
+    </>
   );
 }

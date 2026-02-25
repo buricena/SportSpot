@@ -13,6 +13,7 @@ import {
   Search,
   Star,
 } from "lucide-react";
+import Footer from "../components/Footer";
 
 type Review = {
   rating: number;
@@ -130,6 +131,7 @@ export default function ResultsPage() {
   };
 
   return (
+    <>
     <main className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerIcon}><Trophy size={22} /></div>
@@ -308,6 +310,8 @@ export default function ResultsPage() {
         })}
       </section>
     </main>
+    <Footer></Footer>
+    </>
   );
 }
 
