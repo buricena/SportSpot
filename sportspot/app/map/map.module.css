@@ -62,3 +62,22 @@
   text-align: center;
   color: #666;
 }
+@media (max-width: 768px) {
+  .map-wrapper,
+  .map-container {
+    height: 280px;
+    min-height: 280px;
+    max-height: 60vh; /* ✅ ključno */
+  }
+}
+.map-wrapper {
+  overflow: hidden; /* ✅ */
+}
+.events-around {
+  padding-bottom: 4rem; /* ✅ prostor za footer */
+}
+@media (max-width: 768px) {
+  .map-wrapper {
+    border-radius: 12px;
+  }
+}
