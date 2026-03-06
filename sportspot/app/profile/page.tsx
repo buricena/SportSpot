@@ -69,7 +69,7 @@ const { count: reviewsCount } = await supabase
 
   return (
     <main className={styles.page}>
-      {/* PROFILE CARD */}
+     
       <section className={styles.profileCard}>
         <div className={styles.avatar}>
           {profile.name?.charAt(0).toUpperCase() || "U"}
@@ -97,7 +97,7 @@ const { count: reviewsCount } = await supabase
 
           <div className={styles.stats}>
             <span>
-              {/* <Calendar size={16} /> */}
+             
 <b>{profile.eventsCount}</b> {profile.eventsCount === 1 ? "Event" : "Events"} Joined            </span>
 
             <span>
@@ -107,7 +107,7 @@ const { count: reviewsCount } = await supabase
         </div>
       </section>
 
-      {/* TABS */}
+     
       <nav className={styles.tabs}>
         <button
           className={activeTab === "events" ? styles.active : ""}
@@ -142,7 +142,7 @@ const { count: reviewsCount } = await supabase
         </button>
       </nav>
 
-      {/* CONTENT */}
+    
       <section className={styles.content}>
         {activeTab === "events" && <MyEvents />}
         {activeTab === "reviews" && <MyReviews />}

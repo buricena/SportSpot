@@ -24,7 +24,7 @@ export default function MapPage() {
   const [search, setSearch] = useState("");
   const [center, setCenter] = useState<[number, number]>([
     45.815,
-    15.978, // HR default
+    15.978, 
   ]);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function MapPage() {
       .select("id, title, event_date, location, lat, lng")
       .not("lat", "is", null)
       .not("lng", "is", null)
-      .gte("event_date", now); // ✅ ONLY UPCOMING
+      .gte("event_date", now); 
 
     setEvents(data || []);
     setLoading(false);
@@ -68,7 +68,7 @@ export default function MapPage() {
 
   return (
     <main className={styles.page}>
-      {/* HEADER */}
+     
       <div className={styles.header}>
         <h1>Find events near you</h1>
       <p>
@@ -80,7 +80,7 @@ export default function MapPage() {
       </p>
       </div>
 
-      {/* SEARCH */}
+ 
       <div className={styles.searchBar}>
         <input
           placeholder="Search city or location (e.g. Split)"
@@ -91,7 +91,7 @@ export default function MapPage() {
         <button onClick={handleSearch}>Search</button>
       </div>
 
-      {/* MAP */}
+    
       <div className={styles.mapWrapper}>
         <EventsMap events={events} center={center} />
       </div>

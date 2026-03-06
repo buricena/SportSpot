@@ -21,7 +21,6 @@ export default function RegisterPage() {
     setError(null);
     setLoading(true);
 
-    /* 1️⃣ CREATE AUTH USER */
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -33,13 +32,13 @@ export default function RegisterPage() {
       return;
     }
 
-    /* 2️⃣ INSERT PROFILE (⚠️ favorite_sport MORA BITI ARRAY) */
+  
     const { error: profileError } = await supabase
       .from("profiles")
       .insert({
         id: data.user.id,
         name,
-        favorite_sport: [favoriteSport], // ✅ KLJUČNI FIX
+        favorite_sport: [favoriteSport], 
       });
 
     if (profileError) {
@@ -49,7 +48,7 @@ export default function RegisterPage() {
       return;
     }
 
-    /* 3️⃣ REDIRECT */
+   
     router.push("/profile");
   }
 

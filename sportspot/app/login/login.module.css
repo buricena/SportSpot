@@ -27,7 +27,7 @@
   gap: 1rem;
 }
 
-/* ⬇️ VAŽNO: nema globalnih selektora */
+
 .formLabel {
   display: flex;
   flex-direction: column;

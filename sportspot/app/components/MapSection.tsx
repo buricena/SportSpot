@@ -64,7 +64,7 @@ export default function MapSection({ externalCenter }: MapSectionProps) {
       </button>
 
       <MapView
-        center={center ?? [45.815399, 15.966568]} // fallback Zagreb
+        center={center ?? [45.815399, 15.966568]} 
         events={events}
         userLocation={userLocation}
       />

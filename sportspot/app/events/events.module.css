@@ -4,9 +4,7 @@
   min-height: 100vh;
 }
 
-/* ===============================
-   HEADER
-================================ */
+
 .header {
   max-width: 1200px;
   margin-bottom: 48px;
@@ -35,9 +33,7 @@
   max-width: 540px;
 }
 
-/* ===============================
-   TOP BAR
-================================ */
+
 .topBar {
   margin-top: 32px;
   display: flex;
@@ -69,9 +65,7 @@
   align-items: center;
 }
 
-/* ===============================
-   TABS
-================================ */
+
 .tabs {
   position: relative;
   display: flex;
@@ -149,9 +143,7 @@
   transform: translateX(100%);
 }
 
-/* ===============================
-   ADD BUTTON
-================================ */
+
 .addBtn {
   display: inline-flex;
   align-items: center;
@@ -177,9 +169,7 @@
   transform: translateY(0);
 }
 
-/* ===============================
-   CUSTOM DATE PICKER
-================================ */
+
 .customDate {
   display: inline-flex;
   align-items: center;
@@ -225,9 +215,7 @@
 .clearDate:hover {
   color: #ff6b35;
 }
-/* ===============================
-   LOGIN NOTICE TOAST
-================================ */
+
 .loginNotice {
   position: fixed;
   top: 90px;
@@ -261,9 +249,7 @@
   }
 }
 
-/* ===============================
-   GRID
-================================ */
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -271,9 +257,7 @@
   margin-top: 8px;
 }
 
-/* ===============================
-   CARD
-================================ */
+
 .card {
   position: relative;
   overflow: hidden;
@@ -418,9 +402,7 @@
   opacity: 0.8;
 }
 
-/* ===============================
-   EMPTY STATE
-================================ */
+
 .emptyState {
   display: flex;
   flex-direction: column;
@@ -473,9 +455,7 @@
   box-shadow: 0 10px 24px rgba(255, 107, 53, 0.35);
 }
 
-/* ===============================
-   FILTERS
-================================ */
+
 .filters {
   display: flex;
   align-items: flex-end;

@@ -1,6 +1,4 @@
-/* ===============================
-   WRAPPER
-================================ */
+
 .wrapper {
   max-width: 600px;
   margin: 0 auto;
@@ -10,9 +8,7 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
-/* ===============================
-   HEADER
-================================ */
+
 .title {
   font-size: 1.5rem;
   font-weight: 700;
@@ -25,18 +21,13 @@
   margin-bottom: 1.8rem;
 }
 
-/* ===============================
-   TAG GRID
-================================ */
 .grid {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
 }
 
-/* ===============================
-   TAG
-================================ */
+
 .tag {
   padding: 0.45rem 1.2rem;
   border-radius: 999px;
@@ -60,9 +51,7 @@
   box-shadow: 0 6px 18px rgba(255, 107, 53, 0.35);
 }
 
-/* ===============================
-   ACTIONS
-================================ */
+
 .actions {
   margin-top: 2rem;
   display: flex;
@@ -90,9 +79,7 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
-/* ===============================
-   TOAST
-================================ */
+
 .toast {
   position: fixed;
   bottom: 24px;

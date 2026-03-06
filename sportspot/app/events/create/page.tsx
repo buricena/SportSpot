@@ -41,7 +41,7 @@ export default function CreateEventPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
 
-  /* ================= GEO CODING ================= */
+  
   useEffect(() => {
     if (!location || location.length < 3) return;
 
@@ -66,7 +66,7 @@ export default function CreateEventPage() {
     return () => clearTimeout(timeout);
   }, [location]);
 
-  /* ================= SUBMIT ================= */
+ 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -133,7 +133,7 @@ export default function CreateEventPage() {
         </header>
 
         <form onSubmit={handleSubmit}>
-          {/* EVENT DETAILS */}
+       
           <section className={styles.card}>
             <h2><Trophy size={18} /> Event Details</h2>
 
@@ -156,7 +156,7 @@ export default function CreateEventPage() {
             </div>
           </section>
 
-          {/* DATE & TIME */}
+       
           <section className={styles.card}>
             <h2><Calendar size={18} /> Date & Time</h2>
 
@@ -186,7 +186,7 @@ export default function CreateEventPage() {
             </div>
           </section>
 
-          {/* LOCATION */}
+        
           <section className={styles.card}>
             <h2><MapPin size={18} /> Location</h2>
 
@@ -211,7 +211,7 @@ export default function CreateEventPage() {
             </div>
           </section>
 
-          {/* PARTICIPANTS */}
+    
           <section className={styles.card}>
             <h2><Users size={18} /> Participants</h2>
 
@@ -244,7 +244,7 @@ export default function CreateEventPage() {
         </form>
       </div>
 
-      {/* CANCEL MODAL */}
+
       {showCancelModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>

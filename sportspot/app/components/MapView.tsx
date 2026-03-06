@@ -71,14 +71,13 @@ export default function MapView({ center, events = [], userLocation }: Props) {
 
       <RecenterMap coords={mapCenter} />
 
-      {/* FEATURED / GLAVNI PIN – ISTI KAO OSTALI */}
       <Marker position={mapCenter}>
         <Popup>
           <strong>Selected location</strong>
         </Popup>
       </Marker>
 
-      {/* EVENTI IZ BAZE */}
+     
       {events.map((event) => (
         <Marker key={event.id} position={[event.lat, event.lng]}>
           <Popup>
@@ -93,7 +92,7 @@ export default function MapView({ center, events = [], userLocation }: Props) {
         </Marker>
       ))}
 
-      {/* MY LOCATION */}
+  
       {userLocation && (
         <Marker position={userLocation}>
           <Popup>You are here</Popup>

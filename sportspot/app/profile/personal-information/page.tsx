@@ -78,7 +78,7 @@ export default function PersonalInformation() {
 
   return (
     <RequireAuth>
-      {/* 🔔 TOAST */}
+    
       {showToast && (
         <div className={styles.toast}>
           Personal information updated

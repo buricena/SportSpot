@@ -136,7 +136,7 @@ export default function MyEvents() {
         <p>You haven’t joined any events yet.</p>
       )}
 
-      {/* ================= UPCOMING ================= */}
+     
       {upcoming.length > 0 && (
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -201,7 +201,7 @@ export default function MyEvents() {
         </section>
       )}
 
-      {/* ================= PAST ================= */}
+      
       {past.length > 0 && (
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -313,7 +313,7 @@ export default function MyEvents() {
         </section>
       )}
 
-      {/* ================= LEAVE MODAL ================= */}
+    
       {toLeave && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
@@ -343,7 +343,7 @@ export default function MyEvents() {
         </div>
       )}
 
-      {/* ================= REVIEW TOAST ================= */}
+     
       {reviewSuccess && (
         <div className={styles.successToast}>
           Review submitted successfully

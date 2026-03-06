@@ -29,7 +29,7 @@ export default function EventsPage() {
   const [sportFilter, setSportFilter] = useState<string | null>(null);
   const [locationFilter, setLocationFilter] = useState<string | null>(null);
 
-  // ✅ SINGLE DATE FILTER
+
   const [dateFilter, setDateFilter] = useState<string | null>(null);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -42,7 +42,7 @@ export default function EventsPage() {
 
   useEffect(() => {
     fetchEvents();
-    setDateFilter(null); // reset date on tab switch
+    setDateFilter(null); 
   }, [activeTab]);
 
   async function fetchEvents() {
@@ -80,7 +80,7 @@ export default function EventsPage() {
     setLoading(false);
   }
 
-  /* ================= FILTER OPTIONS ================= */
+
   const sports = useMemo(
     () => [...new Set(events.map(e => e.sport))].sort(),
     [events]
@@ -91,7 +91,7 @@ export default function EventsPage() {
     [events]
   );
 
-  /* ================= FILTER LOGIC ================= */
+
   const filtered = events.filter(e => {
     const matchesSearch = `${e.title} ${e.sport} ${e.location}`
       .toLowerCase()
@@ -124,7 +124,7 @@ export default function EventsPage() {
   return (
     <>
     <main className={styles.page}>
-      {/* HEADER */}
+  
       <header className={styles.header}>
         <span className={styles.kicker}>EVENTS</span>
         <h1>Discover Sports Events</h1>
@@ -171,7 +171,7 @@ export default function EventsPage() {
               </button>
             </div>
 
-            {/* ADD EVENT */}
+        
             <Link
               href="/events/create"
               className={styles.addBtn}
@@ -192,10 +192,10 @@ export default function EventsPage() {
         </div>
       </header>
 
-      {/* FILTERS */}
+      
       {(sports.length > 0 || locations.length > 0) && (
         <div className={styles.filters}>
-          {/* SPORT */}
+        
           {sports.length > 0 && (
             <div className={styles.filterGroup}>
               <span className={styles.filterLabel}>Sport</span>
@@ -220,7 +220,7 @@ export default function EventsPage() {
             </div>
           )}
 
-          {/* LOCATION */}
+          
           {locations.length > 0 && (
             <div className={styles.filterGroup}>
               <span className={styles.filterLabel}>Location</span>
@@ -241,7 +241,7 @@ export default function EventsPage() {
             </div>
           )}
 
-          {/* ✅ CUSTOM DATE PICKER – FIXED */}
+        
           <div className={styles.filterGroup}>
             <span className={styles.filterLabel}>Date</span>
 
@@ -280,7 +280,7 @@ export default function EventsPage() {
             />
           </div>
 
-          {/* CLEAR */}
+        
           {hasActiveFilters && (
             <button
               className={styles.clearFilters}
@@ -298,7 +298,7 @@ export default function EventsPage() {
         </div>
       )}
 
-      {/* GRID */}
+     
       {loading ? (
         <div className={styles.emptyState}>
           <p className={styles.emptyText}>Loading events...</p>

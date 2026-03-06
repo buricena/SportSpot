@@ -10,7 +10,7 @@ import { sanityClient } from "@/lib/sanity";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
 import Footer from "./components/Footer";
 
-// ---------------- TYPES ----------------
+
 
 type FeaturedEvent = {
   eventId: string;
@@ -18,13 +18,13 @@ type FeaturedEvent = {
   description: string;
 };
 
-// Hardcoded locations for featured events
+
 const FEATURED_LOCATIONS: [number, number][] = [
-  [43.5381, 16.4920],  // Solin, Croatia
-  [43.3438, 17.8078],  // Mostar, BiH
+  [43.5381, 16.4920],  
+  [43.3438, 17.8078],  
 ];
 
-// ---------------- COMPONENT ----------------
+
 
 export default function HomePage() {
   const [featuredEvents, setFeaturedEvents] = useState<FeaturedEvent[]>([]);
@@ -63,7 +63,7 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ================= HERO ================= */}
+      
       <main className="hero">
         <Image
           src={heroImage}
@@ -89,7 +89,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      {/* ================= HOW IT WORKS ================= */}
+      
       <section className="how-it-works animate">
         <h2>How It Works</h2>
         <p className="how-subtitle">
@@ -130,7 +130,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ================= EVENTS AROUND YOU ================= */}
+  
       <section className="events-around animate">
         <h2>Events Around You</h2>
         <p className="events-subtitle">

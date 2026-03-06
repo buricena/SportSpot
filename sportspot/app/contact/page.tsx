@@ -5,7 +5,7 @@ import styles from "./contact.module.css";
 export default function ContactPage() {
   return (
     <main className={styles.page}>
-      {/* HEADER */}
+     
       <header className={styles.header}>
         <div className={styles.icon}>
           <Mail size={22} />
@@ -16,7 +16,7 @@ export default function ContactPage() {
         </div>
       </header>
 
-      {/* CONTENT */}
+      
       <section className={styles.card}>
         <p>
           If you have any questions, suggestions or feedback regarding the
@@ -31,7 +31,7 @@ export default function ContactPage() {
 
         </div>
 
-        {/* CTA */}
+       
         <div className={styles.cta}>
           <Link href="/events" className={styles.ctaBtn}>
             Explore Events

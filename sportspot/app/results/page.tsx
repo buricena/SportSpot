@@ -250,7 +250,7 @@ export default function ResultsPage() {
                   )}
                 </div>
 
-                {/* REVIEWS WITH TOOLTIP */}
+              
                 <div className={styles.reviews}>
                   {avgRating ? (
                     <div
@@ -279,7 +279,7 @@ export default function ResultsPage() {
                         className={`${styles.chevron} ${openReviews === event.id ? styles.chevronOpen : ""}`}
                       />
 
-                      {/* TOOLTIP */}
+                  
                     
                     </div>
                   ) : (

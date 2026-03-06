@@ -62,7 +62,7 @@ export default function Navbar() {
   return (
     <>
       <header className="navbar">
-        {/* LOGO */}
+      
         <div className="logo">
           <Link
             href="/"
@@ -87,7 +87,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* CENTER NAV */}
+       
         <nav className="navbar-center">
           <Link href="/" className={isActive("/") ? "active" : ""}>
             Home
@@ -119,7 +119,7 @@ export default function Navbar() {
           
         </nav>
 
-        {/* RIGHT ACTIONS */}
+        
         <div className="navbar-actions">
           {!user ? (
             <Link href="/login">
@@ -148,7 +148,7 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* CONFIRM LOGOUT MODAL */}
+   
       {showLogoutConfirm && (
         <div className="confirmOverlay">
           <div className="confirmBox">

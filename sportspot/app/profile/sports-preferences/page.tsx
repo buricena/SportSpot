@@ -77,7 +77,7 @@ export default function SportsPreferences() {
 
     setSaving(false);
 
-    // 👉 show popup
+ 
     setShowSaved(true);
     setTimeout(() => setShowSaved(false), 2500);
   };
@@ -117,7 +117,7 @@ export default function SportsPreferences() {
         </button>
       </div>
 
-      {/* ✅ TOAST */}
+      
       {showSaved && (
         <div className={styles.toast}>
           Preferences saved successfully 

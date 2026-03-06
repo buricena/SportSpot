@@ -5,7 +5,7 @@ import styles from "./about.module.css";
 export default function AboutPage() {
   return (
     <main className={styles.page}>
-      {/* HEADER */}
+     
       <header className={styles.header}>
         <div className={styles.icon}>
           <Info size={22} />
@@ -16,7 +16,7 @@ export default function AboutPage() {
         </div>
       </header>
 
-      {/* CONTENT */}
+      
       <section className={styles.card}>
         <p>
           <strong>SportSpot</strong> is a web application designed to connect
@@ -38,7 +38,6 @@ export default function AboutPage() {
           real-world application use cases.
         </p>
 
-        {/* CTA */}
         <div className={styles.cta}>
           <Link href="/events" className={styles.ctaBtn}>
             Explore Events

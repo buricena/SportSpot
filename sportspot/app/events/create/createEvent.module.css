@@ -116,9 +116,7 @@
   color: #666;
   text-decoration: none;
 }
-/* ===============================
-   CANCEL BUTTON (IMPROVED)
-================================ */
+
 .cancelButton {
   background: transparent;
   border: 1px solid #ddd;
@@ -176,9 +174,7 @@
   border: 1px solid #ddd;
 }
 
-/* ===============================
-   TOAST
-================================ */
+
 .toast {
   position: fixed;
   bottom: 24px;
@@ -204,9 +200,7 @@
     transform: translateY(0);
   }
 }
-/* ===============================
-   CANCEL MODAL
-================================ */
+
 .modalOverlay {
   position: fixed;
   inset: 0;
